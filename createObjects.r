@@ -1,13 +1,14 @@
-# 
-# 
+
+ 
+# Run this code to write files to DLMtool/data and create the 
+# help manual files 
+
+# Set to root directory for DLMtool and DLMDev 
+localDir <- "C:/Users/Adrian/Documents/GitHub" 
 
 library(DLMtool)
 
-localDir <- "C:/Users/Adrian/Documents/GitHub"
-
-
 devpath <- file.path(localDir, "DLMDev")
-
 pkgpath <- file.path(localDir, "DLMtool")
 dataDir <- file.path(pkgpath, "data")
 
