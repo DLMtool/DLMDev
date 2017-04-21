@@ -1,0 +1,17 @@
+Name,Feasibility2
+Case,Case 1
+Catch,1
+Index,1
+Natural_mortality_rate,1
+Maturity_at_length,1
+Growth,1
+Length_weight_conversion,1
+Fleet_selectivity,0
+Catch_at_length,0
+Catch_at_age,0
+Recruitment_index,0
+Stock_recruitment_relationship,0
+Target_catch,1
+Target_biomass,0
+Target_index,1
+Abundance,0
