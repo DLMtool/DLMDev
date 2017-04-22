@@ -9,6 +9,7 @@ localDir <- "C:/Users/Adrian/Documents/GitHub"
 library(DLMtool)
 
 devpath <- file.path(localDir, "DLMDev")
+source(file.path(devpath, "functions.r"))
 pkgpath <- file.path(localDir, "DLMtool")
 dataDir <- file.path(pkgpath, "data")
 
@@ -36,11 +37,12 @@ createDataObjs("Fease")
 # Create Data Objects 
 createDataObjs("Data")
 
+# Create Imp Objects 
+createIMObject()
+
 # Create Operating Model Objects 
 createOMObject()
 
-# Create Imp Objects 
-createIMObject()
 
 # Create MSE Objects 
 createMSEObject()

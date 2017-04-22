@@ -17,9 +17,9 @@ createDataObjs <- function(ObjectClass, fileName="dataObjects.r") {
     path <- file.path(dataDir, paste0(name, ".RData"))
     message("Saving ", paste(name, collapse = ", "), 
           " as ", paste(basename(path), collapse = ", "), " to ", 
-          dataDir)	 
-    save(list=name, file = path, compress = "bzip2", envir = parent.frame())
-    
+          dataDir)	 	
+    save(list=name, file = path, compress = "bzip2")
+
 	# Write roxygen 
 	chk <- file.exists(file.path(pkgpath, 'R/', fileName))
 	if(!chk) file.create(file.path(pkgpath, 'R/', fileName)) # make empty file 
@@ -47,21 +47,21 @@ createDataObjs <- function(ObjectClass, fileName="dataObjects.r") {
 #'
 createOMObject <- function(ObjectClass="OM", fileName="dataObjects.r") {
   # Create a test OM object 
-  temp <- new("OM", Albacore, Generic_fleet, Generic_obs)
+  temp <- new("OM", Albacore, Generic_fleet, Generic_obs,  new("Imp"))
   save(temp, file=file.path(devpath, "OperatingModels", ObjectClass, "testOM.RData"))
 
   fls <- list.files(file.path(devpath, "OperatingModels/", ObjectClass))
   for (X in seq_along(fls)) {
     if (grepl("Rdata", fls[X])) name <- unlist(strsplit(fls[X], ".Rdata"))
     if (grepl("RData", fls[X])) name <- unlist(strsplit(fls[X], ".RData"))
-    load(file.path(devpath, "OperatingModels/", ObjectClass, fls[X]))
-	temp <- get(name)
+    tt <- load(file.path(devpath, "OperatingModels/", ObjectClass, fls[X]))
+	temp <- get(tt)
     assign(name, temp)
     path <- file.path(dataDir, paste0(name, ".RData"))
     message("Saving ", paste(name, collapse = ", "), 
           " as ", paste(basename(path), collapse = ", "), " to ", 
           dataDir)	 
-    save(list=name, file = path, compress = "bzip2", envir = parent.frame())
+    save(list=name, file = path, compress = "bzip2")
     
 	# Write roxygen 
 	chk <- file.exists(file.path(pkgpath, 'R/', fileName))
@@ -88,14 +88,14 @@ createIMObject <- function(ObjectClass="Imp", fileName="dataObjects.r") {
   for (X in seq_along(fls)) {
     if (grepl("Rdata", fls[X])) name <- unlist(strsplit(fls[X], ".Rdata"))
     if (grepl("RData", fls[X])) name <- unlist(strsplit(fls[X], ".RData"))
-    load(file.path(devpath, "OperatingModels/", ObjectClass, fls[X]))
-	temp <- get(name)
+    tt <- load(file.path(devpath, "OperatingModels/", ObjectClass, fls[X]))
+	temp <- get(tt)
     assign(name, temp)
     path <- file.path(dataDir, paste0(name, ".RData"))
     message("Saving ", paste(name, collapse = ", "), 
           " as ", paste(basename(path), collapse = ", "), " to ", 
           dataDir)	 
-    save(list=name, file = path, compress = "bzip2", envir = parent.frame())
+    save(list=name, file = path, compress = "bzip2")
     
 	# Write roxygen 
 	chk <- file.exists(file.path(pkgpath, 'R/', fileName))
@@ -115,21 +115,21 @@ createIMObject <- function(ObjectClass="Imp", fileName="dataObjects.r") {
 createMSEObject <- function(ObjectClass="MSE", fileName="dataObjects.r") {
   # Create a test MSE object 
   setup()
-  temp <- runMSEdev(testOM)
-  save(temp, file=file.path(devpath, "OperatingModels", ObjectClass, "testOM.RData"))
+  temp <- runMSEdev(new("OM", Albacore, Generic_fleet, Generic_obs,  new("Imp")))
+  save(temp, file=file.path(devpath, "OperatingModels", ObjectClass, "testMSE.RData"))
 
   fls <- list.files(file.path(devpath, "OperatingModels/", ObjectClass))
   for (X in seq_along(fls)) {
     if (grepl("Rdata", fls[X])) name <- unlist(strsplit(fls[X], ".Rdata"))
     if (grepl("RData", fls[X])) name <- unlist(strsplit(fls[X], ".RData"))
-    load(file.path(devpath, "OperatingModels/", ObjectClass, fls[X]))
+    tt <- load(file.path(devpath, "OperatingModels/", ObjectClass, fls[X]))
 	temp <- get(name)
     assign(name, temp)
     path <- file.path(dataDir, paste0(name, ".RData"))
     message("Saving ", paste(name, collapse = ", "), 
           " as ", paste(basename(path), collapse = ", "), " to ", 
           dataDir)	 
-    save(list=name, file = path, compress = "bzip2", envir = parent.frame())
+    save(list=name, file = path, compress = "bzip2")
     
 	# Write roxygen 
 	chk <- file.exists(file.path(pkgpath, 'R/', fileName))
