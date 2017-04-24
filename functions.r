@@ -104,9 +104,9 @@ createIMObject <- function(ObjectClass="Imp", fileName="dataObjects.r") {
     cat("#'  ", name, " ", clss,
         "\n#'", 
         "\n#'  An object of class ", clss, 
-  	  "\n#'\n",
-  	  '"', name, '"\n\n\n', sep="", append=TRUE, 
-  	  file=file.path(pkgpath, 'R/', fileName))  
+  	    "\n#'\n",
+  	    '"', name, '"\n\n\n', sep="", append=TRUE, 
+  	    file=file.path(pkgpath, 'R/', fileName))  
     
     rm(temp)
   }
@@ -123,12 +123,11 @@ createMSEObject <- function(ObjectClass="MSE", fileName="dataObjects.r") {
     if (grepl("Rdata", fls[X])) name <- unlist(strsplit(fls[X], ".Rdata"))
     if (grepl("RData", fls[X])) name <- unlist(strsplit(fls[X], ".RData"))
     tt <- load(file.path(devpath, "OperatingModels/", ObjectClass, fls[X]))
-	temp <- get(name)
+	temp <- get(tt)
     assign(name, temp)
     path <- file.path(dataDir, paste0(name, ".RData"))
     message("Saving ", paste(name, collapse = ", "), 
-          " as ", paste(basename(path), collapse = ", "), " to ", 
-          dataDir)	 
+          " as ", paste(basename(path), collapse = ", "), " to ", dataDir)	 
     save(list=name, file = path, compress = "bzip2")
     
 	# Write roxygen 
@@ -138,9 +137,9 @@ createMSEObject <- function(ObjectClass="MSE", fileName="dataObjects.r") {
     cat("#'  ", name, " ", clss,
         "\n#'", 
         "\n#'  An object of class ", clss, 
-  	  "\n#'\n",
-  	  '"', name, '"\n\n\n', sep="", append=TRUE, 
-  	  file=file.path(pkgpath, 'R/', fileName))  
+  	    "\n#'\n",
+  	    '"', name, '"\n\n\n', sep="", append=TRUE, 
+  	    file=file.path(pkgpath, 'R/', fileName))  
     
     rm(temp)
   }
