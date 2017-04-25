@@ -115,7 +115,7 @@ createIMObject <- function(ObjectClass="Imp", fileName="dataObjects.r") {
 createMSEObject <- function(ObjectClass="MSE", fileName="dataObjects.r") {
   # Create a test MSE object 
   setup()
-  temp <- runMSEdev(new("OM", Albacore, Generic_fleet, Generic_obs,  new("Imp")))
+  temp <- runMSE(new("OM", Albacore, Generic_fleet, Generic_obs,  new("Imp")))
   save(temp, file=file.path(devpath, "OperatingModels", ObjectClass, "testMSE.RData"))
 
   fls <- list.files(file.path(devpath, "OperatingModels/", ObjectClass))
@@ -146,3 +146,26 @@ createMSEObject <- function(ObjectClass="MSE", fileName="dataObjects.r") {
 }
 
 
+createOM2 <- function(Stock, Fleet=Generic_fleet, Obs=Generic_obs, Imp=Perfect_Imp, Name="OM", Source=NULL) {
+  OM <- new("OM", Stock, Fleet, Obs, Imp)
+  if (!is.null(Source)) OM@Source <- Source
+  Name <- paste0(Stock@Name, "_", Name)
+  assign(Name, OM)
+  path <- file.path(dataDir, paste0(Name, ".RData"))
+  message("Saving ", paste(Name, collapse = ", "), 
+          " as ", paste(basename(path), collapse = ", "), " to ", dataDir)	 
+  save(list=Name, file = path, compress = "bzip2")
+     
+  # Write roxygen 
+  chk <- file.exists(file.path(pkgpath, 'R/', fileName))
+  if(!chk) file.create(file.path(pkgpath, 'R/', fileName)) # make empty file 
+  clss <- class(OM)
+     cat("#'  ", Name, " ", clss,
+         "\n#'", 
+         "\n#'  An object of class ", clss, 
+   	    "\n#'\n",
+   	    '"', Name, '"\n\n\n', sep="", append=TRUE, 
+   	    file=file.path(pkgpath, 'R/', fileName))  
+     
+  rm(OM)   
+}

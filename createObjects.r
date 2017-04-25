@@ -43,6 +43,24 @@ createIMObject()
 # Create Operating Model Objects 
 createOMObject()
 
+# Build OMs from existing CSVs
+
+# GOM Stocks and Fleets 
+stocks <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/GOM/Stock"))
+fleets <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/GOM/Fleet"))
+Source <- "http://sedarweb.org/sedar-49-assessment-process."
+for (X in seq_along(stocks)) {
+  Stock <- new("Stock", file.path(devpath, "OperatingModels/OMsToBuild/GOM/Stock", stocks[X]))
+  ind <- which(grepl(unlist(strsplit(stocks[X], ".csv")), fleets))
+  if (length(ind) == 1) {
+    Fleet <- new("Fleet", file.path(devpath, "OperatingModels/OMsToBuild/GOM/Fleet", fleets[ind]))
+  } 
+  if (length(ind) > 1) stop("More than one fleet found!") 
+  
+  if (length(ind) < 1) Fleet <- Generic_fleet 
+  
+  createOM2(Stock, Fleet, Name="GOM", Source=Source)
+}
 
 # Create MSE Objects 
 createMSEObject()
