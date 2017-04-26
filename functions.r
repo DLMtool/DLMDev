@@ -146,7 +146,7 @@ createMSEObject <- function(ObjectClass="MSE", fileName="dataObjects.r") {
 }
 
 
-createOM2 <- function(Stock, Fleet=Generic_fleet, Obs=Generic_obs, Imp=Perfect_Imp, Name="OM", Source=NULL) {
+createOM2 <- function(Stock, Fleet=Generic_fleet, Obs=Generic_obs, Imp=Perfect_Imp, Name="OM", Source=NULL, fileName="dataObjects.r") {
   OM <- new("OM", Stock, Fleet, Obs, Imp)
   if (!is.null(Source)) OM@Source <- Source
   Name <- paste0(Stock@Name, "_", Name)
@@ -168,4 +168,29 @@ createOM2 <- function(Stock, Fleet=Generic_fleet, Obs=Generic_obs, Imp=Perfect_I
    	    file=file.path(pkgpath, 'R/', fileName))  
      
   rm(OM)   
+}
+
+createOM_SS <- function(SSdir, Name=NULL, Source=NULL, Author = "No author provided", nsim=100, fileName="dataObjects.r") {
+  
+  temp <- SS2DLM(SSdir, nsim, Name=Name, Source=Source, Author=Author)
+  Name <- temp@Name
+  assign(Name, temp)
+  path <- file.path(dataDir, paste0(Name, ".RData"))
+  message("\nSaving ", paste(Name, collapse = ", "), 
+          " as ", paste(basename(path), collapse = ", "), " to ", dataDir, "\n")	 
+  save(list=Name, file = path, compress = "bzip2")
+     
+  # Write roxygen 
+  chk <- file.exists(file.path(pkgpath, 'R/', fileName))
+  if(!chk) file.create(file.path(pkgpath, 'R/', fileName)) # make empty file 
+  clss <- class(OM)
+     cat("#'  ", Name, " ", clss,
+         "\n#'", 
+         "\n#'  An object of class ", clss, " (from SS using SS2DLM)",
+   	    "\n#'  ", temp@Source,
+		"\n#' \n",
+   	    '"', Name, '"\n\n\n', sep="", append=TRUE, 
+   	    file=file.path(pkgpath, 'R/', fileName)) 
+		
+  rm(temp)	
 }
