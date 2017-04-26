@@ -22,6 +22,11 @@ fileName <- "dataObjects.r" # name of R script with roxygen
 file.remove(file.path(pkgpath, 'R/', fileName)) # delete 
 file.create(file.path(pkgpath, 'R/', fileName)) # make empty file 
 
+cat("# This file is automatically built by createObjects.r in DLMDev\n",
+    "# Don't edit by hand!\n", 
+	"# \n\n", sep="", append=TRUE, 
+    file=file.path(pkgpath, 'R/', fileName))  
+
 # Create Stock Objects 
 createDataObjs("Stock")
 
@@ -63,87 +68,67 @@ for (X in seq_along(stocks)) {
 }
 
 
+# California 
+stocks <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/California/Stock"))
+fleets <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/California/Fleet"))
+Source <- "CaliforniaHerring"
+for (X in seq_along(stocks)) {
+  Stock <- new("Stock", file.path(devpath, "OperatingModels/OMsToBuild/California/Stock", stocks[X]))
+  ind <- which(grepl(unlist(strsplit(stocks[X], ".csv")), fleets))
+  if (length(ind) == 1) {
+    Fleet <- new("Fleet", file.path(devpath, "OperatingModels/OMsToBuild/California/Fleet", fleets[ind]))
+  } 
+  if (length(ind) > 1) stop("More than one fleet found!") 
+  
+  if (length(ind) < 1) Fleet <- Generic_fleet 
+  
+  createOM2(Stock, Fleet, Name="California", Source=Source)
+}
+
+# DFO 
+stocks <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/DFO/Stock"))
+fleets <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/DFO/Fleet"))
+Source <- "DFO"
+for (X in seq_along(stocks)) {
+  Stock <- new("Stock", file.path(devpath, "OperatingModels/OMsToBuild/DFO/Stock", stocks[X]))
+  ind <- which(grepl(unlist(strsplit(stocks[X], ".csv")), fleets))
+  if (length(ind) == 1) {
+    Fleet <- new("Fleet", file.path(devpath, "OperatingModels/OMsToBuild/DFO/Fleet", fleets[ind]))
+  } 
+  if (length(ind) > 1) stop("More than one fleet found!") 
+  
+  if (length(ind) < 1) Fleet <- Generic_fleet 
+  
+  createOM2(Stock, Fleet, Name="DFO", Source=Source)
+}
+
+
 # Build OMs from SS 
 
 # SEDAR 31
 stocks <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/SS/SEDAR 31"))
 
-x <- 1 
 nsim <- 100
 Source <- "SEDAR 31, 2014 update assessment"
-SSdir <- file.path(devpath, "OperatingModels/OMsToBuild/SS/SEDAR 31", stocks[x])
-createOM_SS <- function(SSdir, Source=NULL, Author = "No author provided") {
-  
-  temp <- SS2DLM(SSdir, nsim, Name=stocks[x], Source=Source, Author=Author, fileName="dataObjects.r")
-  
 
-  Name <- temp@Name
-  assign(Name, temp)
-  path <- file.path(dataDir, paste0(Name, ".RData"))
-  message("Saving ", paste(Name, collapse = ", "), 
-          " as ", paste(basename(path), collapse = ", "), " to ", dataDir)	 
-  save(list=Name, file = path, compress = "bzip2")
-     
-  # Write roxygen 
-  chk <- file.exists(file.path(pkgpath, 'R/', fileName))
-  if(!chk) file.create(file.path(pkgpath, 'R/', fileName)) # make empty file 
-  clss <- class(OM)
-     cat("#'  ", Name, " ", clss,
-         "\n#'", 
-         "\n#'  An object of class ", clss, "(from SS using SS2DLM)",
-   	    "\n#'  ", temp@Source, "\n",
-		"\n#' \n",
-   	    '"', Name, '"\n\n\n', sep="", append=TRUE, 
-   	    file=file.path(pkgpath, 'R/', fileName)) 
-		
-		
-
- grepl("SS2DLM", attributes(temp)$build)
-  
-  temp@Source
-temp@Name
-attributes(testOM)$build
-
-}
+for (x in seq_along(stocks))  
+  createOM_SS(file.path(devpath, "OperatingModels/OMsToBuild/SS/SEDAR 31", stocks[x]), stocks[x], Source, nsim=nsim)
 
 
-#'  Red_Snapper_GOM OM
-#'
-#'  Gulf of Mexico Red Snapper (from SS using SS2DLM)(SEDAR 31, 2014 update assessment), an object of class OM
-"Red_Snapper_GOM"
+# Build OMs from StochasticSRA 
 
+# BC 
+stocks <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/StochasticSRA/BC"))
+
+Dir <- file.path(devpath, "OperatingModels/OMsToBuild/StochasticSRA/BC", stocks[1])
+setup()
+nsim <- 100 
+for (x in seq_along(stocks))  
+  createOM_SRA(file.path(devpath, "OperatingModels/OMsToBuild/StochasticSRA/BC", stocks[x]), nsim=nsim)
 
 
 
 # Create MSE Objects 
 createMSEObject()
-
-
-
-#'  Yellowfin_Tuna_IO OM
-#'
-#'  Indian Ocean Yellowfin tuna, an object of class OM
-#'
-"Yellowfin_Tuna_IO"
-
-
-#'  Red_Snapper_GOM OM
-#'
-#'  Gulf of Mexico Red Snapper (from SS using SS2DLM)(SEDAR 31, 2014 update assessment), an object of class OM
-"Red_Snapper_GOM"
-
-#'  Rougheye_Rockfish_BC OM
-#'
-#'  British Columbia Rougheye Rockfish (using StochasticSRA) 
-"Rougheye_Rockfish_BC"
-
-#'  Canary_Rockfish_BC OM
-#'
-#'  British Columbia Canary Rockfish 
-"Canary_Rockfish_BC"
-
-
-
-
 
 

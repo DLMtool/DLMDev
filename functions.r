@@ -149,7 +149,8 @@ createMSEObject <- function(ObjectClass="MSE", fileName="dataObjects.r") {
 createOM2 <- function(Stock, Fleet=Generic_fleet, Obs=Generic_obs, Imp=Perfect_Imp, Name="OM", Source=NULL, fileName="dataObjects.r") {
   OM <- new("OM", Stock, Fleet, Obs, Imp)
   if (!is.null(Source)) OM@Source <- Source
-  Name <- paste0(Stock@Name, "_", Name)
+  Name <- paste0(Stock@Name, "_", Fleet@Name, "_", Name)
+  Name <- gsub('([[:punct:]])|\\s+','_',Name)
   assign(Name, OM)
   path <- file.path(dataDir, paste0(Name, ".RData"))
   message("Saving ", paste(Name, collapse = ", "), 
@@ -173,7 +174,7 @@ createOM2 <- function(Stock, Fleet=Generic_fleet, Obs=Generic_obs, Imp=Perfect_I
 createOM_SS <- function(SSdir, Name=NULL, Source=NULL, Author = "No author provided", nsim=100, fileName="dataObjects.r") {
   
   temp <- SS2DLM(SSdir, nsim, Name=Name, Source=Source, Author=Author)
-  Name <- temp@Name
+  Name <- paste0(temp@Name, "_OM")
   assign(Name, temp)
   path <- file.path(dataDir, paste0(Name, ".RData"))
   message("\nSaving ", paste(Name, collapse = ", "), 
@@ -183,7 +184,7 @@ createOM_SS <- function(SSdir, Name=NULL, Source=NULL, Author = "No author provi
   # Write roxygen 
   chk <- file.exists(file.path(pkgpath, 'R/', fileName))
   if(!chk) file.create(file.path(pkgpath, 'R/', fileName)) # make empty file 
-  clss <- class(OM)
+  clss <- class(temp)
      cat("#'  ", Name, " ", clss,
          "\n#'", 
          "\n#'  An object of class ", clss, " (from SS using SS2DLM)",
@@ -194,3 +195,39 @@ createOM_SS <- function(SSdir, Name=NULL, Source=NULL, Author = "No author provi
 		
   rm(temp)	
 }
+
+createOM_SRA <- function(Dir, Imp=Perfect_Imp, nsim=nsim, nits=800, burnin=500, fileName="dataObjects.r") {
+   
+  fls <- list.files(Dir)
+  Stock <- new("Stock", file.path(Dir, fls[grep("Stock", fls)]))
+  Fleet <- new("Fleet", file.path(Dir, fls[grep("Fleet", fls)]))
+  Obs <- new("Obs", file.path(Dir, fls[grep("Obs", fls)]))
+  CAA <- as.matrix(read.csv(file.path(Dir, fls[grep("CAA", fls)])))
+  Chist <- as.matrix(read.csv(file.path(Dir, fls[grep("Chist", fls)]), header=FALSE))
+  
+  OM <- new("OM", Stock, Fleet, Obs, Imp)
+  temp <- StochasticSRA(OM, CAA, Chist, ploty=FALSE, burnin=burnin, nsim=nsim, nits=nits)
+  
+  Name <- paste0(Stock@Name, Fleet@Name, "_OM")
+  Name <- gsub('([[:punct:]])|\\s+','_',Name)
+  assign(Name, temp)
+  path <- file.path(dataDir, paste0(Name, ".RData"))
+  message("\nSaving ", paste(Name, collapse = ", "), 
+          " as ", paste(basename(path), collapse = ", "), " to ", dataDir, "\n")	 
+  save(list=Name, file = path, compress = "bzip2")
+     
+  # Write roxygen 
+  chk <- file.exists(file.path(pkgpath, 'R/', fileName))
+  if(!chk) file.create(file.path(pkgpath, 'R/', fileName)) # make empty file 
+  clss <- class(temp)
+     cat("#'  ", Name, " ", clss,
+         "\n#'", 
+         "\n#'  An object of class ", clss, " (built using StochasticSRA)",
+   	    "\n#'  ", temp@Source,
+		"\n#' \n",
+   	    '"', Name, '"\n\n\n', sep="", append=TRUE, 
+   	    file=file.path(pkgpath, 'R/', fileName)) 
+		
+  rm(temp)	
+}
+
