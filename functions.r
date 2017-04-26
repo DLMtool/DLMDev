@@ -149,7 +149,7 @@ createMSEObject <- function(ObjectClass="MSE", fileName="dataObjects.r") {
 createOM2 <- function(Stock, Fleet=Generic_fleet, Obs=Generic_obs, Imp=Perfect_Imp, Name="OM", Source=NULL, fileName="dataObjects.r") {
   OM <- new("OM", Stock, Fleet, Obs, Imp)
   if (!is.null(Source)) OM@Source <- Source
-  Name <- paste0(Stock@Name, "_", Fleet@Name, "_", Name)
+  Name <- paste0(Stock@Name, "_", Name)
   Name <- gsub('([[:punct:]])|\\s+','_',Name)
   assign(Name, OM)
   path <- file.path(dataDir, paste0(Name, ".RData"))
@@ -208,7 +208,7 @@ createOM_SRA <- function(Dir, Imp=Perfect_Imp, nsim=nsim, nits=800, burnin=500, 
   OM <- new("OM", Stock, Fleet, Obs, Imp)
   temp <- StochasticSRA(OM, CAA, Chist, ploty=FALSE, burnin=burnin, nsim=nsim, nits=nits)
   
-  Name <- paste0(Stock@Name, Fleet@Name, "_OM")
+  Name <- paste0(Stock@Name, "_OM")
   Name <- gsub('([[:punct:]])|\\s+','_',Name)
   assign(Name, temp)
   path <- file.path(dataDir, paste0(Name, ".RData"))
