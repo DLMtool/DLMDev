@@ -107,8 +107,8 @@ MyObs = Generic_obs
   MyObs@ Brefcv    = c(0.5)            # guess
 
 
-Swordfish_North_Atlantic_ICCAT <- new("OM", MyStock, MyFleet, MyObs, Perfect_Imp)
-Swordfish_North_Atlantic_ICCAT<-ForceCor(Swordfish_North_Atlantic_ICCAT)
-Swordfish_North_Atlantic_ICCAT@Source<- "Author: Alex Hanke (DFO)  Assessment: http://iccat.org/Documents/SCRS/Manual/CH2/2_1_9_SWO_ENG.pdf"
+OM <- new("OM", MyStock, MyFleet, MyObs, Perfect_Imp)
+OM<-ForceCor(OM)
+OM@Source<- "Author: Alex Hanke (DFO)  Assessment: http://iccat.org/Documents/SCRS/Manual/CH2/2_1_9_SWO_ENG.pdf"
             
 
