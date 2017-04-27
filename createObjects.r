@@ -3,7 +3,9 @@
 # Run this code to write files to DLMtool/data and create the 
 # help manual files 
 
-# Set to root directory for DLMtool and DLMDev 
+# Setup ----
+
+# Set root directory 
 localDir <- "C:/Users/Adrian/Documents/GitHub" 
 
 library(DLMtool)
@@ -24,23 +26,28 @@ file.create(file.path(pkgpath, 'R/', fileName)) # make empty file
 
 cat("# This file is automatically built by createObjects.r in DLMDev\n",
     "# Don't edit by hand!\n", 
-	"# \n\n", sep="", append=TRUE, 
+	  "# \n\n", sep="", append=TRUE, 
     file=file.path(pkgpath, 'R/', fileName))  
 
-# Create Stock Objects 
+# ---- Create Objects from CSVs ----
+
+# Create Stock Objects
 createDataObjs("Stock")
 
-# Create Fleet Objects 
+# Create Fleet Objects
 createDataObjs("Fleet")
 
-# Create Obs Objects 
+# Create Obs Objects
 createDataObjs("Obs")
 
-# Create Feasibility 
+# Create Feasibility
 createDataObjs("Fease")
 
 # Create Data Objects 
 createDataObjs("Data")
+
+
+# ---- Create objects from Rdata files ---- 
 
 # Create Imp Objects 
 createIMObject()
@@ -48,7 +55,7 @@ createIMObject()
 # Create Operating Model Objects 
 createOMObject()
 
-# Build OMs from existing CSVs
+# ---- Build OMs from existing CSVs ----
 
 # GOM Stocks and Fleets 
 stocks <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/GOM/Stock"))
@@ -103,7 +110,7 @@ for (X in seq_along(stocks)) {
 }
 
 
-# Build OMs from SS 
+# ---- Build OMs from SS ----
 
 # SEDAR 31
 stocks <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/SS/SEDAR 31"))
@@ -115,7 +122,7 @@ for (x in seq_along(stocks))
   createOM_SS(file.path(devpath, "OperatingModels/OMsToBuild/SS/SEDAR 31", stocks[x]), stocks[x], Source, nsim=nsim)
 
 
-# Build OMs from StochasticSRA 
+# ---- Build OMs from StochasticSRA ----
 
 # BC 
 stocks <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/StochasticSRA/BC"))
@@ -127,8 +134,63 @@ for (x in seq_along(stocks))
   createOM_SRA(file.path(devpath, "OperatingModels/OMsToBuild/StochasticSRA/BC", stocks[x]), nsim=nsim)
 
 
+# ---- Build OMs from Scripts ----
+stocks <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/Scripts"))
 
-# Create MSE Objects 
+for (x in seq_along(stocks)) {
+  source(file.path(file.path(devpath, "OperatingModels/OMsToBuild/Scripts"), stocks[x], "Script.R"))
+  Name <- strsplit(strsplit(OM@Name, ":")[[1]][2], "Fleet")[[1]]
+  Name <- paste0(gsub('([[:punct:]])|\\s+','_',Name), "OM")
+  assign(Name, OM)
+  path <- file.path(dataDir, paste0(Name, ".RData"))
+  message("\nSaving ", paste(Name, collapse = ", "), 
+          " as ", paste(basename(path), collapse = ", "), " to ", dataDir, "\n")	 
+  save(list=Name, file = path, compress = "bzip2")
+  
+  # Write roxygen 
+  chk <- file.exists(file.path(pkgpath, 'R/', fileName))
+  if(!chk) file.create(file.path(pkgpath, 'R/', fileName)) # make empty file 
+  clss <- class(OM)
+  cat("#'  ", Name, " ", clss,
+      "\n#'", 
+      "\n#'  An object of class ", clss,
+      "\n#'  ", OM@Source,
+      "\n#' \n",
+      '"', Name, '"\n\n\n', sep="", append=TRUE, 
+      file=file.path(pkgpath, 'R/', fileName))   
+}
+  
+# ---- Build OMs from iSCAM ----
+stocks <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/iSCAM"))
+
+for (x in seq_along(stocks)) {
+  dir <- file.path(file.path(devpath, "OperatingModels/OMsToBuild/iSCAM"), stocks[x])
+  Name <- stocks[x]
+  temp <- iSCAM2DLM(dir, nsim=100)
+  Name <- paste0(stocks[x], "_iSCAM")
+  
+  assign(Name, temp)
+  path <- file.path(dataDir, paste0(Name, ".RData"))
+  message("\nSaving ", paste(Name, collapse = ", "), 
+          " as ", paste(basename(path), collapse = ", "), " to ", dataDir, "\n")	 
+  save(list=Name, file = path, compress = "bzip2")
+  
+  # Write roxygen 
+  chk <- file.exists(file.path(pkgpath, 'R/', fileName))
+  if(!chk) file.create(file.path(pkgpath, 'R/', fileName)) # make empty file 
+  clss <- class(temp)
+  cat("#'  ", Name, " ", clss,
+      "\n#'", 
+      "\n#'  An object of class ", clss, " (built using iSCAM2DLM)",
+      "\n#'  ", temp@Source,
+      "\n#' \n",
+      '"', Name, '"\n\n\n', sep="", append=TRUE, 
+      file=file.path(pkgpath, 'R/', fileName))   
+  rm(temp)
+}
+
+
+
+
+# ---- Create MSE Objects ----
 createMSEObject()
-
-
