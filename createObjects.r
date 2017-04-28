@@ -190,7 +190,16 @@ for (x in seq_along(stocks)) {
 }
 
 
-
-
 # ---- Create MSE Objects ----
 createMSEObject()
+
+
+# ---- Create Test MSE for dev purposes only ----
+
+setup()
+testOM@nsim <- 200
+st <- Sys.time()
+BigMSE <- runMSE(testOM, MPs=c(avail("Output"), avail("Input")))
+save(BigMSE, file=file.path(devpath, "BigMSE.RData"))
+elapse <- Sys.time() - st 
+elapse
