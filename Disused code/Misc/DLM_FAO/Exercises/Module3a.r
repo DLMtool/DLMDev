@@ -1,7 +1,7 @@
 
-# ====================================================================================
-# === DLMtool Exercise 3a: Modifying operating models  ===============================
-# ====================================================================================
+# =====================================================================================
+# === DLMtool Exercise 3a: Modifying operating models  ================================
+# =====================================================================================
 # 
 # The operating models of DLMtool now include a rather large number of slots.  
 # These control the various aspects of the simulations and can be modified to
@@ -12,14 +12,14 @@
 
 
 
-# === Setup (only required if new R session) ====================================
+# === Setup (only required if new R session) =====================================
 
 library(DLMtool)  
 setup()
 
 
 
-# === Task 1: Loading objects from .csv files ===================================
+# === Task 1: Loading objects from .csv files ====================================
 #
 # One of the most tractable and easy-to-understand ways of populating 
 # operating models is to load the Stock, Fleet, Obs and Imp objects from 
@@ -72,144 +72,130 @@ Longline<-new('Fleet',"C:/DLM_FAO/Data/csvs/Longline.csv")
 Overages<-new('Imp',"C:/DLM_FAO/Data/csvs/Overages.csv")
 
 
-# === Task 1: Modify exisiting objects ==========================================
+
+# === Task 2: Modify existing objects ============================================
 #
-# Probably the most common way of specifying a DLMtool operating model is to
-# copy an existing object and change various aspects of it. This ensures that
-# there is a default entry for all required slots and that preliminary MSEs
-# can therefore be run. 
+# Probably the most commonly used approach to specifying DLMtool operating 
+# models is to copy an existing object and change various aspects of it. 
+# This ensures that there is a default entry for all required slots and that
+# preliminary MSEs can therefore be run. 
 #
-# First, create a new operating model with default settings using some other
-# Stock, Fleet, Observation objects:
+# First, as a reference, create a new operating model with default settings 
+# using Stock, Fleet, Obs and Imp objects:
 
-myOM2 <- new("OM", Mackerel, FlatE_HDom, Imprecise_Unbiased, Perfect_Imp)
+myOM1 <- new("OM", Mackerel, FlatE_HDom, Imprecise_Unbiased, Perfect_Imp)
 
-# now run the MSE and store the results in an object MSE1
+# Run the MSE and store the results in an object MSE1:
 
-MSE1 <- runMSE(myOM2)
+MSE1 <- runMSE(myOM1)
 
 # Now, for each of these objects, copy them and change some of their 
 # attributes:
 
-Mack2 <- Mackerel  # create a copy of Mackerel stock 
+Mack2 <- Mackerel  
 
 # Change the name of the Mackerel 
 
-Mack2@Name <- "MackerelMod" # Change the name of the stock 
+Mack2@Name <- "MackerelMod"  # Change the name of the stock 
+Mack2@M <- c(0.2, 0.35)      # Higher natural mortality 
+Mack2@D <- c(0.05, 0.3)      # More uncertaint level of current stock depletion 
 
-Mack2@M <- c(0.2, 0.35) # Change bounds of natural mortality 
+# Now do the same with the 'Flat trend in effort - heavy dome-
+# shaped selectivity' fleet type FlatE_HDom:
 
-Mack2@D <- c(0.05, 0.3) # Change current level of depletion 
+Fleet2 <- FlatE_HDom 
+Fleet2@Name <- "Modified_Fleet" 
+Fleet2@nyears <- 80          # Increase the number of historical fishery years
+Fleet2@Esd <- c(0.1, 0.2)    # Less inter-annual variability in fishing effort
+Fleet2@Vmaxlen <- c(0.7, 1)  # Increase vulnerability of large-sized individuals
 
+# Using the plot command, compare the original and modified Objects:
 
-## Task 3: Modify the Fleet Object by copying and modifying the built-in ####
-# Fleet object 
-
-MyFleet <- FlatE_HDom # copy the FlatE_HDom fleet object 
-
-MyFleet@Name <- "Modified_Fleet" # Change the name 
-
-MyFleet@nyears <- 80 # Increase the number of historical years
-
-MyFleet@Esd <- c(0.2, 0.35) # Modify the bounds on inter-annual variability in fishing effort
-
-MyFleet@Vmaxlen <- c(0.7, 1) # Increase vulnerability of large-sized individuals
-
-## Task 4: Compare the original and modified Stock and Fleet Objects ####
 plot(Mackerel, incVB=FALSE) 
 plot(Mack2, incVB=FALSE)
 
 plot(FlatE_HDom, Mackerel)
-plot(MyFleet, Mack2)
+plot(Fleet2, Mack2)
 
-## Task 5: Run another MSE with the newly created Stock and Fleet Objects ####
-# (same Observation and Implementation)
-myOM3 <- new("OM", Mack2, MyFleet, Imprecise_Unbiased, Perfect_Imp)
-MSE3 <- runMSE(myOM3)
+# Create a new operating model from the modified Stock and fleet objects and 
+# rerun the MSE storing the new MSE outputs in an object MSE2:
 
-## Task 6: Compare the two MSEs using the plotting functions ####
-# e.g.,
-Tplot(MSE2)
-Tplot(MSE3)
-
-# Explore and compare MSEs using other plotting functions 
-plotFun()
-
-# Questions:
-# a) How does the performance of the MPs differ between the two MSEs?
-# b) What is driving this difference in performance for the MPs?
+myOM2 <- new("OM", Mack2, Fleet2, Imprecise_Unbiased, Perfect_Imp)
+MSE2 <- runMSE(myOM2)
 
 
 
-# Optional extras #####
+# === Task 3 Compare MSE results for the default and modified operating models ====
+#
+# Now that two MSEs have been run it is instructive to compare results.
+#
+# Looking at the help documentation for NOAA_plot:
 
-## Task 7: Modify the Observation object using the same method as above and ####
-# compare the performance of different MPs 
+?NOAA_plot
 
-# Steps: 
-# a) Modify Obs object
-myObs <- Imprecise_Unbiased
+# We can see an argument 'panel' which allows us to make plots in sequence
+#
+# That means that we can create a four panel plot (2 x 2) and visualize the 
+# results of the two MSEs together
 
-# b) Create OM 
-# c) Run MSE 
-# d) Plot MSE results and compare with other MSE results 
-
-# Questions:
-# a) Which MPs benefit the most from better data?
-
-
-## More Advanced ####
-
-## Task 8: Use the 'ChooseEffort' function to sketch out bounds on trends in ####
-# historical fishing effort 
-
-MyFleet <- ChooseEffort(MyFleet)
-
-# Note that the bounds on historical effort have now changed in the Fleet object 
-MyFleet@EffLower
-MyFleet@EffUpper
-
-plot(MyFleet, Mack2)
+par(mfrow=c(2,2))
+NOAA_plot(MSE1,panel=F)
+mtext('Top row of panels is MSE1',3,outer=T,line=-1.5)
+NOAA_plot(MSE2,panel=F)
+mtext('Bottom row of panels is MSE2',1,outer=T,line=-1.5)
 
 
-## Task 9: Use the 'ChooseSelect' function to specify historical changes in ####
-# selectivity
-MyFleet <- ChooseSelect(MyFleet, Mack2)
-
-# Note that the selectivity parameters have now changed in the Fleet object 
-
-MyFleet@L5Lower
-MyFleet@L5Upper 
-MyFleet@LFSLower
-MyFleet@LFSUpper
-MyFleet@SelYears 
-MyFleet@AbsSelYears
-
-plot(MyFleet, Mack2)
-
-
-## Most Advanced ####
-
-# Task 10: Create a Stock object with cyclical recruitment patterns (see DLMtool documentation) ####
-# and plot the Stock object to show sampled recruitment deviations
-
-# Questions:
-# a) Do phase shifts in recruitment impact the performance of the MPs similarly?
-
-# b) 
+# Q3.1  How does absolute performance of the MPs differ between the two MSEs?
+#
+# Q3.2  How does the pattern in MP performance vary among the two MSEs?
+#
+# Q3.3  Are any MPs 'dominated' with respect to all metrics and can therefore
+#       be discarded?
+#
+# Q3.4  What are the prevalent trade-offs - what compromises are managers
+#       facing?
 
 
 
+# === Optional tasks ============================================================
 
-# ADVANCED
+# Task 7: Modify the Perfect_Info observation error model to have 
+# potentially high biases in reported catches. Similarly to above
+# run a comparative MSE. 
+#
+# Q7  Which MPs are most affected by increasing biases in reported
+#     catches?
 
-## Create a new implementaiton error object and add catch overages, compare results for testOM
- # which MPs are affected the most strongly
 
-## It is possible to prescribe operating model conditions that are not biologically possible. Find a way to break runMSE()
+# Task 8: Run two comparative MSEs for 2 observation error models,
+# Imprecise_Biased and Precise_Unbiased. 
+#
+# Q8.1  What is the potential value of better quality data for the 
+#       various MPs?
+#
+# Q8.2  Has data quality affected all MPs equally?
 
 
+# Task 9: Create a new implementation error object and add catch
+# overages. Compare MSE results for an operating model with 
+# perfect implementation error. 
 
+
+# === Advanced tasks ===========================================================
+
+# Task 10: It is possible to prescribe operating model conditions 
+# (historical simulation conditions) that are not possible. Find 
+# a way to break runMSE()
+
+
+# Task 11: Find out which operating model parameter is most 
+# influential in determining the performance of all of the 
+# MPs in the toolkit
+
+
+# ==================================================================================
+# === End of Exercise 3a ===========================================================
+# ==================================================================================
 
 
 

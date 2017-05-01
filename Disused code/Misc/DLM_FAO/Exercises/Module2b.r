@@ -177,10 +177,13 @@ NOAA_plot(myMSE)
 #
 # Probability of not overfishing (PNOF): the fraction of simulations where
 #                                       F < FMSY
+#
 # Long term yield (LTY): the fraction of simulations obtaining more than
 #                        50% of FMSY yield
+#
 # Probability of biomass over half BMSY: fraction of simulation where 
 #                                       B > BMSY
+#
 # Probility Average Annual Variability in Yield (AAVY) was less than 15%
 
 

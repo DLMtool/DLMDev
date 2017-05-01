@@ -14,3 +14,18 @@ setup()
 ## More Advanced ####
 
 ## Most Advanced ####
+
+
+
+
+## Most Advanced ####
+
+# Task 10: Create a Stock object with cyclical recruitment patterns (see DLMtool documentation) ####
+# and plot the Stock object to show sampled recruitment deviations
+
+# Questions:
+# a) Do phase shifts in recruitment impact the performance of the MPs similarly?
+
+# b) 
+
+
