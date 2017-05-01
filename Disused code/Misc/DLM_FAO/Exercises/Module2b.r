@@ -1,5 +1,4 @@
 
-
 # ====================================================================================
 # === DLMtool Exercise 2b: A basic DLMtool run =======================================
 # ====================================================================================
@@ -21,6 +20,13 @@
 #
 # In this practical you construct an operating model by combining premade 
 # Stock, Fleet, Observation and Implementation objects. 
+
+
+
+# === Setup (only required if new R session) ====================================
+
+library(DLMtool)  
+setup()
 
 
 

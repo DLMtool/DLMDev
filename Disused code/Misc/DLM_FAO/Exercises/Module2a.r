@@ -116,13 +116,13 @@ setup()
 # operating model object for testing this called 'testOM'. You can test the 
 # MSE functionality using the runMSE function:
 
-test<-runMSE(testOM)
+test<-runMSE()
 
 # This should initiate a set of processing steps ending with the line
 # "5/5 Running MSE for matlenlim".
 
 # If you see this output you have successfully installed DLMtool and 
-# are ready to run the other practicals in this series. Well done!
+# are ready to run the other practicals in this series. 
 
 
 
