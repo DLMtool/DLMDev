@@ -1,3 +1,4 @@
+
 # ====================================================================================
 # === DLMtool Exercise 2a: R script for installation and validating installation  ====
 # ====================================================================================
@@ -24,6 +25,7 @@
 # Choose to install with default options.
 
 
+
 # === Task 2: install RStudio ==================================================
 # 
 # To use R functions (like those included in DLMtool), you are going to be
@@ -37,6 +39,7 @@
 #   https://download1.rstudio.org/RStudio-1.0.143.exe
 
 # Choose to install with the default options. 
+
 
 
 # === Task 3: Installing DLMtool from CRAN =====================================
@@ -55,6 +58,7 @@ install.packages("DLMtool")
 # repeat this step to download the latest version.
 
 
+
 # === Task 4: Loading the package ===============================================
 #
 # Load the DLMtool package into the R session using the code shown in Lecture
@@ -62,6 +66,7 @@ install.packages("DLMtool")
 # packages have also been loaded.
 
 library("DLMtool")
+
 
 
 # === Task 5: Validating the installation =======================================
@@ -85,6 +90,7 @@ Albacore
 # Repeat the steps above, and if it still doesn't work, ask for help! 
 
 
+
 # === Task 6: Set up parallel processing ========================================
 #
 # A lot of DLMtool functionality is computationally intensive. DLMtool is 
@@ -100,6 +106,7 @@ setup()
 
 # A message should alert you that snowfall has initialized parallel execution
 # on a number of CPUs. You are now ready to start using DLMtool.
+
 
 
 # === Task 7: Do a comprehensive test of DLMtool functionality ==================
@@ -120,7 +127,6 @@ test<-runMSE(testOM)
 
 
 # ==================================================================================
-# === End of Exercise ==============================================================
+# === End of Exercise 2a ===========================================================
 # ==================================================================================
-
 
