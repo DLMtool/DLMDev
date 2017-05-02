@@ -117,9 +117,9 @@ hist(DCAC(x=1,Data,reps=1000),xlab="TAC",ylab="Rel. Freq",col="blue")
 # We've now got a better idea of the anatomy of an MP. It is a function 
 # that must accept three arguments:
 # 
-# x: a simulation number 
-# Data: an object of class 'Data' 
-# reps: the MP can provide a sample of TACs 'reps' long. 
+#  x: a simulation number 
+#  Data: an object of class 'Data' 
+#  reps: the MP can provide a sample of TACs 'reps' long. 
 #
 # Lets have a go at designing our own custom MP that can work with 
 # DLMtool. We're going to try a '3rd highest catch' MP which was for
@@ -212,19 +212,20 @@ sfExport("THC")
 TCPUE<-function(x,Data,reps){
   
   mc<-0.05                             # max change in TAC 
+  frac<-0.3                            # target index is 30% of max
   nyears<-length(Data@Ind[x,])         # number of years of data
   
   smoothI<-smooth.spline(Data@Ind[x,]) # smoothed index  
-  targetI<-max(smoothI$y)*0.3          # target is 30% of max
+  targetI<-max(smoothI$y)*frac         # target 
   
   currentI<-mean(Data@Ind[x,(nyears-2):nyears]) # current index
   
   ratio<-currentI/targetI              # ratio currentI/targetI
   
-  if(ratio < (1 - mc)) deltaI <- 1 - mc # if currentI < targetI
-  if(ratio > (1 + mc)) deltaI <- 1 + mc # if currentI > targetI
+  if(ratio < (1 - mc)) ratio <- 1 - mc # if currentI < targetI
+  if(ratio > (1 + mc)) ratio <- 1 + mc # if currentI > targetI
  
-  TAC <- Data@MPrec[x] * deltaI * 
+  TAC <- Data@MPrec[x] * ratio * 
          trlnorm(reps, 1, Data@CV_Ind[x])
 
 }
@@ -258,17 +259,25 @@ sfExport("TCPUE")
 #         and find out which most strongly determine TCPUE performance. 
 
 # Task 5: Make a version of TCPUE that allows for greater change in TACs
-#         among recommendations (the mc variable).
+#         among recommendations (the mc parameter).
 #
 #         How does the level of mc affect performance?
      
+# Task 6: Make a version of TCPUE that aims for a different fraction of 
+#         maximum index (frac parameter).
+#
+#         How does the level of frac affect performance?
+
 
 
 # === Advanced Tasks ====================================================
 
-# Task 6: Design an MP that makes a TAC recommendation that is the 
+# Task 7: Design an MP that makes a TAC recommendation that is the 
 #         average of the TACs of other MPs.
 
+# Task 8: Wrap runMSE() in an optimizer and find the 'best' values of
+#         frac and mc for a given operating model and performance
+#         metric.
 
 
 # ==================================================================================
