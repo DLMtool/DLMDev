@@ -124,14 +124,14 @@ for (x in seq_along(stocks))
 
 # ---- Build OMs from StochasticSRA ----
 
-# BC 
-stocks <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/StochasticSRA/BC"))
-
-Dir <- file.path(devpath, "OperatingModels/OMsToBuild/StochasticSRA/BC", stocks[1])
-setup()
-nsim <- 100 
-for (x in seq_along(stocks))  
-  createOM_SRA(file.path(devpath, "OperatingModels/OMsToBuild/StochasticSRA/BC", stocks[x]), nsim=nsim)
+# # BC 
+# stocks <- list.files(file.path(devpath, "OperatingModels/OMsToBuild/StochasticSRA/BC"))
+# 
+# Dir <- file.path(devpath, "OperatingModels/OMsToBuild/StochasticSRA/BC", stocks[1])
+# setup()
+# nsim <- 100 
+# for (x in seq_along(stocks))  
+#   createOM_SRA(file.path(devpath, "OperatingModels/OMsToBuild/StochasticSRA/BC", stocks[x]), nsim=nsim)
 
 
 # ---- Build OMs from Scripts ----
@@ -191,15 +191,15 @@ for (x in seq_along(stocks)) {
 
 
 # ---- Create MSE Objects ----
-createMSEObject()
+# createMSEObject()
 
 
 # ---- Create Test MSE for dev purposes only ----
 
-setup()
-testOM@nsim <- 200
-st <- Sys.time()
-BigMSE <- runMSE(testOM, MPs=c(avail("Output"), avail("Input")))
-save(BigMSE, file=file.path(devpath, "BigMSE.RData"))
-elapse <- Sys.time() - st 
-elapse
+# setup()
+# testOM@nsim <- 200
+# st <- Sys.time()
+# BigMSE <- runMSE(testOM, MPs=c(avail("Output"), avail("Input")))
+# save(BigMSE, file=file.path(devpath, "BigMSE.RData"))
+# elapse <- Sys.time() - st 
+# elapse

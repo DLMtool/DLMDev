@@ -81,26 +81,26 @@ createOMObject <- function(ObjectClass="OM", fileName="dataObjects.r") {
 
 createIMObject <- function(ObjectClass="Imp", fileName="dataObjects.r") {
   # Create a test IM object 
-  temp <- new("Imp")
-  save(temp, file=file.path(devpath, "OperatingModels", ObjectClass, "Perfect_Imp.RData"))
-
-  fls <- list.files(file.path(devpath, "OperatingModels/", ObjectClass))
-  for (X in seq_along(fls)) {
-    if (grepl("Rdata", fls[X])) name <- unlist(strsplit(fls[X], ".Rdata"))
-    if (grepl("RData", fls[X])) name <- unlist(strsplit(fls[X], ".RData"))
-    tt <- load(file.path(devpath, "OperatingModels/", ObjectClass, fls[X]))
-	  temp <- get(tt)
-    assign(name, temp)
+  Perfect_Imp <- new("Imp")
+  save(Perfect_Imp, file=file.path(devpath, "OperatingModels", ObjectClass, "Perfect_Imp.RData"))
+  name <- "Perfect_Imp"
+#   fls <- list.files(file.path(devpath, "OperatingModels/", ObjectClass))
+#   for (X in seq_along(fls)) {
+#     if (grepl("Rdata", fls[X])) name <- unlist(strsplit(fls[X], ".Rdata"))
+#     if (grepl("RData", fls[X])) name <- unlist(strsplit(fls[X], ".RData"))
+#     tt <- load(file.path(devpath, "OperatingModels/", ObjectClass, fls[X]))
+# 	  temp <- get(tt)
+#     assign(name, temp)
     path <- file.path(dataDir, paste0(name, ".RData"))
-    message("Saving ", paste(name, collapse = ", "), 
-          " as ", paste(basename(path), collapse = ", "), " to ", 
-          dataDir)	 
+    message("Saving ", paste(name, collapse = ", "),
+          " as ", paste(basename(path), collapse = ", "), " to ",
+          dataDir)
     save(list=name, file = path, compress = "bzip2")
-    
+#     
 	# Write roxygen 
 	chk <- file.exists(file.path(pkgpath, 'R/', fileName))
 	if(!chk) file.create(file.path(pkgpath, 'R/', fileName)) # make empty file 
-	clss <- class(temp)
+	clss <- "Imp"
   cat("#'  ", name, " ", clss, 
       "\n#'", 
       "\n#'  An object of class ", clss, 
@@ -108,8 +108,8 @@ createIMObject <- function(ObjectClass="Imp", fileName="dataObjects.r") {
       '"', name, '"\n\n\n', sep="", append=TRUE, 
       file=file.path(pkgpath, 'R/', fileName))  
     
-    rm(temp)
-  }
+    # rm(temp)
+  # }
 }
 
 createMSEObject <- function(ObjectClass="MSE", fileName="dataObjects.r") {
