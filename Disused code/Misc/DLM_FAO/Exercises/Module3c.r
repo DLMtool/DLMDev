@@ -11,10 +11,10 @@
 #
 # In this exercise you will find out more about where data are stored in 
 # MSE objects which allows you to design your own performance metrics and
-# conducts your own evalaution of simulation conditions.
+# conduct your own evalution of simulation conditions.
 #
-# Since we are dealing with R objects, data, arrays and such this will be 
-# one of the more 'programmy' of the exercises. Sorry! Whats important
+# Since we are dealing with R objects, data, arrays and such, this will be 
+# one of the more 'programmy' of the exercises. Sorry! What's important
 # however is that you know that these outputs exist, that they can be
 # accessed and that you can come up with your own ways to interpret them.
 
@@ -50,112 +50,171 @@ class?MSE
 
 slotNames(SWO)
 
+# For example we can see that the MSE was run for 5 MPs
+
+SWO@nMPs
+
+# For a total of 50 projected years:
+
+SWO@proyears
+
+# and 48 simulations
+
+SWO@nsim
+
 # Two of the slots in an MSE object are tables containing the sampled
 # observation error variables (biases, error in data) and the simulated 
 # conditions of the operating models. You can get a glance at each of 
 # these using the function head():
 
-head(YFT@Obs)
-head(YFT@OM)
+head(SWO@Obs)
+head(SWO@OM)
+
+# Let say you wanted to see what the distribution of sampled stock
+# depletion levels (SSB today relative to SSB unfished) for the SWO 
+# operating model looks like, you could use the R histogram function:
+
+hist(SWO@OM$Depletion, col='blue')
+
+# Here we can see the 48 simulations distributed between 30% and
+# 65% of unfished spawning biomass (SSB0)
+#
+# Various time series data are also included in the MSE which are 
+# specific to simulation, the MP that was used and the projected
+# year. 
+#
+# For example the slot B_BMSY is the biomass relative to BMSY
+# over the projection. If you wanted to plot this for a particular
+# MP, say DCAC, you would first locate the MP number. The MSE
+# object contains a record of the MPs that were run in the slot
+# MPs:
+
+SWO@MPs
+
+# Here we can see that DCAC is the second MP of the 5 that were 
+# run.
+# 
+# Looking at the help documentation we can see that the B_BMSY
+# data are organised in order of simulation, MP and projected
+# year. 
+# 
+# This is confirmed by checking the dimensions of the B_BMSY
+# array:
+
+dim(OM@B_BMSY)
+
+# We can now extract the B/BMSY data for our particular MP
+# DCAC (MP 2 of 5) and plot the trajectories:
+
+DCAC_biomass<-SWO@B_BMSY[,2,]
+
+DCAC_biomass<-t(DCAC_biomass) # transpose the matrix for plotting
+
+matplot(DCAC_biomass,type='l')
+
+# We can also superimpose a line representing the BMSY reference
+# level
+
+abline(h=1,col="#99999980",lwd=5,lty=2)
+
+# Hopefully these examples are helping to illustrate why R is
+# such a powerful environment for packaging something like
+# DLMtool - the potential for customization is endless. 
+
+
+# Q1.1  Try to produce a projection plot for F relative to FMSY
+#       for the MP 'matlenlim' 
 
 
 
-Lecture 3c: Custom performance analysis                                                                                                (~ 30 minutes)
--	Interpreting the data stored in the MSE object (MSE object structure)
--	Designing performance metrics
--	User plots
--	User value of information
--	Value of new data
+# === Task 2: Custom performance metrics ==================================
+# 
+# You may be irritated that so far your own idea of 'good 
+# performance' has not been reflected in any of the existing
+# MSE plots. 
+#
+# In this section we're going to interrogate the MSE object
+# to make your own performance metrics.
+# 
+# For the purposes of this example you care about not dropping 
+# below a depletion level of 80% BMSY and want high short-term
+# economic yields (over the next 5 years).
+#
+# We've already seen the B_BMSY slot, we now have to summarize
+# these data with respect to a reference level of 80%, 
+# calculating the fraction, by MP, that dropped below this
+# level. 
+#
+# Using the R function apply this is surprisingly easy:
+
+P80<-apply(SWO@B_BMSY<0.8,2,sum)/(SWO@nsim*SWO@proyears)
+
+# By MP (the second dimension of the B_BMSY array) we have 
+# summed the instances where B_BMSY was less than 80%
+# and divided them by the total number of simulations
+# and projected years. This returns the fraction (interpreted 
+# as a probability) of dropping below 80% of BMSY. 
+#
+# Since future catches are arranged in the same type of
+# array:
+
+dim(SWO@C)  # simulation x MP x projected year
+
+# we can apply a similar apply funciton to calculate mean 
+# expected yield over the first 5 years of the projection:
+
+MY5<-apply(SWO@C[,,1:5],2,mean)
+
+# The two custom performance metrics can now be plotted to 
+# reveal the trade-off among MPs:
+
+plot(P80,MY5,col='white',xlab="Prob. B < 0.8BMSY",
+                         ylab="Expected Yield 5yr")
+
+text(P80,MY5,SWO@MPs,col='blue')
+
+# Its not a particularly attractive plotbut it reveals a
+# clear trade-off between biological and economic metrics. 
+
+
+# Q2.1 Produce a trade-off plot that reflects long-term 
+#      economic interests (ie the last 5 years)
+#
+# Q2.2 How does the trade-off differ from the previous plot
+#      that showed short term economic interests?
+#
+# Q2.3 Can you explain this difference and what does this 
+#      mean in a hypothetical management situation?
 
 
 
-## Exercise 3c: Custom performance metrics (~ 30 minutes) ####
+# === Optional tasks ====================================================
 
-## Initial set-up (only required if new R session) ####
-library(DLMtool)  
-setup() 
+# Task 3: do your own VOI analysis. What observation parameters
+#         affected these new custom performance metrics?
 
-## Explore the MSE output using custom performance metrics ####
-
-## Task 1: Create a new operating model with 200 simulations ####
-OM <- new("OM", Albacore, Generic_fleet, Generic_obs, nsim=200)
-
-# Choose some MPs to test in the MSE 
-avail("Output") # list of built-in Output controls
-avail("Input")  # list of built-in Input controls 
-
-MPs <- c("AvC", "CC1", "DAAC", "DBSRA", "DD", "DCAC", "DepF", "DynF", "Fratio", "Islope1",
-         "Itarget1", "DTe50", "ITe10", "matlenlim")
-
-# Run the MSE 
-MSE <- runMSE(OM, MPs)
-
-slotNames(MSE) # Names of all the slots in the MSE object
-
-## Task 2: Calculate the probability of biomass in final projection year being below BMSY for each MP ####
-proyears <- MSE@proyears # number of projection years
-nsim <- MSE@nsim # save out number of simulations (was set when we created OM)
-B <- MSE@B_BMSY[,,proyears] # assign B/BMSY in final projection year to new variable 'B'
-Bsum <- apply(B < 1, 2, sum) # calculate number of simulations where B < BMSY in last year 
-pB <- Bsum/nsim * 100 # calculate proportion of simulations where B < BMSY and convert to percentage 
-
-data.frame(MPs= MPs, P=pB) # Display the results as a table 
-
-# Display projection plot and compare the results 
-Pplot(MSE) 
-
-# Note that we have only calculated the probability B<BMSY for the last projection year 
-
-
-## Task 3: Calculate the average relative long-term yield for each MP ####
-C <- MSE@C[,, (proyears-9):proyears] # write out catch for last 10 years of projection period
-
-# We need to make the yield (C - catch) relative to a reference yield - highest expected yield fishing at a constant F
-# Don't worry if the code looks confusing - this usually happens within the plotting or summary functions
-refY <- array(MSE@OM$RefY, dim=c(nsim, MSE@nMPs, 10))
-C <- C/refY # standardise catch 
-
-avC <- apply(C, 2, mean) * 100 # calculate average relative yield for each MP and convert to percentage
-avC <- round(avC, 2) # round to 2 places for convenience 
-
-data.frame(MPs= MPs, P=pB, C=avC) # Display the results as a table 
-
-# Tasks Below are Optional #####
-
-## More Advanced ####
-
-## Task 4: ####
-# Create a scatter plot of probability B<BMSY versus average long-term yield (both calculated above)
-# Label the points of the graph with the names of the MPs 
-
-# Tip: you can use the 'plot' and 'text' functions
-
-# Questions: 
-# a) What patterns are shown in the plot?
-# b) What are the implications for expected yield if there is a high probability that B<BMSY?  
-
-
-# Task 4: Copy and modify the code from Task 1 to calculate the probability that 
-#         the biomass in the final year is above 0.5BMSY and create summary plots 
-#         of the performance metrics 
+# Task 4: organize your new performance metrics in a table and
+#         save them to disk somewhere. See R help for two 
+#         functions: cbind() and write.csv(). 
 
 
 
-## Most Advanced Tasks ####
-## Task 5: Calculate the average length of the catch for each MP ####
+# === Advanced tasks ====================================================
 
-## Task 6: ####
-# Calculate the probability that F is greater than FMSY for each MP (in last projection year)
+# Task 5: reading the help documentation for VOI you realise that
+#         you can send custom performance metrics to the VOI
+#         function. Format your metrics correctly and use the 
+#         standard VOI funciton to reveal VOI and CCU.
 
-## Task 7: ####
-# Calculate average short-term yield (first 10 years) for each MP 
 
-## Task 8: #### 
-# Calculate the average inter-annual variability in yield for each MP 
+# Task 6: Calculate the average inter-annual variability in yield 
+#         for each MP 
 
-## Task 9: ####
-# Summarize all calculated performance metrics in a table, ordered by expected long-term yield 
 
+
+# ==================================================================================
+# === End of Exercise 3c ===========================================================
+# ==================================================================================
 
 
 
