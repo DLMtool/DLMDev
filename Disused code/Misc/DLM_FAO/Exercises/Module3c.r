@@ -1,3 +1,23 @@
+
+# =====================================================================================
+# === DLMtool Exercise 3c: Custom performance analysis ================================
+# =====================================================================================
+#
+# You 
+
+
+
+
+
+Lecture 3c: Custom performance analysis                                                                                                (~ 30 minutes)
+-	Interpreting the data stored in the MSE object (MSE object structure)
+-	Designing performance metrics
+-	User plots
+-	User value of information
+-	Value of new data
+
+
+
 ## Exercise 3c: Custom performance metrics (~ 30 minutes) ####
 
 ## Initial set-up (only required if new R session) ####
