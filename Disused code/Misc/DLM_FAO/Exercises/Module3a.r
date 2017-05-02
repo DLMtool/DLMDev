@@ -142,7 +142,7 @@ par(mfrow=c(2,2))
 NOAA_plot(MSE1,panel=F)
 mtext('Top row of panels is MSE1',3,outer=T,line=-1.5)
 NOAA_plot(MSE2,panel=F)
-mtext('Bottom row of panels is MSE2',1,outer=T,line=-1.5)
+mtext('Bottom row of panels is MSE2',1,outer=T,line=-1)
 
 
 # Q3.1  How does absolute performance of the MPs differ between the two MSEs?
