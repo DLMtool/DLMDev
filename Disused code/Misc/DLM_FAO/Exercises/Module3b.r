@@ -80,13 +80,13 @@ NOAA_plot(MSE3)
 # convergence in performance.
 # 
 # DLMtool contains functions for checking convergence of MSE 
-# performance metrics. Here you use the function CheckConverge()
+# performance metrics. Here you use the function Converge()
 # to see whether typical performance metrics have stabilized with
 # additional simlulations:
 
-CheckConverge(MSE3)
+Converge(MSE3)
 
-# CheckConverge either produces 1 or 2 plots. Each has 5 panels that
+# Converge either produces 1 or 2 plots. Each has 5 panels that
 # are some typical performance metrics.
 #
 # The first plot shows the mean performance of all MPs as simulations
@@ -126,7 +126,7 @@ testOM@seed<-2
 
 MSE4<-runMSE(testOM,MPs=myMPs)
 
-CheckConverg(MSE4)
+Converge(MSE4)
 
 # Now the x-axis runs to 100 and all MPs are deemed to have converged.
 #
@@ -135,14 +135,14 @@ CheckConverg(MSE4)
 
 MSE5<-joinMSE(list(MSE3,MSE4))
 
-CheckConverg(MSE5)
+Converge(MSE5)
 
 
 #  Q2.1  Given that convergence never occurs exactly, what threshold
 #        would be sufficient in your applications and why? 
 #
 #  Q2.2  Can you think of a more principled test of convergence than
-#        the 'within 2%' criteria of CheckConverg()?
+#        the 'within 2%' criteria of Converge()?
 
 
 
