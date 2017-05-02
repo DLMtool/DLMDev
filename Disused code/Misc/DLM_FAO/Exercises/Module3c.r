@@ -3,9 +3,60 @@
 # === DLMtool Exercise 3c: Custom performance analysis ================================
 # =====================================================================================
 #
-# You 
+# In the previous exercises you have used the runMSE() to conduct an MSE and 
+# have stored your MSE runs in a series of objects (MSE1, MSE2, MSE3...). 
+# 
+# Using plotting techniques you have been able to vizualise the data stored in
+# these MSE objects. 
+#
+# In this exercise you will find out more about where data are stored in 
+# MSE objects which allows you to design your own performance metrics and
+# conducts your own evalaution of simulation conditions.
+#
+# Since we are dealing with R objects, data, arrays and such this will be 
+# one of the more 'programmy' of the exercises. Sorry! Whats important
+# however is that you know that these outputs exist, that they can be
+# accessed and that you can come up with your own ways to interpret them.
 
 
+
+# === Setup (only required if new R session) =====================================
+
+library(DLMtool)  
+setup()
+
+
+
+# === Task 1: Finding MSE data in an MSE object ==================================
+# 
+# First, lets create an example MSE object so that we can see what the
+# MSE data look like.For a change, rather than build an operating model 
+# from the component Stock, Fleet, Obs and Imp objects we are going to 
+# search for a pre-built operating model (class OM).
+
+avail('OM')
+
+# Lets run an MSE for the default MPs using the Yellowfin tuna operating
+# model:
+
+SWO<-runMSE(Swordfish_OM)
+
+# Similarly to other DLMtool objects you can find out more about MSE 
+# objects like SWO using the built-in help documentation:
+
+class?MSE
+
+# Alternatively you can see a concise summary of names using:
+
+slotNames(SWO)
+
+# Two of the slots in an MSE object are tables containing the sampled
+# observation error variables (biases, error in data) and the simulated 
+# conditions of the operating models. You can get a glance at each of 
+# these using the function head():
+
+head(YFT@Obs)
+head(YFT@OM)
 
 
 

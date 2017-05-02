@@ -3,8 +3,8 @@
 # === DLMtool Exercise 3b: Selecting MPs and other MSE outputs ========================
 # =====================================================================================
 #
-# So far every MSE we have undertaken has used the default Management Procedures.
-# There are 5 of these and they are:
+# So far, every MSE we have undertaken has used the default Management Procedures.
+# There are 5 default MPs and they are:
 #
 # AvC: TAC set to average historical catches
 # DCAC: TAC set to Depletion-Corrected Average Catch (MacCall 2009)
@@ -14,6 +14,7 @@
 #
 # Close to 100 MPs are included in the current version of DLMtool. These include
 # output (TAC) control MPs and input control MPs (effort, spatial and size limit)
+# 
 # In the first half of this set of exercises we will select a greater range of
 # MPs for MSE testing. In the second half of these exercises will we learn how
 # to check for convergence in the performance of these MPs and how to diagnose
@@ -85,16 +86,18 @@ NOAA_plot(MSE3)
 
 CheckConverge(MSE3)
 
-# CheckConverge actually produces two plots, each has 5 panels that are
-# some typical performance metrics. The first plot shows the mean 
-# performance of all MPs as simulations are added. The second plot 
-# just shows MPs for which performance was not stable by simulation
-# 48. 
+# CheckConverge either produces 1 or 2 plots. Each has 5 panels that
+# are some typical performance metrics.
+#
+# The first plot shows the mean performance of all MPs as simulations
+# are added. The second plot just shows MPs for which performance was 
+# not stable by the final simulation (simulation 48). 
 #
 # Look at the first of the two plots with many lines, one for each MP.
 # You may notice that in the first 20 simulations, the absolute 
 # performance of the MPs changes a lot but in many cases the lines are
-# quite parallel and the ranking of the MPs is stable. 
+# quite parallel and the ranking of the MPs is stable long before
+# absolute performance is stable. 
 #
 # This phenomenon occurs because DLMtool deliberately samples identical
 # future conditions for all MPs. Since they share the same future
@@ -105,8 +108,8 @@ CheckConverge(MSE3)
 # design ensure that correct MP selection can occur with the mininum
 # of simulations. 
 # 
-# In this check of convergence three MPs nominally failed and are high-
-# lighted in the second plot (MCD, DBSRA and IT5). 
+# In this check of convergence three MPs nominally failed to converge
+# and are high-lighted in the second plot (MCD, DBSRA and IT5). 
 #
 # To conduct more simulations you can change a slot in the operating
 # model, nsim: 
@@ -114,7 +117,8 @@ CheckConverge(MSE3)
 testOM@nsim<-100
 
 # You also have to change the random seed of the operating model so 
-# that you get a new set of simulations (see joinMSE below)
+# that you get a new set of simulations (we want new simulations
+# because we are about to use joinMSE(), see below)
 
 testOM@seed<-2
 
@@ -126,8 +130,8 @@ CheckConverg(MSE4)
 
 # Now the x-axis runs to 100 and all MPs are deemed to have converged.
 #
-# Note that you also 'glue' together identical MSE runs to get more 
-# simulations:
+# Note that you also 'glue' together MSE runs that have the same 
+# operating model and MPs to get more simulations:
 
 MSE5<-joinMSE(list(MSE3,MSE4))
 
@@ -135,7 +139,10 @@ CheckConverg(MSE5)
 
 
 #  Q2.1  Given that convergence never occurs exactly, what threshold
-#        would be sufficient in your applications and why?
+#        would be sufficient in your applications and why? 
+#
+#  Q2.2  Can you think of a more principled test of convergence than
+#        the 'within 2%' criteria of CheckConverg()?
 
 
 
@@ -223,6 +230,10 @@ VOI(MSE5,ncomp=3,maxrow=5)
 # Q5.2   How is this alternative form of VOI analysis fundamentally
 #        different?
 
+
+# ==================================================================================
+# === End of Exercise 3b ===========================================================
+# ==================================================================================
 
 
 
