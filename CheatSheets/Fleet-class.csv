@@ -1,6 +1,5 @@
 "Name","Fleet-class"
 "Description","The component of the operating model that controls fishing dynamics"
-"Function call","Objects can be created by calls of the form new('Fleet')"
 "",""
 "Slots",""
 "Name","Name of the Fleet object"

@@ -1,6 +1,5 @@
 "Name","Stock-class"
 "Description","An operating model component that specifies the parameters of the population dynamics model"
-"Function call","Objects can be created by calls of the form new('Stock')"
 "",""
 "Slots",""
 "Name","The name of the Stock object"

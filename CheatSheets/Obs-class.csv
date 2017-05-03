@@ -1,6 +1,5 @@
 "Name","Obs-class"
 "Description","An operating model component that controls the observation model"
-"Function call","Objects can be created by calls of the form new('Obs')"
 "",""
 "Slots",""
 "Name","The name of the observation model object"

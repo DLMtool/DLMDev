@@ -1,4 +1,17 @@
-# Make Cheat Sheets 
+---
+title: "Untitled"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+```{r Class Objects, echo=FALSE}
 
 library(DLMtool)
 library(tools)
@@ -10,8 +23,8 @@ db <- Rd_db("DLMtool")
 ## Make Cheat Sheets for Classes ----
 Classes <- grep("-class", names(db))
 
-for (Class in Classes) {
-
+# for (Class in Classes) {
+Class <- 144
 temp <- db[[Class]]
    
 
@@ -134,19 +147,5 @@ write.table(outmat, file=file.path("CheatSheets", paste0(Name, ".csv")), row.nam
 
 
 pander(outmat)
-
-mytableout <- htmlTable(outmat[,2],
-          header =  c("Description"),
-          rnames = outmat[,1],
-          align = "ll",
-          col.rgroup = c("none", "#F7F7F7"))
-
-sink(file.path("CheatSheets", paste0(Name, ".html")))
-print(mytableout,type="html",useViewer=TRUE)
-sink()
-}
-
-
-
-
-
+# }
+```

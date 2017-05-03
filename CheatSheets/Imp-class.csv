@@ -1,6 +1,5 @@
 "Name","Imp-class"
 "Description","An operating model component that specifies the degree of adherence to management recommendations (Implementation error)"
-"Function call","Objects can be created by calls of the form new('Imp')"
 "",""
 "Slots",""
 "Name","The name of the Implementation error object"

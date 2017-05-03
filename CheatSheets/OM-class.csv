@@ -1,6 +1,5 @@
 "Name","OM-class"
 "Description","An object containing all the parameters needed to control the MSE which can be build from component Stock, Fleet and Obs objects. Almost all of these inputs are a vector of length 2 which describes the upper and lower bounds of a uniform distribution from which to sample the parameter."
-"Function call","Objects can be created by calls of the form new('OM', Stock, Fleet, Obs, Imp) ."
 "",""
 "Slots",""
 "Name","Name of the operating model"

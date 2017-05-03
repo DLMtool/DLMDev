@@ -1,0 +1,114 @@
+<table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em;' >
+<thead>
+<tr>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey;'> </th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style='text-align: left;'>Name</td>
+<td style='text-align: left;'>Fleet-class</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>Description</td>
+<td style='background-color: #f7f7f7; text-align: left;'>The component of the operating model that controls fishing dynamics</td>
+</tr>
+<tr>
+<td style='text-align: left;'></td>
+<td style='text-align: left;'></td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>Slots</td>
+<td style='background-color: #f7f7f7; text-align: left;'></td>
+</tr>
+<tr>
+<td style='text-align: left;'>Name</td>
+<td style='text-align: left;'>Name of the Fleet object</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>nyears</td>
+<td style='background-color: #f7f7f7; text-align: left;'>The number of years for the historical simulation</td>
+</tr>
+<tr>
+<td style='text-align: left;'>Spat_targ</td>
+<td style='text-align: left;'>Distribution of fishing in relation to spatial biomass: F is proportional to B^Spat_targ (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>Esd</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Inter-annual variability in fishing mortality rate</td>
+</tr>
+<tr>
+<td style='text-align: left;'>EffYears</td>
+<td style='text-align: left;'>Vector of verticies, years at which to simulate varying relative effort</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>EffLower</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Lower bound on relative effort corresponding to EffYears (uniform distribution)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>EffUpper</td>
+<td style='text-align: left;'>Uppper bound on relative effort corresponding to EffYears (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>LFS</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Shortest length that is fully vulnerable to fishing (uniform distribution)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>L5</td>
+<td style='text-align: left;'>Shortest length corresponding ot 5 percent vulnerability (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>Vmaxlen</td>
+<td style='background-color: #f7f7f7; text-align: left;'>The vulnerability of the longest (oldest) fish (uniform distribution)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>SelYears</td>
+<td style='text-align: left;'>Vector of verticies, index for years at which historical selectivity pattern changed. If left empty, historical selectivity is constant</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>AbsSelYears</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Optional values for SelYears, used for plotting only. Must be of same length as SelYears</td>
+</tr>
+<tr>
+<td style='text-align: left;'>L5Lower</td>
+<td style='text-align: left;'>Optional vector of values of length SelYears, specifiying lower limits of L5 (use  ChooseSelect  function to set these)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>L5Upper</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Optional vector of values of length SelYears, specifiying upper limits of L5 (use  ChooseSelect  function to set these)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>LFSLower</td>
+<td style='text-align: left;'>Optional vector of values of length SelYears, specifiying lower limits of LFS (use  ChooseSelect  function to set these)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>LFSUpper</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Optional vector of values of length SelYears, specifiying upper limits of LFS (use  ChooseSelect  function to set these)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>VmaxLower</td>
+<td style='text-align: left;'>Optional vector of values of length SelYears, specifiying lower limits of Vmaxlen (use  ChooseSelect  function to set these)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>VmaxUpper</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Optional vector of values of length SelYears, specifiying upper limits of Vmaxlen (use  ChooseSelect  function to set these)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>qinc</td>
+<td style='text-align: left;'>Average percentage change in fishing efficiency (uniform distribution)(applicable only to forward projection and input controls)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>qcv</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Inter-annual variability in fishing efficiency (uniform distribution)(applicable only to forward projection and input controls)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>isRel</td>
+<td style='text-align: left;'>Are the selectivity parameters relative to size-of-maturity? TRUE or FALSE</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; border-bottom: 2px solid grey; text-align: left;'>CurrentYr</td>
+<td style='background-color: #f7f7f7; border-bottom: 2px solid grey; text-align: left;'>The current calendar year (final year) of the historical simulations (e.g. 2011)</td>
+</tr>
+</tbody>
+</table>

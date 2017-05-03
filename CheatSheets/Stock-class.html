@@ -1,0 +1,142 @@
+<table class='gmisc_table' style='border-collapse: collapse; margin-top: 1em; margin-bottom: 1em;' >
+<thead>
+<tr>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey;'> </th>
+<th style='border-bottom: 1px solid grey; border-top: 2px solid grey; text-align: center;'>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style='text-align: left;'>Name</td>
+<td style='text-align: left;'>Stock-class</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>Description</td>
+<td style='background-color: #f7f7f7; text-align: left;'>An operating model component that specifies the parameters of the population dynamics model</td>
+</tr>
+<tr>
+<td style='text-align: left;'></td>
+<td style='text-align: left;'></td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>Slots</td>
+<td style='background-color: #f7f7f7; text-align: left;'></td>
+</tr>
+<tr>
+<td style='text-align: left;'>Name</td>
+<td style='text-align: left;'>The name of the Stock object</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>maxage</td>
+<td style='background-color: #f7f7f7; text-align: left;'>The maximum age of individuals that is simulated (there is no 'plus group': individuals die off beyone the maximum age so there isn't a huge cost to simulating more older age classes)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>R0</td>
+<td style='text-align: left;'>The magnitude of unfished recruitment. This is normally fixed to some arbitrary value since it simply scales the simulated numbers)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>M</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Natural mortality rate (uniform distribution)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>Msd</td>
+<td style='text-align: left;'>Inter-annual variability in natural mortality rate expressed as a coefficient of variation (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>Mgrad</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Mean temporal trend in natural mortality rate, expressed as a percentage change in M per year (uniform distribution)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>h</td>
+<td style='text-align: left;'>Steepness of the stock recruit relationship (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>SRrel</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Type of stock-recruit relationship (1)Beverton-Holt (2) Ricker</td>
+</tr>
+<tr>
+<td style='text-align: left;'>Linf</td>
+<td style='text-align: left;'>Maximum length (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>K</td>
+<td style='background-color: #f7f7f7; text-align: left;'>von B. growth parameter k (uniform distribution)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>t0</td>
+<td style='text-align: left;'>von B. theoretical age at length zero (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>Ksd</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Inter-annual variability in growth parameter k (uniform distribution)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>Kgrad</td>
+<td style='text-align: left;'>Mean temporal trend in growth parameter k, expressed as a percentage change in k per year (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>Linfsd</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Inter-annual variability in maximum length - uniform distribution</td>
+</tr>
+<tr>
+<td style='text-align: left;'>Linfgrad</td>
+<td style='text-align: left;'>Mean temporal trend in maximum length, expressed as a percentage change in Linf per year (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>recgrad</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Mean temporal trend in log-normal recruitment deviations (uniform distribution)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>AC</td>
+<td style='text-align: left;'>Autocorrelation in recruitment deviations rec(t)=AC*rec(t-1)+(1-AC)*sigma(t) (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>a</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Length-weight parameter alpha (uniform distribution)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>b</td>
+<td style='text-align: left;'>Length-weight parameter beta (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>L50</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Length-at- 50 percent maturity (uniform distribution)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>L50_95</td>
+<td style='text-align: left;'>Length increment from 50 percent to 95 percent maturity</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>D</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Current level of stock depletion (Bcurrent/Bunfished) (uniform distribution)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>Perr</td>
+<td style='text-align: left;'>Process error, the CV of lognormal recruitment deviations  (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>Period</td>
+<td style='background-color: #f7f7f7; text-align: left;'>Period for cylical recruitment pattern in years (uniform distribution). Leave empty to ignore</td>
+</tr>
+<tr>
+<td style='text-align: left;'>Amplitude</td>
+<td style='text-align: left;'>Amplitude in deviation from long-term average recruitment during recruitment cycle, both positive and negative (uniform distribution). E.g., a range from 0 to 0.5 means recruitment decreases or increases by up to 50% each cycle. Leave empty to ignore</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>Size_area_1</td>
+<td style='background-color: #f7f7f7; text-align: left;'>The size of area 1 relative to area 2 (uniform distribution)</td>
+</tr>
+<tr>
+<td style='text-align: left;'>Frac_area_1</td>
+<td style='text-align: left;'>The fraction of the unfished biomass in stock 1 (uniform distribution)</td>
+</tr>
+<tr style='background-color: #f7f7f7;'>
+<td style='background-color: #f7f7f7; text-align: left;'>Prob_staying</td>
+<td style='background-color: #f7f7f7; text-align: left;'>The probability of inviduals in area 1 remaining in area 1 over the course of one year</td>
+</tr>
+<tr>
+<td style='border-bottom: 2px solid grey; text-align: left;'>Source</td>
+<td style='border-bottom: 2px solid grey; text-align: left;'>A reference to a website or article form which parameters were taken to define the operating model</td>
+</tr>
+</tbody>
+</table>

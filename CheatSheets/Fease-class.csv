@@ -1,6 +1,5 @@
 "Name","Fease-class"
 "Description","An object for storing information about what data are available or might be available"
-"Function call","Objects can be created by calls of the form new('Fease', stock)"
 "",""
 "Slots",""
 "Name","The name of the data feasibility object"
