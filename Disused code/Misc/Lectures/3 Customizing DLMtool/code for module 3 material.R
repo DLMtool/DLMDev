@@ -26,5 +26,11 @@ myMSE3<-Sub(myMSE2,MPs=c("MCD","SPMSY"))
 VOI(myMSE3,ncomp=3)
 
 
+SSB5<-apply(myMSE@B_BMSY>0.05,2,mean)
 
 
+muSSB<-apply(myMSE@SSB,2,mean)
+CrelMSY<-apply(myMSE@C/myMSE@OM$MSY,2,mean)
+
+plot(muSSB,CrelMSY,col='white')
+text(muSSB,CrelMSY,myMSE@MPs,col='blue')
