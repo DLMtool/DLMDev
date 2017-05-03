@@ -1,3 +1,4 @@
+
 # ==============================================================================
 # === DLMtool Exercise 5a: Advanced operating model specification ==============
 # ==============================================================================
@@ -17,13 +18,6 @@
 #
  
 
-TODO - 
-
-# fix the Replace function to include cpars and other parameters
-# SS2DLM - hcv should only be length one
-
-
-
 
 # === Setup (only required if new R session) ===================================
 
@@ -31,25 +25,25 @@ library(DLMtool)
 setup()
 
 
+
 # === Task 1 === Specifying historical effort trends  ==========================
 #
 # The trend in relative fishing effort in the historical years can be an 
-# an important driver that determines the performance of different MPs.
+# an important driver in determining the performance of the various MPs.
 # 
-
 # Suppose that we know the fishery began 50 years ago, and fishing effort 
 # increased slowly over the first decade, was relatively stable in the next two 
 # decades at 1/4 of historical maximum, then increased dramatically over the 
-# next 10 years.  We know that, while fishing effort stayed relatively constant 
+# next 10 years.  We also know that while fishing effort stayed relatively constant 
 # at this high level, there has been a general decline in fishing effort in 
 # last 5 years down to about half of the historical high.
-
+#
 # This information can be included in the Operating Model by using the 
 # 'ChooseEffort' function.  The 'ChooseEffort' function takes an existing 
 # 'Fleet' object as its first argument, and allows the user to manually map out 
 # the range for the historical trend in fishing effort.  The 'ChooseEffort' 
 # function then returns the updated Fleet object.  
-
+#
 # Let's base our initial Fleet object on the 'Generic_fleet' object included in 
 # DLMtool:
 
@@ -68,23 +62,9 @@ MyFleet <- Generic_fleet
 
 MyFleet <- ChooseEffort(MyFleet)
 
-
-# We can plot the bounds of the trends in relative fishing effort for both 
-# the original and our updated Fleet objects:
-
-par(mfrow=c(1,2), bty="l", las=1)
-plot(c(0,Generic_fleet@nyears), c(0,1), type="n", xlab="Historical Years", 
-    ylab="Relative fishing effort", main="Generic_fleet")
-lines(Generic_fleet@EffYears*Generic_fleet@nyears, Generic_fleet@EffLower)
-lines(Generic_fleet@EffYears*Generic_fleet@nyears, Generic_fleet@EffUpper)
-
-plot(c(0,MyFleet@nyears), c(0,1), type="n", xlab="Years", ylab="", main="MyFleet")
-lines(MyFleet@EffYears, MyFleet@EffLower)
-lines(MyFleet@EffYears, MyFleet@EffUpper)
-
 # You may notice that some of the slots in the 'MyFleet' object have been 
 # updated. The 'EffLower', 'EffUpper', and 'EffYears' slots now contain the 
-# bounds and year vertices that we mapped out using 'ChooseEffort':
+# bounds and year vertices that we drew using 'ChooseEffort':
 
 MyFleet@EffLower
 MyFleet@EffUpper
@@ -95,17 +75,11 @@ Generic_fleet@EffLower
 Generic_fleet@EffUpper
 Generic_fleet@EffYears
 
-# This suggests that we can define the bounds on the historical fishing effort 
-# by modifying the values in these slots.
- 
-# This can be useful for saving the values of the relative effort trajectories 
-# which we mapped out using 'ChooseEffort'. For example, here we update the 
-# relevant slots following the scenario outlined above: 
+# Rather than drawing effort we could just modify these slot directly. E.g: 
 
 MyFleet@EffLower <- c(0, 0.2, 0.9, 0.9, 0.45)
 MyFleet@EffUpper <- c(0, 0.25, 1, 1, 0.55)
 MyFleet@EffYears <- c(1, 10, 21, 45, 50)
-
 
 # We can see the difference in historical fishing effort when we plot the 
 # two Fleet objects (you may need to expand the size of the plotting window):
@@ -120,18 +94,21 @@ plot(MyFleet, Albacore, 50)
 
 # Does this different pattern of historical fishing effort have any impact on 
 # the performance of the MPs?
+#
 # It is straightforward to answer this question by creating two operating models
 # and running two MSEs.
-
+#
 # Specify the two OM objects (the only difference between the two is the 
 # different historical fishing effort):
 
 OM1 <- new("OM", Albacore, Generic_fleet, Generic_obs, Perfect_Imp, nsim=150)
+
 OM2 <- new("OM", Albacore, MyFleet, Generic_obs, Perfect_Imp, nsim=150)
 
 # Run the two MSEs using the different the two OMs:
 
 MSE1 <- runMSE(OM1)
+
 MSE2 <- runMSE(OM2)
 
 # And finally, plot the results for each MSE:
@@ -187,64 +164,13 @@ MyFleet <- ChooseSelect(MyFleet, Albacore, FstYr=1968, SelYears=c(1970, 1990))
 
 # Use the plot to map out some different selectivity curves for each year.
 
-# Note that the first year (`FstYr`) must also be specified, and the 
-# selectivity pattern is mapped for this year as well.
-
 # When 'ChooseSelect' is used, the 'L5Lower', 'L5Upper', 'LFSLower', 'LFSUpper', 
 # 'VmaxLower', 'VmaxUpper', and 'SelYears' slots are updated in the Fleet
 # object. If these slots are populated, the values in the 'L5', 'LFS', and 
 # 'Vmaxlen' slots are ignored in the operating model. 
 
-
-
-
-
-
-
-# Similar to the 'ChooseEffort' function we can change the historical selectivity 
-# by updating the relevant slots in the Fleet object. 
-
-# For example, here we modify the time-varying selectivity slots for the three 
-# years mentioned above with
-#   - dome-shaped selectivity in the initial year
-#   - change to non-dome shaped selectivity in third year of fishing
-#   - increase in size of first capture in twenty second year of fishing
-
-# First we specify the year indices for changes in selectivity:
-
-MyFleet@SelYears <- c(1, 3, 22)
-
-# Then we enter the lower and upper bounds for the length at 5% selection for 
-# each of the year vertices:
-
-MyFleet@L5Lower <- c(17.5, 20, 65)
-MyFleet@L5Upper <- c(22.5, 25, 70)
-
-# Next we enter the length at full selection for each of the year vertices:
-
-MyFleet@LFSLower <- c(70, 75, 90)
-MyFleet@LFSUpper <- c(77.5, 82.5, 95)
-
-# Next we set the lower and upper bounds on the selectivity at maximum length,
-# with dome-shaped selectivity in the first year, and asymptotic selectivity 
-# after the 3rd year of fishing:
-
-MyFleet@VmaxLower <- c(0.35, 0.95, 0.95)
-MyFleet@VmaxUpper <- c(0.45, 1, 1)
-
-# Finally we must indicate that the selectivity parameters are in absolute units
-# (the same units as Linf used in the Stock object) and not the default option 
-# of being relative to length of maturity:
-
-MyFleet@isRel <- "FALSE"
-
-# === Optional Task === Comparing MP performance ===============================
-#
-# If time allows you can create two new OM objects using the original and the 
-# modified Fleet objects and run two MSEs to determine if this different pattern 
-# of historical selectivity has any impact on the performance of the MPs
-
-
+# Similarlyto the 'ChooseEffort' function we can change the historical 
+# selectivity by updating the relevant slots in the Fleet object. 
 
 
 
@@ -253,11 +179,11 @@ MyFleet@isRel <- "FALSE"
 # By default the MSE draws samples from a uniform distribution for each input 
 # parameter. However, there are often cases where we may wish to preserve 
 # correlation between different input parameters. A common example of 
-# this is the von Bertalanffy growth parameters (Linf, K) which are often 
-# found to be strongly correlated when estimated from growth data.  Furthermore,
-# there is evidence that the natural mortality rate (M) is often correlated 
-# with Linf and K.
-
+# this is among the von Bertalanffy growth parameters (Linf, K) which like
+# the intercept and slope in linear regression analyis are often found to be 
+# strongly correlated when estimated from growth data. 
+#
+#
 # Let's create a OM object using the Sole Stock object, and the Generic_fleet,
 # Generic_obs, Perfect_Imp, and 150 simulations:
 
@@ -274,21 +200,22 @@ OM@M
 
 # By default, DLMtool will draw samples uniformly from within this range for 
 # each parameter and assume that there is no correlation between them. 
-
+#
 # If we have information on the correlation structure between different input 
-# parameters, it is possible include these correlations by adding them to the 
-# 'cpars' slot in the OM object.
-
+# parameters, it is possible include sampled parameters that maintaing these 
+# correlations by adding them to the 'cpars' (custom parameters) slot in the 
+# OM object.
+#
 # At the moment the 'cpars' slot is an empty list, which indicates that there are 
 # no custom parameters in this OM object 
- 
+
 OM@cpars 
 
-# The 'ForceCor' function has been developed to determine typical correlations 
+# The 'ForceCor' function has been developed to force typical correlations 
 # among estimated parameters to generate realistic samples for natural mortality 
 # rate (M), growth rate (K), average asymptotic length (Linf) and length at 50%
 # maturity (L50).
-
+#
 # We can use this function to generate correlated samples of M, Linf, K, and L50:
 
 CorOM <- ForceCor(OM)
@@ -297,8 +224,7 @@ CorOM <- ForceCor(OM)
 # for each parameter (blue shading) and the 150 correlated samples that were 
 # generated (black dots) as well as the distribution of the samples for 
 # each parameter (histograms).
-
-
+#
 # Note that the 'ForceCor' function returns an object of class OM. This is 
 # identical to the original OM object that we provided it, with the exception
 # that the 'cpars' slot is now populated with the correlated samples that were
@@ -312,14 +238,13 @@ names(CorOM@cpars)
 
 # Note that the MSE will now ignore the parameters with these names in the 
 # standard OM object, and use these correlated samples instead.
-
-
+#
 # We can now run a MSE both with and without the correlated samples and determine
 # if it has a significant impact on the performance of the MPs:
 
 MSE1 <- runMSE(OM)
-MSE2 <- runMSE(CorOM)
 
+MSE2 <- runMSE(CorOM)
 
 NOAA_plot(MSE1)
 
@@ -328,7 +253,7 @@ NOAA_plot(MSE2)
 # Based on this single plot it appears that in this case it appears that the 
 # correlated growth and mortality parameters have had little impact on the 
 # relative performance of the MPs.
-
+#
 # It is possible to include a range of other correlated parameters in the 'cpars'
 # slot. We will examine this in more detail in the next two tasks.
 
@@ -358,11 +283,11 @@ StockRER@Name
 
 # This Stock object is based on the long-lived Rougheye Rockfish from British
 # Columbia, Canada.
+#
+# Next we create an OM object. Here we are using Generic_fleet, Generic_obs 
+# and Perfect_Imp:
 
-# Next we create an OM object. Here we are using Generic_fleet, Generic_obs, 
-# Perfect_Imp, and 100 simulations:
-
-OM <- new("OM", StockRER, Generic_fleet, Generic_obs, Perfect_Imp, nsim=100)
+OM <- new("OM", StockRER, Generic_fleet, Generic_obs, Perfect_Imp)
 
 # To run the StochasticSRA analysis we need to import the CAA and Chist data, 
 # and convert them to the correct format :
@@ -389,15 +314,13 @@ matplot(t(OMSRA@cpars$Find), type="l")
 # the current level of depletion:
 
 plot(OMSRA@cpars$Find[,44], OMSRA@cpars$dep, xlab="Last year fishing effort", 
-    ylab="Depletion")
+     ylab="Depletion")
 
 
 # The OMSRA object with the correlated custom parameters derived from the 
 # StochasticSRA analysis can then be used to run a MSE:
 
 MSE <- runMSE(OMSRA)
-
-
 
 
 
@@ -459,7 +382,6 @@ plot(SSOM)
 MSE <- runMSE(SSOM)
 
 NOAA_plot(MSE)
-
 
 
 

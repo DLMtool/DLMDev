@@ -1,5 +1,6 @@
 "Name","Data-class"
 "Description","An object for storing data for analysis using data-limited methods"
+"Function call","Objects can be created by calls of the form new('Data', stock)"
 "",""
 "Slots",""
 "Name","The name of the case-study"
