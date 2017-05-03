@@ -145,9 +145,9 @@ abline(h=1,col="#99999995",lwd=5,lty=2)
 # calculating the fraction, by MP, that dropped below this
 # level. 
 #
-# Using the R function apply this is surprisingly easy:
+# Using the R function 'apply' this is surprisingly easy:
 
-P80<-apply(SWO@B_BMSY<0.8,2,sum)/(SWO@nsim*SWO@proyears)
+P80<-apply(SWO@B_BMSY<0.8,2,mean)
 
 # By MP (the second dimension of the B_BMSY array) we have 
 # summed the instances where B_BMSY was less than 80%
