@@ -31,9 +31,10 @@ setup()
 # computers. 
 #
 # The data folder for this workshop contains examples of .csv files for stock, 
-# fleet and observation models. 
+# fleet, observation and implementation models. 
 #
-# You can take a look at one of these "Data/Object_csvs/Bluefin_tuna.csv"
+# You can take a look at one of these in excel or a text editor: 
+# "Exercises/Data/CSV/Albacore.csv"
 #
 # To convert this .csv to a DLMtool object is relatively simple you just have
 # to specify the location of the file:
