@@ -101,7 +101,7 @@ SWO@MPs
 # This is confirmed by checking the dimensions of the B_BMSY
 # array:
 
-dim(OM@B_BMSY)
+dim(SWO@B_BMSY)
 
 # We can now extract the B/BMSY data for our particular MP
 # DCAC (MP 2 of 5) and plot the trajectories:
@@ -115,15 +115,15 @@ matplot(DCAC_biomass,type='l')
 # We can also superimpose a line representing the BMSY reference
 # level
 
-abline(h=1,col="#99999980",lwd=5,lty=2)
+abline(h=1,col="#99999995",lwd=5,lty=2)
 
 # Hopefully these examples are helping to illustrate why R is
 # such a powerful environment for packaging something like
 # DLMtool - the potential for customization is endless. 
 
 
-# Q1.1  Try to produce a projection plot for F relative to FMSY
-#       for the MP 'matlenlim' 
+# Q1.1  Try to produce a similar projection plot for F relative 
+#       to FMSY for the MP 'matlenlim' 
 
 
 
@@ -173,7 +173,7 @@ plot(P80,MY5,col='white',xlab="Prob. B < 0.8BMSY",
 
 text(P80,MY5,SWO@MPs,col='blue')
 
-# Its not a particularly attractive plotbut it reveals a
+# Its not a particularly attractive plot but it reveals a
 # clear trade-off between biological and economic metrics. 
 
 
