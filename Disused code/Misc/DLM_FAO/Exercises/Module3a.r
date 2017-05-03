@@ -3,12 +3,12 @@
 # === DLMtool Exercise 3a: Modifying operating models  ================================
 # =====================================================================================
 # 
-# The operating models of DLMtool now include a rather large number of slots.  
-# These control the various aspects of the simulations and can be modified to
-# match the specific conditions of a given fishery.
+# The operating models of DLMtool include a rather large number of slots. These 
+# control the various aspects of the simulations and can be modified to match the 
+# specific conditions of a given fishery.
 #
 # In this excercise you will learn more about DLMtool operating models and how
-# to customize these for a given fishery case study. 
+# to customize them for a given fishery case study. 
 
 
 
@@ -38,7 +38,7 @@ setup()
 # To convert this .csv to a DLMtool object is relatively simple you just have
 # to specify the location of the file:
 
-Albacore<-new('Stock',"C:/DLM_FAO/Data/csvs/Albacore.csv")
+Albacore<-new('Stock',"D:/DLM_FAO/Exercises/Data/CSV/Albacore.csv")
 
 # Each fow of the csv is a slot in the stock object e.g natural mortality
 # rate:
@@ -65,11 +65,11 @@ class?Stock
 # Similarly to Stocks objects, Fleets, Obs and Imp objects can be read from
 # csv files. E.g:
 
-ICCATobs<-new('Obs',"C:/DLM_FAO/Data/csvs/ICCATobs.csv")
+ICCATobs<-new('Obs',"D:/DLM_FAO/Exercises/Data/CSV/ICCATobs.csv")
 
-Longline<-new('Fleet',"C:/DLM_FAO/Data/csvs/Longline.csv")
+Longline<-new('Fleet',"D:/DLM_FAO/Exercises/Data/CSV/Longline.csv")
 
-Overages<-new('Imp',"C:/DLM_FAO/Data/csvs/Overages.csv")
+Overages<-new('Imp',"D:/DLM_FAO/Exercises/Data/CSV/Overages.csv")
 
 
 
