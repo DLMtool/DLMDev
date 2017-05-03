@@ -169,7 +169,7 @@ MyFleet <- ChooseSelect(MyFleet, Albacore, FstYr=1968, SelYears=c(1970, 1990))
 # object. If these slots are populated, the values in the 'L5', 'LFS', and 
 # 'Vmaxlen' slots are ignored in the operating model. 
 
-# Similarlyto the 'ChooseEffort' function we can change the historical 
+# Similarly to the 'ChooseEffort' function we can change the historical 
 # selectivity by updating the relevant slots in the Fleet object. 
 
 
