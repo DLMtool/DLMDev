@@ -74,6 +74,7 @@ head(SWO@OM)
 # depletion levels (SSB today relative to SSB unfished) for the SWO 
 # operating model looks like, you could use the R histogram function:
 
+dev.off() # re-set plotting window
 hist(SWO@OM$Depletion, col='blue')
 
 # Here we can see the 48 simulations distributed between 30% and

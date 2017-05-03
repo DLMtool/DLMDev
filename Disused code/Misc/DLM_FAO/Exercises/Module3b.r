@@ -130,7 +130,7 @@ Converge(MSE4)
 
 # Now the x-axis runs to 100 and all MPs are deemed to have converged.
 #
-# Note that you also 'glue' together MSE runs that have the same 
+# Note that you can also 'glue' together MSE runs that have the same 
 # operating model and MPs to get more simulations:
 
 MSE5<-joinMSE(list(MSE3,MSE4))
@@ -156,7 +156,7 @@ Converge(MSE5)
 # we can track which observation processes are driving performance and
 # to what extent. 
 # 
-# DLMtool includes a series of Value-Of-Information functiosn. Try this
+# DLMtool includes a series of Value-Of-Information functions. Try this
 # for our new MSE object MSE5:
 
 VOI(MSE5,ncomp=3,maxrow=5)
