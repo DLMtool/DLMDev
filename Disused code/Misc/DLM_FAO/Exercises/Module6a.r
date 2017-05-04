@@ -18,7 +18,7 @@
 
 
 
-# === Setup (only required if new R session) =====================================
+# === Setup (only required if new R session) ======================================
 
 library(DLMtool)  
 setup()

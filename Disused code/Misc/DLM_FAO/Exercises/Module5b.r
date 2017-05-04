@@ -108,6 +108,7 @@ DCAC(x=1,Data,reps=1)
 # If we wanted a stochastic estimate of the TAC we could increase
 # the number of reps:
 
+dev.off() #  reset plotting space
 hist(DCAC(x=1,Data,reps=1000),xlab="TAC",ylab="Rel. Freq",col="blue")
 
 

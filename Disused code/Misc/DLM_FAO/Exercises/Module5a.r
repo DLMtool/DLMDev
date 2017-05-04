@@ -277,7 +277,7 @@ NOAA_plot(MSE2)
 
 # First we create a new Stock object by importing the CSV:
 
-StockRER <- new("Stock", "Exercises/Data/SRA/Stock_RER.csv")
+StockRER <- new("Stock", "Data/SRA/Stock_RER.csv")
 
 StockRER@Name 
 
@@ -292,8 +292,8 @@ OM <- new("OM", StockRER, Generic_fleet, Generic_obs, Perfect_Imp)
 # To run the StochasticSRA analysis we need to import the CAA and Chist data, 
 # and convert them to the correct format :
 
-CAA <- as.matrix(read.csv("Exercises/Data/SRA/CAA.csv"))
-Chist <- as.numeric(as.matrix(read.csv("Exercises/Data/SRA/Chist.csv")))
+CAA <- as.matrix(read.csv("Data/SRA/CAA.csv"))
+Chist <- as.numeric(as.matrix(read.csv("Data/SRA/Chist.csv")))
 
 # And run the 'StochasticSRA' analysis (this may take some time):
 
@@ -308,6 +308,7 @@ names(OMSRA@cpars)
 # We can examine some of the information contained in the 'cpars' slot by 
 # plotting. For example, the estimated historical trends in fishing mortality:
 
+dev.off() # reset plotting space
 matplot(t(OMSRA@cpars$Find), type="l")
 
 # Or the correlation between fishing effort in the last historical year and 
@@ -339,7 +340,7 @@ MSE <- runMSE(OMSRA)
 #   - a name for the Name slot in the OM object 
 #   - the number of simulations we wish to include 
 
-SSout <- SS2DLM(SSdir="Exercises/Data/SS/", Name="fromSS", nsim=100)
+SSout <- SS2DLM(SSdir="Data/SS/", Name="fromSS", nsim=100)
 
 # The 'SS2DLM' function returns an object of class OM with the slots populated 
 # from the MLE estimates in the SS3 model run.
