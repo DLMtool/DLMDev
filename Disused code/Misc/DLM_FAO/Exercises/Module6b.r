@@ -62,7 +62,8 @@ NOAA_plot(Rob)
 
 # === Optional tasks ===============================================================
 # 
-# There are few other variables can can be time-varying in DLMtool operating models including
+# There are few other variables can can be time-varying in DLMtool operating models
+# including
 #
 # Mgrad: gradients in natural mortality rate (disease,fewer/more numerous predators)
 # Linfgrad: gradient in maximum length
@@ -76,7 +77,7 @@ NOAA_plot(Rob)
 
 
 # ==================================================================================
-# === End of Exercise 5b ===========================================================
+# === End of Exercise 6b ===========================================================
 # ==================================================================================
 
 

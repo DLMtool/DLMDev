@@ -25,8 +25,8 @@ setup()
 # operating models is to load the Stock, Fleet, Obs and Imp objects from 
 # .csv files.
 #
-# These are essentially excel tables in which have a row for each entry of 
-# these objects. The good thing about using .csv files is that the file acts
+# These are essentially excel tables which have a row for slot in these 
+# objects. The good thing about using .csv files is that the file serves as a
 # dated record of what was specified and they are easy to examine on most
 # computers. 
 #
@@ -36,17 +36,17 @@ setup()
 # You can take a look at one of these in excel or a text editor: 
 # "Exercises/Data/CSV/Albacore.csv"
 #
-# To convert this .csv to a DLMtool object is relatively simple you just have
-# to specify the location of the file:
+# It is relatively straightforward to convert this .csv to a DLMtool object 
+# by just specifying the location of the file:
 
-Albacore<-new('Stock',"D:/DLM_FAO/Exercises/Data/CSV/Albacore.csv")
+Albacore <- new('Stock', "D:/DLM_FAO/Exercises/Data/CSV/Albacore.csv")
 
 # Each fow of the csv is a slot in the stock object e.g natural mortality
 # rate:
 
 Albacore@M
 
-# You can list all the slots in an object using 
+# You can list all the slots in any object using 
 
 slotNames(Albacore)
 
@@ -63,14 +63,14 @@ class?Stock
 # among these if you wish. We will cover these features in a later 
 # exercise.
 #
-# Similarly to Stocks objects, Fleets, Obs and Imp objects can be read from
+# Similarly to Stock objects, Fleets, Obs and Imp objects can be read from
 # csv files. E.g:
 
-ICCATobs<-new('Obs',"D:/DLM_FAO/Exercises/Data/CSV/ICCATobs.csv")
+ICCATobs <- new('Obs',"D:/DLM_FAO/Exercises/Data/CSV/ICCATobs.csv")
 
-Longline<-new('Fleet',"D:/DLM_FAO/Exercises/Data/CSV/Longline.csv")
+Longline <- new('Fleet',"D:/DLM_FAO/Exercises/Data/CSV/Longline.csv")
 
-Overages<-new('Imp',"D:/DLM_FAO/Exercises/Data/CSV/Overages.csv")
+Overages <- new('Imp',"D:/DLM_FAO/Exercises/Data/CSV/Overages.csv")
 
 
 
@@ -79,7 +79,7 @@ Overages<-new('Imp',"D:/DLM_FAO/Exercises/Data/CSV/Overages.csv")
 # Probably the most commonly used approach to specifying DLMtool operating 
 # models is to copy an existing object and change various aspects of it. 
 # This ensures that there is a default entry for all required slots and that
-# preliminary MSEs can therefore be run. 
+# preliminary MSEs will therefore run. 
 #
 # First, as a reference, create a new operating model with default settings 
 # using Stock, Fleet, Obs and Imp objects:
@@ -95,11 +95,9 @@ MSE1 <- runMSE(myOM1)
 
 Mack2 <- Mackerel  
 
-# Change the name of the Mackerel 
-
 Mack2@Name <- "MackerelMod"  # Change the name of the stock 
 Mack2@M <- c(0.2, 0.35)      # Higher natural mortality 
-Mack2@D <- c(0.05, 0.3)      # More uncertaint level of current stock depletion 
+Mack2@D <- c(0.05, 0.3)      # More uncertain level of current stock depletion 
 
 # Now do the same with the 'Flat trend in effort - heavy dome-
 # shaped selectivity' fleet type FlatE_HDom:
@@ -112,8 +110,8 @@ Fleet2@Vmaxlen <- c(0.7, 1)  # Increase vulnerability of large-sized individuals
 
 # Using the plot command, compare the original and modified Objects:
 
-plot(Mackerel, incVB=FALSE) 
-plot(Mack2, incVB=FALSE)
+plot(Mackerel, incVB = FALSE) 
+plot(Mack2, incVB = FALSE)
 
 plot(FlatE_HDom, Mackerel)
 plot(Fleet2, Mack2)
@@ -139,11 +137,11 @@ MSE2 <- runMSE(myOM2)
 # That means that we can create a four panel plot (2 x 2) and visualize the 
 # results of the two MSEs together
 
-par(mfrow=c(2,2))
-NOAA_plot(MSE1,panel=F)
-mtext('Top row of panels is MSE1',3,outer=T,line=-1.5)
-NOAA_plot(MSE2,panel=F)
-mtext('Bottom row of panels is MSE2',1,outer=T,line=-1)
+par(mfrow=c(2, 2))
+NOAA_plot(MSE1, panel=F)
+mtext('Top row of panels is MSE1', 3, outer=T, line=-1.5)
+NOAA_plot(MSE2, panel=F)
+mtext('Bottom row of panels is MSE2', 1, outer=T, line=-1)
 
 
 # Q3.1  How does absolute performance of the MPs differ between the two MSEs?
@@ -161,10 +159,10 @@ mtext('Bottom row of panels is MSE2',1,outer=T,line=-1)
 # === Optional tasks ============================================================
 
 # Task 7: Modify the Perfect_Info observation error model to have 
-# potentially high biases in reported catches. Similarly to above
+# potentially high biases in reported catches. Similarly to above,
 # run a comparative MSE. 
 #
-# Q7  Which MPs are most affected by increasing biases in reported
+# Q7  Which MPs are most affected by larger biases in reported
 #     catches?
 
 
@@ -180,6 +178,7 @@ mtext('Bottom row of panels is MSE2',1,outer=T,line=-1)
 # Task 9: Create a new implementation error object and add catch
 # overages. Compare MSE results for an operating model with 
 # perfect implementation error. 
+
 
 
 # === Advanced tasks ===========================================================

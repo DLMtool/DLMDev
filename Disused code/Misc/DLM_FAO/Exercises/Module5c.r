@@ -28,9 +28,9 @@ setup()
 # Similarly to Output controls, input controls are functions that accept
 # three arguments:
 #
-#  x: a simulation number 
-#  Data: an object of class 'Data' 
-#  reps: not currently used by input controls 
+#  x:     a simulation number 
+#  Data:  an object of class 'Data' 
+#  reps:  not currently used by input controls 
 # 
 # You can list the available input control MPs using the avail() function:
 
@@ -43,10 +43,10 @@ curE
 # As illustrated by curE, an Input control MP returns a vector of 6 numbers.
 # These six numbers represent four characteristics:
 #
-#  Allocation
-#  Effort
-#  Spatial closure
-#  Length Vulnerability
+# 1  Allocation
+# 2  Effort
+# 3  Spatial closure
+# 4  Length Vulnerability
 #
 # Allocation is the first number and specifies how much fishing effort is
 # reallocated given a spatial closure.
@@ -62,10 +62,22 @@ curE
 # vulnerability.
 #
 # The curE MP does not include any spatial reductions in effort 
-# (Spatial<-c(1,1)), therefore does not require spatial reallocation of
-# effort (Allocate<-1) and keeps effort constant at current levels
-# (Effort<-1). Since there are no specified changes to size limits
-# the vulnerability parameters are not specified Vuln<-c(NA,NA).
+# 
+#     Spatial<-c(1,1)
+#
+# therefore does not require spatial reallocation of
+# effort 
+#
+#     Allocate<-1
+#
+# and keeps effort constant at current levels
+#
+#     Effort<-1.
+#
+# Since there are no specified changes to size limits the vulnerability 
+# parameters are not specified 
+#
+#     Vuln<-c(NA,NA).
 #
 # To highlight the difference examine spatial control MP 'MRreal' that 
 # closes area 1 to fishing and reallocates fishing to the open area 2:
@@ -115,12 +127,12 @@ TCPUE_e<-function(x,Data,reps){
 # There have been surprisingly few changes to make TCPUE an input
 # control MP that sets total allowable effort. 
 #
-#  We have had to use stored recommendations of effort in the 
-#  Data@MPeff slot 
+#  1. We have had to use stored recommendations of effort in the 
+# Data@MPeff slot 
 #
 # and
 #
-#  The final line of the MP is now a vector where the second 
+#  2. The final line of the MP is now a vector where the second 
 #  position is our new TAE recommendation.
 #
 # That is all. 
@@ -243,6 +255,7 @@ NOAA_plot(MSE8)
 # Q3.3  What does this tell us about the likely 
 #       efficacy of spatial closures for highly 
 #       migratory mixed stocks?
+
 
 
 # === Optional tasks ================================================

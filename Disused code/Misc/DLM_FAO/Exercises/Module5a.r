@@ -4,14 +4,14 @@
 # ==============================================================================
 #
 # In this Exercise we will look at some of the more advanced methods to specify 
-# and modify an Operating Model. We will learn how to include historical trends
-# in fishing effort and time-varying selectivity in the Operating Model. We will
-# cover two methods for including these features in the OM: an interactive 
-# plot interface, and using R code.
+# and modify an Operating Model.
+#
+# We will learn how to include historical trends in fishing effort and time-
+# varying selectivity in the Operating Model. 
 # 
-# We will look at methods to include correlated parameter samples in the MSE, 
-# and investigate the impact correlated parameters have on the performance of 
-# MPs in the MSE.
+# In many settings analysts wish to include include correlated parameters in the
+# MSE. In this exercise you will learn how to do this and investigate the impact
+# that correlated parameters have on the performance of MPs in the MSE.
 # 
 # Finally, we will look at methods condition the OM object on fishery data or
 # the output from a stock assessment.
@@ -28,13 +28,15 @@ setup()
 
 # === Task 1 === Specifying historical effort trends  ==========================
 #
-# The trend in relative fishing effort in the historical years can be an 
-# an important driver in determining the performance of the various MPs.
+# The trend in historical fishing effort can be an important driver of MP
+# performance.
 # 
 # Suppose that we know the fishery began 50 years ago, and fishing effort 
 # increased slowly over the first decade, was relatively stable in the next two 
 # decades at 1/4 of historical maximum, then increased dramatically over the 
-# next 10 years.  We also know that while fishing effort stayed relatively constant 
+# next 10 years.  
+#
+# We also know that while fishing effort stayed relatively constant 
 # at this high level, there has been a general decline in fishing effort in 
 # last 5 years down to about half of the historical high.
 #
@@ -118,12 +120,14 @@ NOAA_plot(MSE1)
 NOAA_plot(MSE2)
 
 # We can see that there is some difference in performance in some MPs and 
-# less so with others. This speedy comparision of MSE results can be very useful 
-# to determine the implications and importance alternative hypotheses or scenarios
-# about the history of the fishery. It may be the case the trends in historical 
-# fishing effort are controversial but the MSE results reveal that, the 
-# performance of the MPs of interest are relatively unaffected by historical 
-# effort. 
+# less so with others. 
+#
+# This rapid comparision of MSE results can be very useful in determining the
+# implications and importance of alternative hypotheses or scenarios. 
+#
+# It may be the case the trends in historical fishing effort are controversial
+# but the MSE results reveal that the performance of the MPs of interest are 
+# relatively unaffected by historical effort. 
 
 # Q1.1  Why does the 'curE' method (current effort) have a lower long-term 
 #       yield and higher probablity of not overfishing in the second MSE?
@@ -136,11 +140,11 @@ NOAA_plot(MSE2)
 # throughout the history of exploitation - either through the development of 
 # different gears or changes to regulations.
 #
-# Suppose that we may knew there had been changes in the selectivity pattern 
+# Suppose that we knew there had been changes in the selectivity pattern 
 # of the fishery over time. This information can be included in the Operating 
 # Model by using the 'ChooseSelect' function.
 #
-# Like the 'ChooseEffort' function described above, the 'ChooseSelection'
+# Like the 'ChooseEffort' function described above, the 'ChooseSelect'
 # function takes a Fleet object as the first argument, and returns an updated 
 # Fleet object.
 #
@@ -178,10 +182,12 @@ MyFleet <- ChooseSelect(MyFleet, Albacore, FstYr=1968, SelYears=c(1970, 1990))
 #
 # By default the MSE draws samples from a uniform distribution for each input 
 # parameter. However, there are often cases where we may wish to preserve 
-# correlation between different input parameters. A common example of 
-# this is among the von Bertalanffy growth parameters (Linf, K) which like
-# the intercept and slope in linear regression analyis are often found to be 
-# strongly correlated when estimated from growth data. 
+# correlation between different input parameters. 
+#
+# A common example of this is correlation among the von Bertalanffy growth 
+# parameters (Linf, K) which like the intercept and slope in linear regression
+# analyis are often found to be strongly negatively correlated when estimated 
+# from growth data. 
 #
 #
 # Let's create a OM object using the Sole Stock object, and the Generic_fleet,
@@ -250,9 +256,9 @@ NOAA_plot(MSE1)
 
 NOAA_plot(MSE2)
 
-# Based on this single plot it appears that in this case it appears that the 
-# correlated growth and mortality parameters have had little impact on the 
-# relative performance of the MPs.
+# Based on this single plot it appears that in this case the correlated growth
+# and mortality parameters have had little impact on the relative performance of
+# the MPs.
 #
 # It is possible to include a range of other correlated parameters in the 'cpars'
 # slot. We will examine this in more detail in the next two tasks.
@@ -277,7 +283,7 @@ NOAA_plot(MSE2)
 
 # First we create a new Stock object by importing the CSV:
 
-StockRER <- new("Stock", "Data/SRA/Stock_RER.csv")
+StockRER <- new("Stock", "C:/Users/Tom Carruthers/GitHub/GitHub/DLMDev/Disused code/Misc/DLM_FAO/Exercises/Data/SRA/Stock_RER.csv")
 
 StockRER@Name 
 
@@ -292,8 +298,8 @@ OM <- new("OM", StockRER, Generic_fleet, Generic_obs, Perfect_Imp)
 # To run the StochasticSRA analysis we need to import the CAA and Chist data, 
 # and convert them to the correct format :
 
-CAA <- as.matrix(read.csv("Data/SRA/CAA.csv"))
-Chist <- as.numeric(as.matrix(read.csv("Data/SRA/Chist.csv")))
+CAA <- as.matrix(read.csv("C:/Users/Tom Carruthers/GitHub/GitHub/DLMDev/Disused code/Misc/DLM_FAO/Exercises/Data/SRA/CAA.csv"))
+Chist <- as.numeric(as.matrix(read.csv("C:/Users/Tom Carruthers/GitHub/GitHub/DLMDev/Disused code/Misc/DLM_FAO/Exercises/Data/SRA/Chist.csv")))
 
 # And run the 'StochasticSRA' analysis (this may take some time):
 
@@ -308,7 +314,6 @@ names(OMSRA@cpars)
 # We can examine some of the information contained in the 'cpars' slot by 
 # plotting. For example, the estimated historical trends in fishing mortality:
 
-dev.off() # reset plotting space
 matplot(t(OMSRA@cpars$Find), type="l")
 
 # Or the correlation between fishing effort in the last historical year and 
@@ -322,6 +327,10 @@ plot(OMSRA@cpars$Find[,44], OMSRA@cpars$dep, xlab="Last year fishing effort",
 # StochasticSRA analysis can then be used to run a MSE:
 
 MSE <- runMSE(OMSRA)
+
+# Q4.1  What is the difference in MSE results between rockfish OMs that 
+#       include/exclude custom parameters (tip: you can use new('list') to
+#       generate a blank list in @cpars) 
 
 
 
@@ -340,7 +349,7 @@ MSE <- runMSE(OMSRA)
 #   - a name for the Name slot in the OM object 
 #   - the number of simulations we wish to include 
 
-SSout <- SS2DLM(SSdir="Data/SS/", Name="fromSS", nsim=100)
+SSout <- SS2DLM(SSdir = "Exercises/Data/SS/", Name = "fromSS", nsim = 100)
 
 # The 'SS2DLM' function returns an object of class OM with the slots populated 
 # from the MLE estimates in the SS3 model run.
@@ -377,13 +386,16 @@ SSOM@cpars <- SSout@cpars
 
 plot(SSOM)
 
-
 # And we can run a MSE using the OM object created by 'SS2DLM':
 
 MSE <- runMSE(SSOM)
 
 NOAA_plot(MSE)
 
+
+# Q5.1  Examine SSOM using the plot function. Are there any parts of the 
+#       operating model that you think are too certain and do not reflect
+#       credible ranges of uncertainty?
 
 
 # ==============================================================================

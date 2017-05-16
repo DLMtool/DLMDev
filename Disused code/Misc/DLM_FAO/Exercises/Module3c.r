@@ -30,7 +30,7 @@ setup()
 # === Task 1: Finding MSE data in an MSE object ==================================
 # 
 # First, lets create an example MSE object so that we can see what the
-# MSE data look like.For a change, rather than build an operating model 
+# MSE data look like. For a change, rather than build an operating model 
 # from the component Stock, Fleet, Obs and Imp objects we are going to 
 # search for a pre-built operating model (class OM).
 
@@ -39,7 +39,7 @@ avail('OM')
 # Lets run an MSE for the default MPs using the Yellowfin tuna operating
 # model:
 
-SWO<-runMSE(Swordfish_OM)
+SWO <- runMSE(Swordfish_OM)
 
 # Similarly to other DLMtool objects you can find out more about MSE 
 # objects like SWO using the built-in help documentation:
@@ -81,7 +81,7 @@ hist(SWO@OM$Depletion, col='blue')
 # 65% of unfished spawning biomass (SSB0)
 #
 # Various time series data are also included in the MSE which are 
-# specific to simulation, the MP that was used and the projected
+# specific to the simulation, the MP that was used and the projected
 # year. 
 #
 # For example the slot B_BMSY is the biomass relative to BMSY
@@ -99,13 +99,12 @@ SWO@MPs
 # data are organised in order of simulation, MP and projected
 # year. 
 # 
-# This is confirmed by checking the dimensions of the B_BMSY
-# array:
+# This is confirmed by checking the dimensions of the B_BMSY array:
 
 dim(SWO@B_BMSY)
 
-# We can now extract the B/BMSY data for our particular MP
-# DCAC (MP 2 of 5) and plot the trajectories:
+# We can now extract the B/BMSY data for our particular MP# DCAC 
+# (MP 2 of 5) and plot the trajectories:
 
 DCAC_biomass<-SWO@B_BMSY[,2,]
 
@@ -125,6 +124,9 @@ abline(h=1,col="#99999995",lwd=5,lty=2)
 
 # Q1.1  Try to produce a similar projection plot for F relative 
 #       to FMSY for the MP 'matlenlim' 
+# 
+# Q1.2  Create a histogram for an observation error variable in 
+#       the table SWO@Obs
 
 
 
@@ -148,7 +150,7 @@ abline(h=1,col="#99999995",lwd=5,lty=2)
 #
 # Using the R function 'apply' this is surprisingly easy:
 
-P80<-apply(SWO@B_BMSY<0.8,2,mean)
+P80 <- apply(SWO@B_BMSY < 0.8, 2, mean)
 
 # By MP (the second dimension of the B_BMSY array) we have 
 # summed the instances where B_BMSY was less than 80%
@@ -182,7 +184,7 @@ text(P80,MY5,SWO@MPs,col='blue')
 #      economic interests (ie the last 5 years)
 #
 # Q2.2 How does the trade-off differ from the previous plot
-#      that showed short term economic interests?
+#      that showed short-term economic interests?
 #
 # Q2.3 Can you explain this difference and what does this 
 #      mean in a hypothetical management situation?

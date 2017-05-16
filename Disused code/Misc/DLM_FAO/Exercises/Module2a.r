@@ -3,9 +3,8 @@
 # === DLMtool Exercise 2a: R script for installation and validating installation  ====
 # ====================================================================================
 #
-# The aim of this exercise is to install the DLMtool package to your machine,
-# load the package into R, and test that the package is working correctly on
-# your machine.
+# The aim of this exercise is to install the DLMtool package on your machine,
+# load the package into R, and test that the package is working correctly.
 
 
 
@@ -61,9 +60,8 @@ install.packages("DLMtool")
 
 # === Task 4: Loading the package ===============================================
 #
-# Load the DLMtool package into the R session using the code shown in Lecture
-# 2a. A message should appear in the R console alerting you that some dependant
-# packages have also been loaded.
+# Load the DLMtool package into the R session. A message should appear in the
+# R console alerting you that some dependant packages have also been loaded.
 
 library("DLMtool")
 

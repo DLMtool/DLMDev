@@ -45,7 +45,7 @@ avail('Data')
 #
 # Let's take a look at the first pre-defined data object 'Atlantic_mackerel'.
 #
-# Just like with the other objects, we can use the 'slotNames' function to 
+# Just like other objects, we can use the 'slotNames' function to 
 # explore the Data object:
 
 slotNames(Atlantic_mackerel)
@@ -82,6 +82,11 @@ class?Data
 #
 # Q1.1  In your case study are there additional data that could be included
 #       in an analysis for which there does not appear to be a slot?
+#
+# Q1.2  One of the slots in a Data object is LHYear, this is the last 
+#       historical year before MSE projection (where MPs start making
+#       management recommendations). Can you think why slot is necessary
+#       for some MPs?
 
 
 
@@ -90,7 +95,7 @@ class?Data
 # Perhaps the easiest way to get fishery data into DLMtool for non-R users 
 # is to populate a .csv file in the correct format.
 #
-# A number of example .csv files are available in the DLMtool. These CSVs 
+# A number of example .csv files are available in DLMtool. These CSVs 
 # files are located in the installation directory of the DLMtool library on your 
 # machine. The exact location of the files will vary between operating systems 
 # and machines.
@@ -160,8 +165,9 @@ CobiaData@Name
 # 
 # After importing a Data object we may wish to visualize the data. A generic 
 # and rather basic function 'summary' is available to visualize `Data` objects.
-# While not particularly asthetically pleasing this plot provides a quick-
-# glance confirmation that the data are right
+#
+# While not particularly asthetically pleasing, this plot provides a quick-
+# glance confirmation that the data have been read in correctly.
 
 summary(Cobia)
 
@@ -267,7 +273,7 @@ Madeup@BMSY_B0 <- 0.35                    #  BMSY relative to unfished
 # use a single value (ie one position) as this is considered the first 
 # position of a vector (of nsim long potentially). 
 #
-# However time-series data are matrices that have npositions (nsims) rows 
+# However time-series data are matrices that have n positions (nsims) rows 
 # with columns for the years of data. So in this case our made up catch
 # data Madeup@Cat is assigned a matrix with only one row. 
 #
@@ -285,10 +291,10 @@ Needed(Madeup)
 # In this set of exercises we have examined the contents of the Data object 
 # class.
 #
-# We have also seen how to import Data objects from a specially formatted CSV 
+# We have also seen how to import Data objects from a formatted CSV 
 # file, as well as created and populated our own Data object in R. Finally, we 
 # used the 'Can', 'Cant', and 'Needed' functions to determine which MPs can be 
-# applied to our data, which MPs cannot be applied, and what additional data is 
+# applied to our data, which MPs cannot be applied, and what additional data are 
 # required in order to run those MPs.
 # 
 # In the next set of exercises we will apply MPs to our Data objects, plot the 
@@ -308,12 +314,15 @@ Needed(Madeup)
 # you work with. Import the CSV file from the new location, and use the 'summary'
 # function to visualize your modified data. Use the 'Can', 'Cant', and 'Needed' 
 # functions to determine which MPs can be run on your modified data set.
+#
+# Remember some data-limited MPs only need a few data types to provide a 
+# management recommendation. 
 
 
 # === Task 7 === Determining which MPs can be applied to the Data object =======
 # 
 # Create a blank Data object and populate it with simulated data created 
-# by runMSE (tip: use the argument 'Hist=TRUE' to only simulate historical data.) 
+# by runMSE (tip: use the argument 'Hist=TRUE' to simulate only historical data.) 
 # Populate the Observation error slots in the Data object and visualize the data 
 # object.
 

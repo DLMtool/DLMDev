@@ -56,18 +56,18 @@ avail("Imp")
 
 # === Task 2: Building an Operating Model ======================================
 #
-# In DLMtool operating models are created by 'glueing' together component
-# Stock, Fleet, Obs and Imp objects
+# In DLMtool operating models can be created by 'glueing' together 
+# component Stock, Fleet, Obs and Imp objects
 #
-# To build a new operating model use the new() function from the following
-# objects:
+# To build a new operating model use the new() function and combine the 
+# following objects:
 #
 # Stock = Blue_shark
 # Fleet = IncE_NDom
 # Obs   = Imprecise_Unbiased
 # Imp   = Perfect_Imp
 #
-# and assign the OM object to a variable called `myOM`.
+# and assign the new OM object the name `myOM`.
 
 myOM <- new("OM", Blue_shark, IncE_Dom, Imprecise_Unbiased, Perfect_Imp)
 
@@ -89,14 +89,14 @@ plot(Perfect_Imp)            # plot Imp
 
 # Alternatively you can do all of the above and a bit more if you apply
 # the plot() function to your constructed operating model
-
+windows()
 plot(myOM)
 
 # You may be now confused by a large number of plots that include
 # names you do not understand. In most cases these plots refer to
-# slots in the objects. You can find out more about these objects 
-# and what the slots mean by using the package documentation
-# that comes built-in to DLMtool. 
+# operating model parameters that are slots in the objects. You 
+# can find out more about these objects and what the slots mean by using 
+# the package documentation that comes built-in to DLMtool. 
 #
 # For example to learn more about objects of class Stock you can use 
 # the questio nmark operator:
@@ -132,7 +132,8 @@ Pplot(myMSE)
 # Each column of this plot shows the simulated fishing rate relative to FMSY 
 # and the biomass relative to BMSY for a different management procedure.
 #
-# In this MSE 5 default MPs were evaluated for 50 years into the future:
+# In this MSE, 5 default MPs were evaluated over 50 projected years into 
+# the future:
 #
 # AvC      Average historical catches are used as TAC
 # DCAC     Depletion-Corrected Average Catch (MacCall 2009)
@@ -143,7 +144,7 @@ Pplot(myMSE)
 # the probabilty of overfishing (POF) and the magnitude of yield relative 
 # to FMSY fishing.
 #
-# Similarly to objects and function you can learn about MPs using the 
+# Similarly to objects and functions, you can learn about MPs using the 
 # help documentation:
 
 ?DCAC
@@ -153,20 +154,20 @@ Pplot(myMSE)
 #
 # Q5.2  What stands out about the biomass projections for AvC and DCAC?
 #
-# Q5.3  Can you guess why FMSYref projectsion are not perfectly on the
-#       F/FMSY = 1 line?
+# Q5.3  Can you guess why FMSYref projections are not perfectly on the
+#       line at F/FMSY = 1?
 #
-# Q5.4  Exclusing FMSYref, what MP would you chose for managemetn and why?
+# Q5.4  Excluding FMSYref, what MP would you chose for management and why?
 
 
 
 # === Task 6: Investigate other MSE visualization options =======================
 # 
-# Other plotting options for MSE objects aim to aggregate the results of
-# these projections to provide a summary of performance that can be used
-# to more easily select appropriate MPs.
+# Other plotting options aim to aggregate the results of these 
+# projections and summarize performance to more easily select 
+# appropriate MPs.
 #
-# Here is the generic plot used by NOAA for stocks in the Caribean and 
+# Here is the generic plot used by NOAA for stocks in the Caribbean and 
 # Gulf of Mexico:
 
 NOAA_plot(myMSE)
@@ -192,6 +193,11 @@ NOAA_plot(myMSE)
 #
 # Q6.2 Describe the trade-off between probability of not overfishing and
 #      long-term yield for matlenlim and DCAC
+#
+# Q6.3 Why do you think it might be better to phrase performance in terms
+#      of the likelihood of exceeded a value, rather than the mean value
+#      (e.g. Probability Yield over half FMSY yield rather than mean
+#       yield)?
 
 
 
@@ -200,8 +206,6 @@ NOAA_plot(myMSE)
 # There are many other MSE plots you can explore:
 # 
 # Tplot:     a generic trade-off plot
-# DFO_plot2: a Canadian Department of Fisheries and Oceans Trade-off plot
-# DFO_proj:  a Canadian DFO projection plot using DFO reference points
 # Kplot:     a Kobe plot by MP
 # Splot:     a Kobe plot by MP for the final projected year
 # wormplot:  a rebuilding plot
@@ -210,11 +214,12 @@ NOAA_plot(myMSE)
 
 # Q7.1  Are there any of these plots that you find particularly useful?
 #
-# Q7.2  What additional diagnostics / outputs would be desirable?
+# Q7.2  What additional diagnostics / outputs would be desirable in 
+#       your management setting?
  
 
-# TIP: You can use the `plotFun()` function to print out DLMtool functions for 
-# plotting MSE objects.
+# TIP: You can use `plotFun()` to print out all theDLMtool functions that  
+# plot MSE objects.
 
 plotFun()
 

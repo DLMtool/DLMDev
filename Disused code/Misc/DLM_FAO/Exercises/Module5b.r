@@ -64,7 +64,7 @@ avail('Output')
 
 DCAC
 
-# "Crikey that looks complicated!" might be your first reaction. However
+# "Crikey that looks complicated"! might be your first reaction. However
 # This DLM_output function is easily demystified. Like all DLM_output 
 # functions it has three arguments: x, Data and reps.
 #
@@ -101,14 +101,13 @@ Data@Cat
 
 # We could generate a single TAC recommendation from these data 
 # using DCAC by specifying position 1 (there is only 1 simulation)
-# and by setting reps=1 (we want a single mean DCAC TAC recommendation)
+# and by setting reps=1 (we want a single DCAC TAC recommendation)
 
 DCAC(x=1,Data,reps=1)
 
 # If we wanted a stochastic estimate of the TAC we could increase
 # the number of reps:
 
-dev.off() #  reset plotting space
 hist(DCAC(x=1,Data,reps=1000),xlab="TAC",ylab="Rel. Freq",col="blue")
 
 
@@ -146,9 +145,9 @@ THC<-function(x, Data, reps){
 
 # To recap that's just five lines of code: 
 
-THC<-function(x, DLM_data, reps){
-  THCpos<-order(DLM_data@Cat[x,],decreasing=T)[3]
-  THCmu<-DLM_data@Cat[x,THCpos]
+THC<-function(x, Data, reps){
+  THCpos<-order(Data@Cat[x,],decreasing=T)[3]
+  THCmu<-Data@Cat[x,THCpos]
   trlnorm(reps, THCmu, 0.1)
 }
 
@@ -207,7 +206,7 @@ sfExport("THC")
 # It is straightforward to design an MP that will aim for this 
 # target index level by making adjustments to the TAC.
 #
-# We will call this MP TCPUE, short for target catch per unit
+# We will call this MP 'TCPUE', short for target catch per unit
 # effort:
 
 TCPUE<-function(x,Data,reps){
@@ -226,8 +225,7 @@ TCPUE<-function(x,Data,reps){
   if(ratio < (1 - mc)) ratio <- 1 - mc # if currentI < targetI
   if(ratio > (1 + mc)) ratio <- 1 + mc # if currentI > targetI
  
-  TAC <- Data@MPrec[x] * ratio * 
-         trlnorm(reps, 1, Data@CV_Ind[x])
+  Data@MPrec[x] * ratio * trlnorm(reps, 1, Data@CV_Ind[x])
 
 }
 
