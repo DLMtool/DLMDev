@@ -6,10 +6,12 @@ dataDir <- file.path(pkgpath, "data")
 RDir <- file.path(pkgpath, "R")
 
 MSEobj <- runMSE(testOM) # for testing 
+testOM2 <- testOM
+testOM2@seed <- 101
+MSEobj2 <- runMSE(testOM2) # for testing 
 
 
-
-# --- Spawning Biomass Relative to SBMSY ----
+# --- Prob Spawning Biomass > 0.5 SBMSY ----
 SB_SBMSY <- new("PM")
 SB_SBMSY@Name <- "Spawning Biomass Relative to SBMSY"
 SB_SBMSY@Description <- "Probability spawning biomass in last 5 years is above Ref * SBMSY"
@@ -23,10 +25,96 @@ SB_SBMSY@Func <- function(MSEobj, PMobj) {
   y1 <- yrs$y1
   y2 <- yrs$y2
   if (class(PMobj@Stat) == "character") Stat <- get(PMobj@Stat)
+  if (class(PMobj@Stat) == "function") Stat <- PMobj@Stat
   apply(var[,,y1:y2, drop=FALSE]  >= PMobj@Ref, c(1,2), Stat)
 }
-SB_SBMSY@Label <- function(PMobj, MSEobj) MakeLab(PMobj, MSEobj)
+SB_SBMSY@Label <- function(MSEobj, PMobj) MakeLab(MSEobj, PMobj)
 SB_SBMSY@Var <- "SB_SBMSY"
+
+
+SB_SBMSY@Func(MSEobj, SB_SBMSY)
+
+
+# --- Prob Fishing Mortality > FMSY ----
+F_FMSY <- new("PM")
+F_FMSY@Name <- "Fishing Mortality"
+F_FMSY@Description <- "Probability fishing mortality in last 5 years is below Ref * FMSY"
+F_FMSY@Ref <- 1
+F_FMSY@Stat <- "mean"
+F_FMSY@Y1 <- -5
+F_FMSY@Y2 <- NA
+F_FMSY@Func <- function(MSEobj, PMobj) {
+  yrs <- ChkYrs(MSEobj, PMobj@Y1, PMobj@Y2)
+  y1 <- yrs$y1
+  y2 <- yrs$y2
+  if (class(PMobj@Stat) == "character") Stat <- get(PMobj@Stat)
+  apply(MSEobj@F_FMSY[,,y1:y2, drop=FALSE]  <= PMobj@Ref, c(1,2), Stat)
+}
+F_FMSY@Label <- function(MSEobj, PMobj) MakeLab(MSEobj, PMobj)
+F_FMSY@Var <- "F_FMSY"
+
+
+F_FMSY@Func(MSEobj, F_FMSY)
+F_FMSY@Label(MSEobj, F_FMSY)
+
+xydf(MSEobj, SB_SBMSY, F_FMSY)
+
+xydf(list(MSEobj, MSEobj2), SB_SBMSY, F_FMSY)
+
+PM1 <- SB_SBMSY
+PM2 <- F_FMSY
+
+
+xydf <- function(MSEobj, PM1, PM2, MSEname=NULL, Can=NULL) {
+  
+  # add LRP TRP etc 
+  
+  lst <- list()
+  if (is.null(MSEname)) MSEname <- 1:length(MSEobj)
+  # Create a x,y data frame
+  for (X in 1:length(MSEobj)) {
+    if (class(MSEobj) == "MSE") MSE <- MSEobj
+    if (class(MSEobj) == "list") MSE <- MSEobj[[X]]
+    x <- apply(PM1@Func(MSE, PM1), 2, PM1@Stat)
+    y <- apply(PM2@Func(MSE, PM2), 2, PM2@Stat)
+    
+    lst[[X]] <- data.frame(MP=MSE@MPs, x=x, y=y, MSE=MSEname[X])
+  }
+  DF <- do.call("rbind", lst)
+  
+  # add labels 
+  out <- list()
+  out$DF <- DF 
+  if (class(PM1@Label) == "function") out$xlab <- PM1@Label(MSE, PM1)
+  if (class(PM1@Label) == "character")  out$xlab <- PM1@Label
+  if (class(PM2@Label) == "function")  out$ylab <- PM2@Label(MSE, PM1)
+  if (class(PM2@Label) == "character")  out$ylab <- PM2@Label
+  
+  out
+}
+
+
+
+myPlot <- function(MSEobj, PM1, PM2, MSEname=NULL, Can=NULL) {
+  
+
+  
+  F1a <- ggplot(DF, aes(x=x, y=y, label=MP)) + 
+    facet_wrap(~MSE, ncol=3) + 
+    geom_point(size=2) + 
+    geom_label_repel(show.legend=FALSE) + 
+    scale_x_continuous(breaks = seq(0, 1, by=0.2), limits=c(0,1)) +
+    ylim(0,1.6) + 
+    xlab(expression("Probability Biomass > 0.2 B"[0])) +
+    ylab("Relative Yield") +
+    scale_colour_discrete(guide = FALSE)  +
+    theme_bw() +
+    theme(axis.text=element_text(size=12),
+          axis.title=element_text(size=14))
+  
+  F1a 
+}
+
 
 
 
@@ -35,7 +123,11 @@ SB_SBMSY@Func(MSEobj, PMobj)
 
 
 
-MakeLab <- function(PMobj, MSEobj) {
+
+
+
+
+MakeLab <- function(MSEobj, PMobj) {
   yrs <- ChkYrs(MSEobj, PMobj@Y1, PMobj@Y2)
   years <- paste0(yrs[1], "-", yrs[2])
   StatText <- switch(PMobj@Stat,
@@ -75,24 +167,11 @@ if (VarText == "Yield") {
 }
 
 
-switch("test",
-                   "prob" = "Prob.",
-                   "mean" = "Mean",
-                   "median" = "Med.",
-                   "sd" = "S.D.",
-                   "max" = "Max.",
-                   "min" = "Min.",
-                   "var" = "Var.",
-                   "quantile" = "Quant.",
-                   "sum" = "Sum",
-       "function")
 
 
 
 
 SB_BMSY
-
-attributes(SB_BMSY2)
 
 
 SB_BMSY@Ref <- 0.1
@@ -100,13 +179,6 @@ SB_BMSY@Func(MSEobj, SB_BMSY)
 
 
 
-
-setMethod("show", signature(object = "PM"), function(object) {
-  print(object)
-})
-
-
-call("SB_BMSY2")
 
 
 
@@ -189,3 +261,36 @@ save(SB_B0, file = file.path(dataDir, "SB_B0.RData"), compress = "bzip2")
 # save(F_FMSY, file = file.path(dataDir, "F_FMSY.RData"), compress = "bzip2")
 # 
 # 
+
+
+
+#'  Long-Term Yield Peformance Metric Function
+#'
+#'  An object of class PM
+#'
+"LTY"
+
+#'  Short-Term Yield Peformance Metric Function
+#'
+#'  An object of class PM
+#'
+"STY"
+
+#'  Spawning Biomass Relative to SBMSY
+#'
+#'  An object of class PM
+#'
+"SB_BMSY"
+
+#'  Spawning Biomass Relative to SB0
+#'
+#'  An object of class PM
+#'
+"SB_B0"
+
+#'  Fishing Mortality Relative to FMSY
+#'
+#'  An object of class PM
+#'
+"F_FMSY"
+
