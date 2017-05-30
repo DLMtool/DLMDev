@@ -1,296 +1,211 @@
+localDir <- "C:/Users/Adrian/Documents/GitHub" 
+
+# Modify to include a description later 
+
+
 library(DLMtool)
 
-localDir <- "C:/Users/Adrian/Documents/GitHub" 
+pms <- try(avail("PM"), silent=TRUE )
+if (class(pms) =="try-error") pms <- NULL
+
+
 pkgpath <- file.path(localDir, "DLMtool")
 dataDir <- file.path(pkgpath, "data")
 RDir <- file.path(pkgpath, "R")
 
-MSEobj <- runMSE(testOM) # for testing 
-testOM2 <- testOM
-testOM2@seed <- 101
-MSEobj2 <- runMSE(testOM2) # for testing 
+fileName <- "RoxyPMobj.r" # name of R script with roxygen 
+file.remove(file.path(pkgpath, 'R/', fileName)) # delete 
+file.create(file.path(pkgpath, 'R/', fileName)) # make empty file 
+
+cat("# This file is automatically built by prefinedPMobjects.r in DLMDev\n",
+    "# Don't edit by hand!\n", 
+    "# \n\n", sep="", append=TRUE, 
+    file=file.path(pkgpath, 'R/', fileName))  
 
 
-# --- Prob Spawning Biomass > 0.5 SBMSY ----
+# Save the PM object to data directory and write Roxygen code 
+saveWrite <- function(obj, dataDir=file.path(pkgpath, "data")) {
+  name <- paste0(obj, ".RData")
+  temp <- get(obj)
+  assign(obj, temp)
+  save(list=obj, file = file.path(dataDir, name), compress = "bzip2")
+  
+  # Write roxygen 
+  chk <- file.exists(file.path(pkgpath, 'R/', fileName))
+  if(!chk) file.create(file.path(pkgpath, 'R/', fileName)) # make empty file 
+  clss <- class(get("SB_SB0"))
+  cat("#'  ", obj, " Performance Metric Object",
+      "\n#'", 
+      "\n#'  An object of class ", clss,
+      "\n#' \n",
+      "'", obj, "'\n\n\n", sep="", append=TRUE, 
+      file=file.path(pkgpath, 'R/', fileName))   
+}
+
+
+# --- Spawning Biomass relative to SB0 ----
+SB_SB0 <- new("PM")
+SB_SB0@Name <- "Spawning Biomass Relative to SB0"
+SB_SB0@Func <- function(MSEobj, PMobj)  MSEobj@SSB / array(MSEobj@OM$SSB0, dim=dim(MSEobj@SSB)) 
+SB_SB0@Label <- bquote(italic("SB") * "/" * italic("SB"[0]))
+saveWrite("SB_SB0")
+
+
+
+# --- Probabiity Spawning Biomass is above Ref * SB0 ----
+pSB0 <- new("PM")
+pSB0@Name <- "Probability spawning biomass is above Ref * SB0"
+pSB0@Ref <- 0.2 
+pSB0@RP <- 0.8
+pSB0@Func <- function(MSEobj, PMobj) MSEobj@SSB / array(MSEobj@OM$SSB0, dim=dim(MSEobj@SSB)) >= PMobj@Ref
+pSB0@Label <- function(MSEobj, PMobj) {
+  if (PMobj@Ref == 1) return(bquote("Prob." ~ italic("SB") ~ ">" ~ italic("SB"[0])))
+  if (PMobj@Ref != 1) return(bquote("Prob." ~ italic("SB") ~ ">" ~ .(PMobj@Ref) ~ italic("SB"[0]))) 
+}
+saveWrite("pSB0")
+
+# --- Spawning Biomass relative to SBMSY ----
 SB_SBMSY <- new("PM")
 SB_SBMSY@Name <- "Spawning Biomass Relative to SBMSY"
-SB_SBMSY@Description <- "Probability spawning biomass in last 5 years is above Ref * SBMSY"
-SB_SBMSY@Ref <- 0.5 
-SB_SBMSY@Stat <- "mean"
-SB_SBMSY@Y1 <- -5
-SB_SBMSY@Y2 <- NA
-SB_SBMSY@Func <- function(MSEobj, PMobj) {
-  var <- MSEobj@SSB/array(MSEobj@OM$SSBMSY, dim=dim(MSEobj@SSB))
-  yrs <- ChkYrs(MSEobj, PMobj@Y1, PMobj@Y2)
-  y1 <- yrs$y1
-  y2 <- yrs$y2
-  if (class(PMobj@Stat) == "character") Stat <- get(PMobj@Stat)
-  if (class(PMobj@Stat) == "function") Stat <- PMobj@Stat
-  apply(var[,,y1:y2, drop=FALSE]  >= PMobj@Ref, c(1,2), Stat)
+SB_SBMSY@Func <- function(MSEobj, PMobj) MSEobj@SSB/array(MSEobj@OM$SSBMSY, dim=dim(MSEobj@SSB))
+SB_SBMSY@Label <- bquote(italic("SB") * "/" * italic("SB"[MSY]))
+saveWrite("SB_SBMSY")
+
+
+# --- Probabiity Spawning Biomass is above Ref * SBMSY ----
+pSBMSY <- new("PM")
+pSBMSY@Name <- "Probability spawning biomass is above Ref * SBMSY"
+pSBMSY@Ref <- 0.5
+pSBMSY@RP <- 0.8
+pSBMSY@Func <- function(MSEobj, PMobj) MSEobj@SSB/array(MSEobj@OM$SSBMSY, dim=dim(MSEobj@SSB)) >= PMobj@Ref
+pSBMSY@Label <- function(MSEobj, PMobj) {
+  if (PMobj@Ref == 1) return(bquote("Prob." ~ italic("SB") ~ ">" ~ italic("SB"[MSY])))
+  if (PMobj@Ref != 1) return(bquote("Prob." ~ italic("SB") ~ ">" ~ .(PMobj@Ref) ~ italic("SB"[MSY]))) 
 }
-SB_SBMSY@Label <- function(MSEobj, PMobj) MakeLab(MSEobj, PMobj)
-SB_SBMSY@Var <- "SB_SBMSY"
+saveWrite("pSBMSY")
 
-
-SB_SBMSY@Func(MSEobj, SB_SBMSY)
-
+# --- Relative Fishing Mortality  ----
+F_FMSY <- new("PM")
+F_FMSY@Name <- "Fishing Mortality relative to FMSY"
+F_FMSY@Func <- function(MSEobj, PMobj) MSEobj@F_FMSY
+F_FMSY@Label <- bquote("Fishing mortality relative to " ~ italic("F"[MSY]))  
+saveWrite("F_FMSY")
 
 # --- Prob Fishing Mortality > FMSY ----
-F_FMSY <- new("PM")
-F_FMSY@Name <- "Fishing Mortality"
-F_FMSY@Description <- "Probability fishing mortality in last 5 years is below Ref * FMSY"
-F_FMSY@Ref <- 1
-F_FMSY@Stat <- "mean"
-F_FMSY@Y1 <- -5
-F_FMSY@Y2 <- NA
-F_FMSY@Func <- function(MSEobj, PMobj) {
-  yrs <- ChkYrs(MSEobj, PMobj@Y1, PMobj@Y2)
-  y1 <- yrs$y1
-  y2 <- yrs$y2
-  if (class(PMobj@Stat) == "character") Stat <- get(PMobj@Stat)
-  apply(MSEobj@F_FMSY[,,y1:y2, drop=FALSE]  <= PMobj@Ref, c(1,2), Stat)
+pFMSY <- new("PM")
+pFMSY@Name <- "Probability fishing mortality is below Ref * FMSY"
+pFMSY@Ref <- 1
+pFMSY@RP <- 0.5
+pFMSY@Func <- function(MSEobj, PMobj) {
+  apply(MSEobj@F_FMSY <= PMobj@Ref, c(1,2), mean)
 }
-F_FMSY@Label <- function(MSEobj, PMobj) MakeLab(MSEobj, PMobj)
-F_FMSY@Var <- "F_FMSY"
-
-
-F_FMSY@Func(MSEobj, F_FMSY)
-F_FMSY@Label(MSEobj, F_FMSY)
-
-xydf(MSEobj, SB_SBMSY, F_FMSY)
-
-xydf(list(MSEobj, MSEobj2), SB_SBMSY, F_FMSY)
-
-PM1 <- SB_SBMSY
-PM2 <- F_FMSY
-
-
-xydf <- function(MSEobj, PM1, PM2, MSEname=NULL, Can=NULL) {
-  
-  # add LRP TRP etc 
-  
-  lst <- list()
-  if (is.null(MSEname)) MSEname <- 1:length(MSEobj)
-  # Create a x,y data frame
-  for (X in 1:length(MSEobj)) {
-    if (class(MSEobj) == "MSE") MSE <- MSEobj
-    if (class(MSEobj) == "list") MSE <- MSEobj[[X]]
-    x <- apply(PM1@Func(MSE, PM1), 2, PM1@Stat)
-    y <- apply(PM2@Func(MSE, PM2), 2, PM2@Stat)
-    
-    lst[[X]] <- data.frame(MP=MSE@MPs, x=x, y=y, MSE=MSEname[X])
-  }
-  DF <- do.call("rbind", lst)
-  
-  # add labels 
-  out <- list()
-  out$DF <- DF 
-  if (class(PM1@Label) == "function") out$xlab <- PM1@Label(MSE, PM1)
-  if (class(PM1@Label) == "character")  out$xlab <- PM1@Label
-  if (class(PM2@Label) == "function")  out$ylab <- PM2@Label(MSE, PM1)
-  if (class(PM2@Label) == "character")  out$ylab <- PM2@Label
-  
-  out
+pFMSY@Label <- function(MSEobj, PMobj) {
+  if (PMobj@Ref == 1) return(bquote("Prob." ~ italic("F") ~ "<" ~ italic("F"[MSY])))
+  if (PMobj@Ref != 1) return(bquote("Prob." ~ italic("F") ~ "<" ~ .(PMobj@Ref) ~ italic("F"[MSY])))
 }
+saveWrite("pFMSY")
+
+# --- Yield relative to Reference Yield ----
+Yield <- new("PM")
+Yield@Name <- "Yield relative to Reference Yield"
+Yield@Func <- function(MSEobj, PMobj) MSEobj@C / array(MSEobj@OM$RefY, dim=dim(MSEobj@C))
+Yield@Label <- bquote("Yield / " ~italic("F"[MSY]) ~ "Yield")
+saveWrite("Yield")
 
 
-
-myPlot <- function(MSEobj, PM1, PM2, MSEname=NULL, Can=NULL) {
-  
-
-  
-  F1a <- ggplot(DF, aes(x=x, y=y, label=MP)) + 
-    facet_wrap(~MSE, ncol=3) + 
-    geom_point(size=2) + 
-    geom_label_repel(show.legend=FALSE) + 
-    scale_x_continuous(breaks = seq(0, 1, by=0.2), limits=c(0,1)) +
-    ylim(0,1.6) + 
-    xlab(expression("Probability Biomass > 0.2 B"[0])) +
-    ylab("Relative Yield") +
-    scale_colour_discrete(guide = FALSE)  +
-    theme_bw() +
-    theme(axis.text=element_text(size=12),
-          axis.title=element_text(size=14))
-  
-  F1a 
-}
-
-
-
-
-PMobj <- SB_SBMSY 
-SB_SBMSY@Func(MSEobj, PMobj)
-
-
-
-
-
-
-
-MakeLab <- function(MSEobj, PMobj) {
-  yrs <- ChkYrs(MSEobj, PMobj@Y1, PMobj@Y2)
-  years <- paste0(yrs[1], "-", yrs[2])
-  StatText <- switch(PMobj@Stat,
-                     "prob" = "Prob.",
-                     "mean" = "Mean",
-                     "median" = "Med.",
-                     "sd" = "S.D.",
-                     "max" = "Max.",
-                     "min" = "Min.",
-                     "var" = "Var.",
-                     "quantile" = "Quant.",
-                     "sum" = "Sum",
-                     "statistic")
-  RefText <- as.character(PMobj@Ref)
-  if (is.na(RefText)) RefText <- NULL
-  VarText <- switch(PMobj@Var,
-                    "F_FMSY" = bquote(italic("F")*"/"*italic("F"[MSY])),
-                    "SB_SB0" = bquote(italic("SB")*"/"*italic("SB"[0])),
-                    "SB_SBMSY" = bquote(italic("SB")*"/"*italic("SB"[MSY])),
-                    "B_BMSY" = bquote(italic("B")*"/"*italic("B"[MSY])),
-                    "B_B0" = bquote(italic("B")*"/"*italic("B"[0])),
-                    "Yield" = "Yield",
-                    "AAVY" = "AAVY",
-                    "AAVE" = "AAVE",
-                    "something else")
-  YearText <- paste0("(Years ", as.character(years), ")")
-  lab <- bquote(atop(.(StatText) ~ .(VarText) ~ ">" ~ .(RefText), .(YearText)))
-  lab  
-}
-
-
-if (VarText == "Yield") {
-  lab <- bquote(atop(.(StatText) ~ .(VarText) ~ .(SignText) ~ .(RefText) ~ italic("F"[MSY]) ~
-                       "Yield", .(YearText)))
-  if (RefText == "1") lab <- bquote(atop(.(StatText) ~ .(VarText) ~ .(SignText) ~ "relative to" 
-                                         ~ italic("F"[MSY]) ~ "Yield ", .(YearText)))
-}
-
-
-
-
-
-
-SB_BMSY
-
-
-SB_BMSY@Ref <- 0.1
-SB_BMSY@Func(MSEobj, SB_BMSY)
-
-
-
-
-
-
-# Write Roxygen code 
-
-
-
-# Save object to data directory
-save(SB_BMSY, file = file.path(dataDir, "SB_BMSY.RData"), compress = "bzip2")
-
-
-
-
-# --- Long-term Yield ----
+# --- Long-term Yield relative to Reference Yield ----
 LTY <- new("PM")
-LTY@Name <- "Long-term Yield"
-LTY@Description <- "Probability ..."
-LTY@Ref <- 0.5 
-LTY@Stat <- mean
-
-LTY@Func <- function(MSEobj) {
-  RelY <- MSEobj@C / array(MSEobj@OM$RefY, dim=dim(MSEobj@C))
-  pyears <- MSEobj@proyears
-  if (pyears > 4) y1 <- pyears - 4 
-  if (pyears <= 4) y1 <- 1
-  nyr <- length(y1:pyears)
-  apply(RelY[,,y1:pyears, drop=FALSE]  > LTY@Ref, c(1,2), mean)
+LTY@Name <- "Long-Term Yield relative to Reference Yield"
+LTY@Func <- function(MSEobj, PMobj) {
+  y1 <- MSEobj@proyears - 4
+  y2 <- MSEobj@proyears
+  if (y1 < 1) y1 <- 1
+  relY <-(MSEobj@C / array(MSEobj@OM$RefY, dim=dim(MSEobj@C)))
+  relY[,,y1:y2]
 }
-save(LTY, file = file.path(dataDir, "LTY.RData"), compress = "bzip2")
+LTY@Label <- bquote("Long-Term Yield / " ~italic("F"[MSY]) ~ "Yield")
+saveWrite("LTY")
 
 
+# --- Short-term Yield relative to Reference Yield ----
 STY <- new("PM")
-STY@Name <- "Short-term Yield"
-STY@Description <- "Probability ..."
-STY@Ref <- 0.5 
-STY@Stat <- mean
-STY@Func <- function(MSEobj) {
-  RelY <- MSEobj@C / array(MSEobj@OM$RefY, dim=dim(MSEobj@C))
-  pyears <- MSEobj@proyears
+STY@Name <- "Short-Term Yield relative to Reference Yield"
+STY@Func <- function(MSEobj, PMobj) {
   y1 <- 1 
-  if (pyears > 5) y2 <- 5
-  if (pyears <= 5) y2 <- pyears
-  nyr <- length(y1:y2)
-  apply(RelY[,,y1:y2, drop=FALSE]  > STY@Ref, c(1,2), mean)
+  y2 <- 5
+  if (MSEobj@proyears < 5) y2 <- MSEobj@proyears
+  relY <-(MSEobj@C / array(MSEobj@OM$RefY, dim=dim(MSEobj@C)))
+  relY[,,y1:y2]
 }
-save(STY, file = file.path(dataDir, "STY.RData"), compress = "bzip2")
+STY@Label <- bquote("Short-Term Yield / " ~italic("F"[MSY]) ~ "Yield")
+saveWrite("STY")
 
-
-
-
-SB_B0 <- new("PM")
-SB_B0@Name <- "Spawning Biomass Relative to SB0"
-SB_B0@Description <- "Probability ..."
-SB_B0@Ref <- 0.5 
-SB_B0@Stat <- mean
-SB_B0@Func <- function(MSEobj) {
-  var <- MSEobj@SSB / array(MSEobj@OM$SSB0, dim=dim(MSEobj@SSB))
-  pyears <- MSEobj@proyears
-  if (pyears > 4) y1 <- pyears - 4 
-  if (pyears <= 4) y1 <- 1
-  apply(var[,,y1:pyears, drop=FALSE]  > SB_B0@Ref, c(1,2), mean)
+# --- Average Annual Variability in Yield ----
+AAVY <- new("PM")
+AAVY@Name <- "Average Annual Variablity in Yield"
+AAVY@Func <- function(MSEobj, PMobj) {
+  MSEobj@C[(!is.finite(MSEobj@C[, , , drop = FALSE]))] <- 0  # if catch is NAN or NA, make it 0
+  MSEobj@C[MSEobj@C < 0.1] <- 0 # tiny catches go to zero
+  y1 <- 1 
+  y2 <- MSEobj@proyears
+  ys1 <- y1:(y2-1)
+  ys2 <- ys1+1
+  apply(abs(MSEobj@C[,,ys1, drop=FALSE] - MSEobj@C[,,ys2, drop=FALSE]), c(1,2), mean, na.rm=TRUE)/
+    apply(MSEobj@C[, ,y1:y2, drop=FALSE], c(1,2), mean, na.rm=TRUE) * 100
 }
-save(SB_B0, file = file.path(dataDir, "SB_B0.RData"), compress = "bzip2")
+AAVY@Label <- "Average Annual Variability in Yield (%)"
+saveWrite("AAVY")
+
+# --- Probability AAVY is greater than Ref % ----
+pAAVY <- new("PM")
+pAAVY@Name <- "Probability AAVY is less than Ref %"
+pAAVY@Ref <- 25
+pAAVY@RP <- 0.8
+pAAVY@Func <- function(MSEobj, PMobj) {
+  MSEobj@C[(!is.finite(MSEobj@C[, , , drop = FALSE]))] <- 0  # if catch is NAN or NA, make it 0
+  MSEobj@C[MSEobj@C < 0.1] <- 0 # tiny catches go to zero
+  y1 <- 1 
+  y2 <- MSEobj@proyears
+  ys1 <- y1:(y2-1)
+  ys2 <- ys1+1
+  if (PMobj@Ref < 1) Ref <- PMobj@Ref * 100 
+  if (PMobj@Ref > 1) Ref <- PMobj@Ref
+  apply(abs(MSEobj@C[,,ys1, drop=FALSE] - MSEobj@C[,,ys2, drop=FALSE]), c(1,2), mean, na.rm=TRUE)/
+    apply(MSEobj@C[, ,y1:y2, drop=FALSE], c(1,2), mean, na.rm=TRUE) * 100 <= Ref
+}
+pAAVY@Label <- function(MSEobj, PMobj) bquote("Prob." ~ italic("AAVY") ~ "<" ~ .(PMobj@Ref) * "%")
+saveWrite("pAAVY")
 
 
-# F_FMSY <- new("PM")
-# F_FMSY@Name <- "Fishing Mortality Relative to FMSY"
-# F_FMSY@Description <- "Probability of Overfishing..."
-# F_FMSY@Ref <- 1 
-# F_FMSY@Stat <- mean
-# F_FMSY@Func <- function(MSEobj) {
-#   var <- MSEobj@F_FMSY
-#   pyears <- MSEobj@proyears
-#   y1 <- 1 
-#   if (pyears > 5) y2 <- 5
-#   if (pyears <= 5) y2 <- pyears
-#   nyr <- length(y1:y2)
-#   apply(var[,,y1:y2, drop=FALSE]  < F_FMSY@Ref, c(1,2), mean)
-# }
-# save(F_FMSY, file = file.path(dataDir, "F_FMSY.RData"), compress = "bzip2")
-# 
-# 
+# --- Average Annual Variability in Effort ----
+AAVE <- new("PM")
+AAVE@Name <- "Average Annual Variablity in Effort"
+AAVE@Func <- function(MSEobj, PMobj) {
+  y1 <- 1 
+  y2 <- MSEobj@proyears
+  ys1 <- y1:(y2-1)
+  ys2 <- ys1+1
+  apply(abs(MSEobj@Effort[,,ys1, drop=FALSE] - MSEobj@Effort[,,ys2, drop=FALSE]), c(1,2), mean)/
+    apply(MSEobj@Effort[, ,y1:y2, drop=FALSE], c(1,2), mean)* 100
+}
+AAVE@Label <- "Average Annual Variability in Effort (%)"
+saveWrite("AAVE")
 
-
-
-#'  Long-Term Yield Peformance Metric Function
-#'
-#'  An object of class PM
-#'
-"LTY"
-
-#'  Short-Term Yield Peformance Metric Function
-#'
-#'  An object of class PM
-#'
-"STY"
-
-#'  Spawning Biomass Relative to SBMSY
-#'
-#'  An object of class PM
-#'
-"SB_BMSY"
-
-#'  Spawning Biomass Relative to SB0
-#'
-#'  An object of class PM
-#'
-"SB_B0"
-
-#'  Fishing Mortality Relative to FMSY
-#'
-#'  An object of class PM
-#'
-"F_FMSY"
+# --- Probability AAVY is greater than Ref % ----
+pAAVE <- new("PM")
+pAAVE@Name <- "Probability AAVE is less than Ref %"
+pAAVE@Ref <- 25
+pAAVE@RP <- 0.8
+pAAVE@Func <- function(MSEobj, PMobj) {
+  y1 <- 1 
+  y2 <- MSEobj@proyears
+  ys1 <- y1:(y2-1)
+  ys2 <- ys1+1
+  if (PMobj@Ref < 1) Ref <- PMobj@Ref * 100 
+  if (PMobj@Ref > 1) Ref <- PMobj@Ref
+  apply(abs(MSEobj@Effort[,,ys1, drop=FALSE] - MSEobj@Effort[,,ys2, drop=FALSE]), c(1,2), mean)/
+    apply(MSEobj@Effort[, ,y1:y2, drop=FALSE], c(1,2), mean)* 100 <= Ref
+}
+pAAVE@Label <- function(MSEobj, PMobj) bquote("Prob." ~ italic("AAVE") ~ "<" ~ .(PMobj@Ref) * "%")
+saveWrite("pAAVE")
 
