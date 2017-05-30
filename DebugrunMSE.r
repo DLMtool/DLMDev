@@ -15,3 +15,14 @@ if (!exists("fracD")) fracD <- 0.05
 
 if (!exists("OM")) OM <- new("OM", Albacore, Generic_fleet, Perfect_Info, Perfect_Imp)
 
+MPs <- "DDes"
+
+test <- runMSE(Rougheye_Rockfish_BC, MP="DDes")
+
+sum(is.na(test@F_FMSY))
+
+OM <- new("OM", Albacore, Generic_fleet, Perfect_Info, Perfect_Imp)
+OM <- makePerf(OM)
+test <- runMSE(OM, MP="FMSYref", interval=2)
+
+test@F_FMSY[1,,40:50]
