@@ -167,11 +167,11 @@ ggTrade <- function(PerfObj) {
     geom_label_repel(show.legend=FALSE) + 
     # scale_colour_discrete(guide = FALSE)  +
     theme_bw() +
-    theme(axis.line = element_line(colour = "black"),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.border = element_blank(),
-          panel.background = element_blank()) +
+    # theme(axis.line = element_line(colour = "black"),
+    #       panel.grid.major = element_blank(),
+    #       panel.grid.minor = element_blank(),
+    #       panel.border = element_blank(),
+    #       panel.background = element_blank()) +
     expand_limits(y=c(0,1), x=c(0,1)) + 
     theme(axis.text=element_text(size=12),
           axis.title=element_text(size=14)) +
