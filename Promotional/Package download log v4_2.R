@@ -33,6 +33,8 @@ coly<-colsse[ceiling(ncols*(((out$Count+0.01)/max(out$Count))^0.3))]
 coly2<-colsse[ceiling(ncols*(((ply$y+0.01)/max(out$Count))^0.3))]
 
 
+jpeg("E:/DLMtool download log v4_2.jpg",width=9,height=6,res=300,units='in')
+
 par(mar=c(5,5,3,5))
 
 plot(out$Date,out$Count,col="white",pch=19,xlab="Date",ylab="Downloads per day",main="DLMtool package downloads 2014 - 2017")
@@ -50,6 +52,7 @@ a4<-pretty(seq(0,max(out$CumCount),length.out=10))
 axis(4,at=a4*scaler,a4,col='blue',col.ticks='blue',col.axis='blue')
 mtext("Total downloads",4,col='blue',line=2.9,font=2)
 
+dev.off()
 
 
 
