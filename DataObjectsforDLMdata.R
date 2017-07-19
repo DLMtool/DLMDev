@@ -39,7 +39,10 @@ copyDataObject <- function(class, fromData, pkgpath) {
     if (class(temp) == "try-error") {
       tt <- load(file.path(ObjectDir, fls[X]))
       temp <- get(tt)
-    } else  assign(name, temp)
+      
+    } 
+    temp <- updateMSE(temp)
+    assign(name, temp)
     path <- file.path(dataDir, paste0(name, ".RData"))
     message("Saving ", paste(Name, collapse = ", "), 
             " as ", paste(basename(path), collapse = ", "), " to ", dataDir)	 
@@ -48,7 +51,7 @@ copyDataObject <- function(class, fromData, pkgpath) {
     # Write roxygen 
     chk <- file.exists(file.path(pkgpath, 'R/', RoxygenFile))
     if(!chk) file.create(file.path(pkgpath, 'R/', RoxygenFile)) # make empty file 
-      cat("#'  ", name, " ", clss,
+      cat("#'  ", name, " ", class,
           "\n#'", 
           "\n#'  An object of class ", class, 
           "\n#'\n",
@@ -83,10 +86,10 @@ copyDataObject("OM", fromData, pkgpath)
 
 ## --- Build OM from CSV ----
 createOM <- function(Stock, Fleet=Generic_fleet, Obs=Generic_obs, Imp=Perfect_Imp, 
-                     Name="OM", Source=NULL, RoxygenFile) {
+                     Name="name", Source=NULL, RoxygenFile) {
   OM <- new("OM", Stock, Fleet, Obs, Imp)
   if (!is.null(Source)) OM@Source <- Source
-  Name <- paste0(Stock@Name, "_", Name)
+  # Name <- Stock@Name
   Name <- gsub('([[:punct:]])|\\s+','_',Name)
   assign(Name, OM)
   path <- file.path(dataDir, paste0(Name, ".RData"))

@@ -1,7 +1,13 @@
 
 # ============ Diagnostic checks of DLMtool ================================================================================
 
+CheckAll <- TRUE # do you want to load DLMdata and run MSE on all OMs?
+
 library(DLMtool)
+if (CheckAll) {
+  GetMoreData()
+  library(DLMdata)
+}
 setup()
 
 works<-function(x)class(try(x,silent=T))!="try-error"
@@ -53,14 +59,14 @@ OM@seed<-runif(1)
 MPs<-c("matlenlim","matlenlim2")
 nMPs<-length(MPs)
 
-test1<-runMSEdev_imp(OM,MPs)
+test1<-runMSE(OM,MPs)
 
 OM@SizeLimFrac<-c(1.2,1.2)
 
-test2<-runMSEdev_imp(OM,MPs)
+test2<-runMSE(OM,MPs)
 
-I5<-sum(NOAA_plot(test1)$PNOF>NOAA_plot(test2)$PNOF)==nMPs
-
+# I5<-sum(NOAA_plot(test1)$PNOF>NOAA_plot(test2)$PNOF)==nMPs
+I5<-sum(NOAA_plot(test1)$PNOF<NOAA_plot(test2)$PNOF)==nMPs
 CHECKS$Imp_size<-data.frame(I5)
 
 
@@ -80,7 +86,7 @@ CHECKS$Imp_size<-data.frame(I5)
 
 # --------- Prebuilt OM checks ----------------------------------------------------
 
-
+# Tests all OMs in DLMdata package 
 OMs<-avail('OM')
 nOMs<-length(OMs)
 
@@ -109,17 +115,60 @@ Butterfish@D<-c(0.8,1)
 ButterHigh<-try(runMSE(new('OM',Butterfish,Generic_fleet,Generic_obs,Perfect_Imp)),silent=T)
 if(class(ButterHigh)=="try-error")runMSEs[1,2]<-FALSE
 
-Canary_Rockfish_BC_DFO@D<-c(0.01,0.05)
-CanaryLow<-try(runMSE(Canary_Rockfish_BC_DFO),silent=T)
-if(class(CanaryLow)=="try-error")runMSEs[1,3]<-FALSE
-
-Canary_Rockfish_BC_DFO@D<-c(0.5,0.7)
-CanaryHigh<-try(runMSE(Canary_Rockfish_BC_DFO),silent=T)
-if(class(CanaryHigh)=="try-error")runMSEs[1,4]<-FALSE
-
 CHECKS$runMSEs<-runMSEs
 
-exMSE<-list(ButterLow,ButterHigh,CanaryLow,CanaryHigh)
+exMSE<-list(ButterLow,ButterHigh)
+
+if (CheckAll) {
+  CanaryRockfishBC_OM@D<-c(0.01,0.05)
+  CanaryLow<-try(runMSE(CanaryRockfishBC_OM),silent=T)
+  if(class(CanaryLow)=="try-error")runMSEs[1,3]<-FALSE
+  
+  CanaryRockfishBC_OM@D<-c(0.5,0.7)
+  CanaryHigh<-try(runMSE(CanaryRockfishBC_OM),silent=T)
+  if(class(CanaryHigh)=="try-error")runMSEs[1,4]<-FALSE
+  
+  CHECKS$runMSEs<-runMSEs
+  
+  exMSE<-list(ButterLow,ButterHigh,CanaryLow,CanaryHigh)
+}
+
+# --- Check for NAs ---- 
+
+F_FMSYnoNA <- data.frame(matrix(TRUE,nrow=1,ncol=length(exMSE)))
+for (X in 1:length(exMSE)) {
+  if (class(exMSE[[X]])=="MSE") {
+    if(any(is.na(exMSE[[X]]@F_FMSY))) F_FMSYnoNA[1,X] <- FALSE
+  }
+}
+CHECKS$F_FMSYnoNA
+
+
+
+# ---------- Run MSE Robust ------------------------------------------------------
+# runMSErobusts <- data.frame(matrix(TRUE,nrow=1,ncol=4))
+# 
+# Butterfish@D<-c(0.01,0.05)
+# ButterLowSt <- runMSE(new('OM',Butterfish,Generic_fleet,Generic_obs,Perfect_Imp, nsim=200))
+# ButterLowRobust <- runMSErobust(new('OM',Butterfish,Generic_fleet,Generic_obs,Perfect_Imp, nsim=200),
+#                                     saveMSE=FALSE)
+# 
+# sum(apply(NOAA_plot(ButterLowSt), 2, order) == apply(NOAA_plot(ButterLowRobust), 2, order))
+# sum(!apply(NOAA_plot(ButterLowSt), 2, order) == apply(NOAA_plot(ButterLowRobust), 2, order))
+# 
+# 
+# Butterfish@D<-c(0.5,0.8)
+# ButterHighSt <- runMSE(new('OM',Butterfish,Generic_fleet,Generic_obs,Perfect_Imp, nsim=200))
+# ButterHighRobust <- runMSErobust(new('OM',Butterfish,Generic_fleet,Generic_obs,Perfect_Imp, nsim=200),
+#                                 saveMSE=FALSE)
+# 
+# order(NOAA_plot(ButterHighSt)$B50) == order(NOAA_plot(ButterHighRobust)$B50)
+# 
+# apply(NOAA_plot(ButterHighSt), 2, order) == apply(NOAA_plot(ButterHighRobust), 2, order)
+
+# Check cpars 
+
+
 
 # ---------- Misc ----------------------------------------------------------------
 
@@ -146,7 +195,7 @@ exMSE<-list(ButterLow,ButterHigh,CanaryLow,CanaryHigh)
 
 
 OMs<-avail('OM')
-nOMs<-length(OMs)
+nOM<-length(OMs)
 
 # Tplot
 Plot_DFOhist<-data.frame(matrix(FALSE,nrow=1,ncol=nOM))
@@ -159,30 +208,29 @@ CHECKS$Plot_DFOhist<-Plot_DFOhist
 nMSE<-length(exMSE) # using butter and canary example OMs
 
 # Tplot
-Plot_Tplot<-data.frame(matrix(FALSE,nrow=1,ncol=nOM))
+Plot_Tplot<-data.frame(matrix(FALSE,nrow=1,ncol=nMSE))
 for(i in 1:nMSE) Plot_Tplot[i]<-works(Tplot(exMSE[[i]]))
 CHECKS$Plot_Tplot<-Plot_Tplot
 
 # Pplot                                     
-Plot_Pplot<-data.frame(matrix(FALSE,nrow=1,ncol=nOM))
+Plot_Pplot<-data.frame(matrix(FALSE,nrow=1,ncol=nMSE))
 for(i in 1:nMSE) Plot_Pplot[i]<-works(Pplot(exMSE[[i]]))
 CHECKS$Plot_Pplot<-Plot_Pplot
 
 # Kplot                                     
-Plot_Kplot<-data.frame(matrix(FALSE,nrow=1,ncol=nOM))
+Plot_Kplot<-data.frame(matrix(FALSE,nrow=1,ncol=nMSE))
 for(i in 1:nMSE) Plot_Kplot[i]<-works(Kplot(exMSE[[i]]))
 CHECKS$Plot_Kplot<-Plot_Kplot
 
-# Kplot                                     
-Plot_NOAAplot<-data.frame(matrix(FALSE,nrow=1,ncol=nOM))
+# NOAAplot                                      
+Plot_NOAAplot<-data.frame(matrix(FALSE,nrow=1,ncol=nMSE))
 for(i in 1:nMSE) Plot_NOAAplot[i]<-works(NOAA_plot(exMSE[[i]]))
 CHECKS$Plot_NOAAplot<-Plot_NOAAplot
 
 # DFO_proj                                     
-Plot_DFOproj<-data.frame(matrix(FALSE,nrow=1,ncol=nOM))
+Plot_DFOproj<-data.frame(matrix(FALSE,nrow=1,ncol=nMSE))
 for(i in 1:nMSE) Plot_DFOproj[i]<-works(DFO_proj(exMSE[[i]]))
-CHECKS$Plot_NOAAplot<-Plot_DFOproj[i]
-
+CHECKS$Plot_DFOproj<-Plot_DFOproj[i]
 
 
 # mega MSE
@@ -202,7 +250,7 @@ cursory<-lapply(CHECKS,nerrs)
 if(sum(unlist(cursory))==0){
   message("!!! ALL CHECKS PASSED !!!")
 }else{
-  message(paste("problems with:", names(CHECKS)[as.numeric(unlist(cursory))>0]))
+  paste("problems with:", names(CHECKS)[as.numeric(unlist(cursory))>0])
 }
 
 

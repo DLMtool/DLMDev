@@ -24,13 +24,14 @@ setClassUnion(name="label.class", members=c("call", "character", "function"))
 #' 
 setClass("PM", representation(Name = "character",  Description="character",  
                               Func = "function", Ref="numeric", Stat="character",
-                              RP="numeric",  Label="label.class"))
+                              RP="numeric",  Y1="numeric", Y2="numeric", 
+                              Label="label.class", extra="numeric"))
 
 
 setMethod("initialize", "PM", function(.Object) {
+  .Object@Ref <- 0.8
   .Object@Stat <- "mean"
   .Object
-  
 })
 
 

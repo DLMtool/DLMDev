@@ -1,15 +1,17 @@
-localDir <- "C:/Users/Adrian/Documents/GitHub" 
+
 
 # Modify to include a description later 
 
 
 library(DLMtool)
+library(DLMdata)
 
 pms <- try(avail("PM"), silent=TRUE )
 if (class(pms) =="try-error") pms <- NULL
 
 
-pkgpath <- file.path(localDir, "DLMtool")
+localDir <- getwd()
+pkgpath <- file.path(localDir, "../DLMtool")
 dataDir <- file.path(pkgpath, "data")
 RDir <- file.path(pkgpath, "R")
 
@@ -43,13 +45,195 @@ saveWrite <- function(obj, dataDir=file.path(pkgpath, "data")) {
 }
 
 
+
+MSEobj <- testMSE 
+PMobj <- SB_SB03
+
+ChkYrs(MSEobj, PMobj)
+
+ChkYrs <- function(MSEobj, PMobj) {
+  y1 <- PMobj@Y1 
+  y2 <- PMobj@Y2
+  if (length(y2) == 0 || !is.finite(y2)) y2 <- MSEobj@proyears
+  if (y2 > MSEobj@proyears) {
+    y2 <- MSEobj@proyears
+    warning("Y2 is greater than proyears. Defaulting to Y2 = proyears", call.=FALSE)
+  }
+  if (length(y1) == 0 || !is.finite(y1)) {
+    y1 <- 1 
+  } else {
+    if (y1 < 0) y1 <- y2 - abs(y1) + 1 
+    if (y1 == 0) y1 <- 1
+  }
+  if (y1 <= 0) {
+    y1 <- 1
+    warning("Y1 is negative. Defaulting to Y1 = 1", call.=FALSE)
+  }
+  if (y1 >= y2) {
+    y1 <- y2 - 4 
+    warning("Y1 is greater or equal to Y2. Defaulting to Y1 = Y2-4", call.=FALSE)
+    
+  }
+  c(y1,y2)
+}
+
 # --- Spawning Biomass relative to SB0 ----
 SB_SB0 <- new("PM")
 SB_SB0@Name <- "Spawning Biomass Relative to SB0"
-SB_SB0@Func <- function(MSEobj, PMobj)  MSEobj@SSB / array(MSEobj@OM$SSB0, dim=dim(MSEobj@SSB)) 
+SB_SB0@Func <- MSEobj@SSB / array(MSEobj@OM$SSB0, dim=dim(MSEobj@SSB))
 SB_SB0@Label <- bquote(italic("SB") * "/" * italic("SB"[0]))
 saveWrite("SB_SB0")
 
+# --- Spawning Biomass relative to SB0 over certain years ----
+SB_SB02 <- new("PM")
+SB_SB02@Name <- "Spawning Biomass Relative to SB0"
+SB_SB02@Func <- function(MSEobj, PMobj) {
+  y1 <- ChkYrs(MSEobj, PMobj)[1]
+  y2 <- ChkYrs(MSEobj, PMobj)[2]
+  var <- MSEobj@SSB / array(MSEobj@OM$SSB0, dim=dim(MSEobj@SSB)) 
+  var[,,y1:y2]
+} 
+SB_SB02@Label <- function(MSEobj, PMobj) {
+  y1 <- ChkYrs(MSEobj, PMobj)[1]
+  y2 <- ChkYrs(MSEobj, PMobj)[2]
+  bquote(italic("SB") * "/" * italic("SB"[0]) ~ "(Years" ~ .(y1) ~ "-" ~ .(y2) * ")")
+}
+saveWrite("SB_SB02")
+
+
+# --- Spawning Biomass relative to SB0 over certain years ----
+SB_SB03 <- new("PM")
+SB_SB03@Name <- "Spawning Biomass Relative to SB0"
+SB_SB03@Func <- function(MSEobj, PMobj) {
+  y1 <- ChkYrs(MSEobj, PMobj)[1]
+  y2 <- ChkYrs(MSEobj, PMobj)[2]
+  var <- MSEobj@SSB / array(MSEobj@OM$SSB0, dim=dim(MSEobj@SSB)) 
+  if (length(PMobj@Ref) > 0) return(var[,,y1:y2] >= PMobj@Ref)
+  if (length(PMobj@Ref) == 0) return(var[,,y1:y2])
+} 
+SB_SB03@Label <- function(MSEobj, PMobj) {
+  y1 <- ChkYrs(MSEobj, PMobj)[1]
+  y2 <- ChkYrs(MSEobj, PMobj)[2]
+  if (length(PMobj@Ref) > 0) {
+    if (PMobj@Ref == 1) return(bquote("Prob." ~ italic("SB") ~ ">" ~ italic("SB"[0]) ~ "(Years" ~ .(y1) ~ "-" ~ .(y2) * ")"))
+    if (PMobj@Ref != 1) return(bquote("Prob." ~ italic("SB") ~ ">" ~ .(PMobj@Ref) ~ italic("SB"[0]) ~ "(Years" ~ .(y1) ~ "-" ~ .(y2) * ")"))
+  } else  return(bquote(italic("SB") * "/" * italic("SB"[0]) ~ "(Years" ~ .(y1) ~ "-" ~ .(y2) * ")"))
+}
+saveWrite("SB_SB03")
+
+
+SB_SB03@Ref <- numeric()
+PM(MSEobj, SB_SB03)
+PM(MSEobj, SB_SB03, "project")
+
+type <- "project"
+type <- "summary"
+PMobj <- SB_SB03
+
+PM <- function(MSEobj, PMobj, type=c("summary", "project"), MSEname=NULL, Can=NULL, Class=NULL) {
+  type <- match.arg(type)
+  
+  out <- list()
+  lst <- list()
+  if (is.null(MSEname)) MSEname <- 1:length(MSEobj)
+  if (class(MSEname) == "character") MSEname <- factor(MSEname, ordered=TRUE, levels=MSEname)
+  
+  for (X in 1:length(MSEobj)) {
+    if (class(MSEobj) == "MSE") MSE <- MSEobj
+    if (class(MSEobj) == "list") MSE <- MSEobj[[X]]
+    if (class(PMobj@Label) == "function") label <- PMobj@Label(MSE, PMobj)
+    if (class(PMobj@Label) != "function") label <- PMobj@Label
+    if (is.null(Can)) Can <- rep(NA, MSE@nMPs)
+    if (is.null(Class)) Class <- MPclass(MSE@MPs)
+    if (class(Can) == "character")  Can <- MSE@MPs %in% Can 
+    if (type == "summary") {
+      if (length(PMobj@extra) > 0 ) val <- apply(PMobj@Func(MSE, PMobj), 2, get(PMobj@Stat), PMobj@extra)  
+      if (length(PMobj@extra) == 0 ) val <- apply(PMobj@Func(MSE, PMobj), 2, get(PMobj@Stat))
+      
+      rp <- PMobj@Ref
+      pass <- val > PMobj@Ref
+      if (length(rp) == 0) rp <- NA
+      if (length(pass) == 0) pass <- NA
+      lst[[X]] <- data.frame(MP=MSE@MPs, val=val, rp=rp, pass=pass,
+                             MSE=MSEname[X], Can=Can, Class=Class, 
+                             stringsAsFactors = FALSE)
+    }     
+    if (type == "project") {
+      val <- PMobj@Func(MSE, PMobj)
+      if (is.logical(val)) { # probabilites
+        lst[[X]] <- apply(val, c(2,3), mean)
+      } else lst[[X]] <- val
+    }
+  }    
+  
+  if (type == "summary") {
+    DF <- do.call("rbind", lst)
+    class(out) <- "summary"
+    if (length(PMobj@Ref) == 0) label <- bquote(.(simpleCap(PMobj@Stat)) ~ .(label))
+  }
+  if (type == "project") {
+    DF <- lst
+    
+    temp <- lst[[1]]
+    
+    
+    df0 <- as.data.frame.table(temp)
+    levels(df0$Var1) <- 1:MSE@nsim
+    levels(df0$Var2) <- MSE@MPs
+    y1 <- ChkYrs(MSE, PMobj)[1]
+    y2 <- ChkYrs(MSE, PMobj)[2]
+    levels(df0$Var3) <- y1:y2
+    
+    DFout <- data.frame(MP=df0$Var2, sim=(df0$Var1), year=as.numeric(df0$Var3), val=df0$Freq)
+    library(ggplot2)
+    ggplot(DFout, aes(x=year, y=val, colour=sim)) +
+      facet_grid(~MP) +
+      geom_line() + ylab(label)
+    
+    library(dplyr)
+    tt <- DFout %>% filter(MP=="AvC")
+    ggplot(tt, aes(x=year, y=val, colour=sim)) +  geom_line()
+
+    factor(df0$Var1, levels=1:MSE@nsim)
+    
+    dim(DF[[1]])
+    
+    
+    
+    names(DF) <- MSEname
+    class(out) <- "project"
+  }  
+
+  out$Vals <- DF
+  out$Label <- label
+  out 
+}
+
+OM <- makePerf(testOM)
+MSEobj <- runMSE(OM, MP="curE")
+
+b0 <- MSEobj@SSB / array(MSEobj@OM$SSB0, dim=dim(MSEobj@SSB)) 
+range(b0[,1,1])
+
+b <- apply(MSEobj@SSB_hist, c(1,3), sum)
+
+sim <- 1
+mp <- 1
+totb <- c(b[sim,], MSEobj@SSB[sim,mp,])
+plot(totb/MSEobj@OM$SSB0[sim], type="l", ylim=c(0,2))
+abline(v=MSEobj@nyears, lty=2)
+
+totF <- cbind(apply(MSEobj@FM_hist, c(1,3), sum), MSEobj@F_FMSY[,mp,])
+plot(totF[sim,], type="l", ylim=c(0,max(totF[sim,])))
+abline(v=MSEobj@nyears, lty=2)
+
+
+
+totb <- cbind(b, MSEobj@SSB[,mp,])
+
+matplot(t(totb/MSEobj@OM$SSB0), type="l")
+abline(v=MSEobj@nyears)
+range((totb/MSEobj@OM$SSB0)[,MSEobj@nyears+1])
 
 
 # --- Probabiity Spawning Biomass is above Ref * SB0 ----

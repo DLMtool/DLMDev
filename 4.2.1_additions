@@ -1,0 +1,11 @@
+
+- alternative growth patterns (other than vB) can be used by passing Len_age array (nsim, maxage, nyears+proyears) in with cpars
+    vB parameters are estimated from the length-at-age array for the data object 
+- same with Wt_age (weight-at-age) and estimate a and b from L - W relationship from data 
+
+To Do: test providing these data to cpars 
+
+
+Add length-at-age CV to stock object? 
+
+Turing - build function

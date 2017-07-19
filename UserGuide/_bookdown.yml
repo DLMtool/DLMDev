@@ -1,5 +1,0 @@
-book_filename: "userguide"
-chapter_name: "Chapter "
-output_dir: userguide
-rmd_files: ["index.Rmd", "01-first-time-working-with-r.Rmd"]
-edit: https://github.com/DLMtool/DLMDev/edit/master/Userguide%s
