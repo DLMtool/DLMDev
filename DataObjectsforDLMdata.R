@@ -279,7 +279,7 @@ createOM_SRA <- function(Dir, nsim=nsim, nits=800, burnin=500, RoxygenFile) {
     Imp <- new("Imp", impfile)  
   } else Imp <- Perfect_Imp
   
-  CAA <- as.matrix(read.csv(file.path(Dir, fls[grep("CAA", fls)])))
+  CAA <- as.matrix(read.csv(file.path(Dir, fls[grep("CAA", fls)]), header=FALSE))
   Chist <- as.numeric(as.matrix(read.csv(file.path(Dir, fls[grep("Chist", fls)]), header=FALSE)))
   
   OM <- new("OM", Stock, Fleet, Obs, Imp)
