@@ -40,7 +40,9 @@ copyDataObject <- function(class, fromData, pkgpath) {
       tt <- load(file.path(ObjectDir, fls[X]))
       temp <- get(tt)
     } 
+    temp <- updateMSE(temp)
     assign(name, temp)
+    
     path <- file.path(dataDir, paste0(name, ".RData"))
     message("Saving ", paste(Name, collapse = ", "), 
             " as ", paste(basename(path), collapse = ", "), " to ", dataDir)	 
