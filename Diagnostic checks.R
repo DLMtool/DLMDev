@@ -21,6 +21,7 @@ nMPs<-length(MPs)
 
 test1<-runMSE(OM,MPs) # Base
 
+
 OM@TACFrac<-c(1,1.2)
 test2<-runMSE(OM,MPs) # 20% overage
 
@@ -53,11 +54,11 @@ OM@seed<-runif(1)
 MPs<-c("matlenlim","matlenlim2")
 nMPs<-length(MPs)
 
-test1<-runMSEdev_imp(OM,MPs)
+test1<-runMSE(OM,MPs)
 
 OM@SizeLimFrac<-c(1.2,1.2)
 
-test2<-runMSEdev_imp(OM,MPs)
+test2<-runMSE(OM,MPs)
 
 I5<-sum(NOAA_plot(test1)$PNOF>NOAA_plot(test2)$PNOF)==nMPs
 

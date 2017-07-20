@@ -1,38 +1,38 @@
-library(DLMtool)
-library(ggplot2)
-library(gridExtra)
-library(grid)
-library(ggrepel)
-
-
-setup()
-
-MSEobj <- runMSE(testOM) # for testing 
-testOM2 <- testOM
-testOM2@seed <- 101
-MSEobj2 <- runMSE(testOM2) # for testing 
-
-avail("PM")
-
-PMtrade(pSB0, LTY, MSEobj)
-
-PerfObj <- PMtrade(pAAVY, LTY, MSEobj)
-
-
-ggTrade(PMtrade(pAAVY, LTY, MSEobj))
-bsTrade(PMtrade(pAAVY, LTY, MSEobj))
-
-Tplotnew(PerfObj)
-Tplotnew(PerfObj, pFun="bsTrade")
-
-
-Tplotnew(x=list(SB_SB0, SB_SBMSY, F_FMSY), y=Yield, MSEobj)
-Tplotnew(x=list(SB_SB0, SB_SBMSY, F_FMSY), y=Yield, MSEobj, pFun="bsTrade")
-
-Tplotnew(x=SB_SB0, y=list(SB_SBMSY, SB_SBMSY, F_FMSY, F_FMSY), MSEobj)
-
-Tplotnew(x=SB_SB0, y=list(SB_SBMSY, SB_SBMSY, F_FMSY), MSEobj, pFun="bsTrade")
-
+# library(DLMtool)
+# library(ggplot2)
+# library(gridExtra)
+# library(grid)
+# library(ggrepel)
+# 
+# 
+# setup()
+# 
+# MSEobj <- runMSE(testOM) # for testing 
+# testOM2 <- testOM
+# testOM2@seed <- 101
+# MSEobj2 <- runMSE(testOM2) # for testing 
+# 
+# avail("PM")
+# 
+# PMtrade(pSB0, LTY, MSEobj)
+# 
+# PerfObj <- PMtrade(pAAVY, LTY, MSEobj)
+# 
+# 
+# ggTrade(PMtrade(pAAVY, LTY, MSEobj))
+# bsTrade(PMtrade(pAAVY, LTY, MSEobj))
+# 
+# Tplotnew(PerfObj)
+# Tplotnew(PerfObj, pFun="bsTrade")
+# 
+# 
+# Tplotnew(x=list(SB_SB0, SB_SBMSY, F_FMSY), y=Yield, MSEobj)
+# Tplotnew(x=list(SB_SB0, SB_SBMSY, F_FMSY), y=Yield, MSEobj, pFun="bsTrade")
+# 
+# Tplotnew(x=SB_SB0, y=list(SB_SBMSY, SB_SBMSY, F_FMSY, F_FMSY), MSEobj)
+# 
+# Tplotnew(x=SB_SB0, y=list(SB_SBMSY, SB_SBMSY, F_FMSY), MSEobj, pFun="bsTrade")
+# 
 
 Tplotnew <- function(x, y=NULL, MSEobj=NULL, MSEname=NULL, Can=NULL, Class=NULL, 
                      pFun=c("ggTrade", "bsTrade")) {
@@ -167,11 +167,11 @@ ggTrade <- function(PerfObj) {
     geom_label_repel(show.legend=FALSE) + 
     # scale_colour_discrete(guide = FALSE)  +
     theme_bw() +
-    theme(axis.line = element_line(colour = "black"),
-          panel.grid.major = element_blank(),
-          panel.grid.minor = element_blank(),
-          panel.border = element_blank(),
-          panel.background = element_blank()) +
+    # theme(axis.line = element_line(colour = "black"),
+    #       panel.grid.major = element_blank(),
+    #       panel.grid.minor = element_blank(),
+    #       panel.border = element_blank(),
+    #       panel.background = element_blank()) +
     expand_limits(y=c(0,1), x=c(0,1)) + 
     theme(axis.text=element_text(size=12),
           axis.title=element_text(size=14)) +

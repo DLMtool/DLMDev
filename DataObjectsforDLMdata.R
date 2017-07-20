@@ -39,7 +39,8 @@ copyDataObject <- function(class, fromData, pkgpath) {
     if (class(temp) == "try-error") {
       tt <- load(file.path(ObjectDir, fls[X]))
       temp <- get(tt)
-    } else  assign(name, temp)
+    } 
+    assign(name, temp)
     path <- file.path(dataDir, paste0(name, ".RData"))
     message("Saving ", paste(Name, collapse = ", "), 
             " as ", paste(basename(path), collapse = ", "), " to ", dataDir)	 
@@ -48,7 +49,7 @@ copyDataObject <- function(class, fromData, pkgpath) {
     # Write roxygen 
     chk <- file.exists(file.path(pkgpath, 'R/', RoxygenFile))
     if(!chk) file.create(file.path(pkgpath, 'R/', RoxygenFile)) # make empty file 
-      cat("#'  ", name, " ", clss,
+      cat("#'  ", name, " ", class,
           "\n#'", 
           "\n#'  An object of class ", class, 
           "\n#'\n",
@@ -260,7 +261,7 @@ for (om in region_agency) {
 } 
 
 # --- Build OM from Stochastic SRA ---- 
-createOM_SRA <- function(Dir, nsim=nsim, nits=800, burnin=500, RoxygenFile) {
+createOM_SRA <- function(Dir, nsim=nsim, nits=5000, burnin=200, RoxygenFile) {
   
   fls <- list.files(Dir)
   Stock <- new("Stock", file.path(Dir, fls[grep("Stock", fls)]))
@@ -276,11 +277,15 @@ createOM_SRA <- function(Dir, nsim=nsim, nits=800, burnin=500, RoxygenFile) {
     Imp <- new("Imp", impfile)  
   } else Imp <- Perfect_Imp
   
-  CAA <- as.matrix(read.csv(file.path(Dir, fls[grep("CAA", fls)])))
+  CAA <- as.matrix(read.csv(file.path(Dir, fls[grep("CAA", fls)]), header=FALSE))
   Chist <- as.numeric(as.matrix(read.csv(file.path(Dir, fls[grep("Chist", fls)]), header=FALSE)))
   
   OM <- new("OM", Stock, Fleet, Obs, Imp)
+  OM@D <- rep(0, 2) # add missing values
+  OM@L5 <- rep(0, 2) # add missing values
+  OM@LFS <- rep(0, 2)
   temp <- StochasticSRA(OM, CAA, Chist, ploty=FALSE, burnin=burnin, nsim=nsim, nits=nits)
+  
   
   Name <- paste0(Stock@Name, "_SRA")
   Name <- gsub('([[:punct:]])|\\s+','_',Name)
