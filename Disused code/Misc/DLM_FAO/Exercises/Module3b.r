@@ -72,7 +72,7 @@ NOAA_plot(MSE3)
 
 # === Task 2: Checking covergence of performance ==============================
 # 
-# In all of the MSE runs so far, unbenownst to you, just 48 simulations 
+# In all of the MSE runs so far, unbeknownst to you, just 48 simulations 
 # have been used to test the MPs. That doesn't sound like a lot, but 
 # what number of simulations is sufficient? 
 #
@@ -80,7 +80,7 @@ NOAA_plot(MSE3)
 # presumably because it 'sounds like quite a lot'. But of course this 
 # might be wasted computation. 
 #
-# When anserwing the question 'what number of simulations is enough', 
+# When answering the question 'what number of simulations is enough', 
 # a more principled answer is enough that your performance metrics 
 # don't change as more simulations are undertaken - that there is 
 # convergence in performance.
@@ -133,7 +133,7 @@ testOM@seed<-2
 # Now run the new MSE
 
 
-myMPs<-c("MCD","DBSRA","DBSRA4010")# 
+ # myMPs<-c("MCD","DBSRA","IT5")# 
 
 MSE4<-runMSE(testOM,MPs=myMPs)
 
