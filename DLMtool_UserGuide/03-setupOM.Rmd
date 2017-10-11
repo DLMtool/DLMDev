@@ -172,6 +172,50 @@ avail("Stock")
 
 We can do the same thing for the *Fleet* objects (`avail("Fleet")`), the *Obs* objects (`avail("Obs")`), and the *Imp* objects (`avail("Imp")`).
 
+
+
+## Recommended Method for Creating the Operating Model Object
+DLMtool V4.5 introduced a standardised system for initializing, populating, documenting, and importing OM objects. 
+
+
+### Initialize OM
+We recommend that 
+
+```{r setwd, message=FALSE, warning=FALSE, include=FALSE}
+setwd(file.path(getwd(), 'ExampleOM'))
+```
+
+
+new project 
+
+
+```{r OM-init, message=FALSE, warning=FALSE, include=FALSE}
+OMinit('example', overwrite = TRUE)
+```
+
+
+
+```{r OM-init2, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
+OMinit('MyOM')
+```
+
+
+### Populate and Document OM
+
+
+
+
+### Compile OM Report
+```{r Doc, eval=FALSE}
+OMdoc()
+```
+
+
+### Import OM 
+
+
+
+
 ## Creating the Operating Model Object
 The built-in *Stock*, *Fleet*, *Obs*, and *Imp* objects means that it is straightforward to create an *Operating Model* and run the MSE using the DLMtool.  
 
@@ -195,6 +239,16 @@ myOM@proyears
 myOM@seed
 ```
 
+### Important changes - DLMtool V4.5 and greater
+Since DLMtool V4.5 the following slots have been added to the OM object:
+
+- `OM@interval`
+- `OM@pstar`
+- `OM@maxF`
+- `OM@reps`
+
+This was done so that an OM object is completely self-contained and includes all information used in the MSE. 
+
 ## Customizing the Operating Model
 We have now created a *Operating Model* object and can begin the MSE.  If you wish, you can jump ahead to the [Management Strategy Evaluation] section (although you may wish to read the [Management Procedures] section first).
 
@@ -205,6 +259,12 @@ The pre-defined *Stock*, *Fleet*, *Obs*, and *Imp* objects in DLMtool can be use
 To do this, the parameters of the *Operating Model* (or more specifically the *Stock*, *Fleet*, *Obs* and *Imp* objects from which it is built) must be specified in such a way that reflects the characteristics of the fishery. 
 
 There are a number of ways of doing this.
+
+
+
+
+
+
 
 ### Creating New Objects
 One method is to create empty *Stock*, *Fleet*, *Obs*, and *Imp* objects and manually populate them.  This can be done using the `new` command:
