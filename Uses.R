@@ -15,7 +15,7 @@ Uses <- function(MP=NA, data=NULL) {
   out <- matrix(NA, nrow=length(MP), ncol=3)
   out[,1] <- MP
   out[,2] <- MPclass(MP)
-    
+  slots <- slotNames('Data') 
   slotnams <- paste("Data@", slotNames("Data"), sep = "")
   for (mm in 1:length(MP)) {
     temp <- format(match.fun(MP[mm]))
@@ -51,6 +51,7 @@ Uses(c("AvC", "LBSPR_ItTAC"))
 
 
 Uses('DCAC')
+
 
 
 Uses(data=c("steep"))
