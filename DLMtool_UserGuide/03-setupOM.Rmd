@@ -1,3 +1,8 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
 # Setting up the MSE Operating Model  {#setupOM} 
 
 ```{r, message=FALSE, warning=FALSE, include=FALSE}
@@ -75,14 +80,14 @@ class?Stock
 ### Fleet Object
 While the *Stock* object contains all the information relating to the fish stock that is being modeled, the *Fleet* object is populated with information relating to the fishing fleet and historical pattern of exploitation.
 
-Like the *Stock* objects, there are a number of *Fleet* objects that are built into the DLMtool.  Here we will look at the `Generic_fleet` object.
+Like the *Stock* objects, there are a number of *Fleet* objects that are built into the DLMtool.  Here we will look at the `Generic_Fleet` object.
 
 ```{r}
-slotNames(Generic_fleet)
+slotNames(Generic_Fleet)
 ```
 
 ```{r, include=FALSE}
-Fslots <- slotNames(Generic_fleet)
+Fslots <- slotNames(Generic_Fleet)
 FnSlot <- length(Fslots)
 ```
 
@@ -90,17 +95,17 @@ There are `r FnSlot` slots in the *Fleet* object. The parameters in the *Fleet* 
 
 For example, the number of years that the stock has been exploited is specified in the `nyears` slot:
 ```{r}
-Generic_fleet@nyears
+Generic_Fleet@nyears
 ```
 
 As another example, the smallest length at full selection is specified in the `LFS` slot:
 ```{r}
-Generic_fleet@LFS
+Generic_Fleet@LFS
 ```
 
 Note that by default the values in the `LFS` (and the `L5` [smallest length at 5% selectivity]) slots are specified as multiples of the length of maturity (e.g., `Albacore@L50`).  This is necessary because the *Fleet* objects built into the DLMtool are all generic, in the sense that they can be used with any *Stock* object.  
 
-You will notice that the `isRel` slot in the `Generic_fleet` object is set to "TRUE".  This means that the selectivity parameters are relative to the length of maturity in the *Stock* object.  Absolute values for the selectivity parameters can be used, for example by specifying `LFS` and `L5` to, say, 100 - 150 and 50 - 70 respectively. The `isRel` parameter must then be set to "FALSE", so that the Operating Model knows that these selectivity values are in absolute terms, and does not multiply them by the length of maturity (strange things may happen if the model assumes that the size of first capture is 50 to 70 times greater than the size of maturity!).
+You will notice that the `isRel` slot in the `Generic_Fleet` object is set to "TRUE".  This means that the selectivity parameters are relative to the length of maturity in the *Stock* object.  Absolute values for the selectivity parameters can be used, for example by specifying `LFS` and `L5` to, say, 100 - 150 and 50 - 70 respectively. The `isRel` parameter must then be set to "FALSE", so that the Operating Model knows that these selectivity values are in absolute terms, and does not multiply them by the length of maturity (strange things may happen if the model assumes that the size of first capture is 50 to 70 times greater than the size of maturity!).
 
 Note that all the parameters in the *Fleet* object have two values, representing the minimum and maximum bounds of a uniform distribution (with some exceptions that will be discussed in more detail later).
 
@@ -155,6 +160,26 @@ More information on the *Imp* object can be found by typing:
 class?Imp
 ```
 
+### Important changes - DLMtool V4.1 and greater
+DLMtool V4.1 introduced some important changes to the Operating Model object. The number of simulations (`nsim`) and the number of projection years (`proyears`) are now slots in the `OM` object, rather than arguments to `runMSE` (see [Management Strategy Evaluation]). This change was required to allow users to specify their own custom futures for parameters like *M*, growth, etc. The `OM` object also now has a new random seed slot in the operating model, which ensures that the MSE results are now exactly reproducible.
+
+You can modify the number of simulations, the number of projection years, or the value of the random seed by modifiying the relevant slots in the `OM` object:
+```{r, eval=FALSE}
+myOM@nsim 
+myOM@proyears
+myOM@seed
+```
+
+### Important changes - DLMtool V4.5 and greater
+Since DLMtool V4.5 the following slots have been added to the OM object:
+
+- `OM@interval`
+- `OM@pstar`
+- `OM@maxF`
+- `OM@reps`
+
+This was done so that an OM object is completely self-contained and includes all information used in the MSE. 
+
 ## Existing Stock, Fleet, Obs, and Imp Objects
 As mentioned earlier, there are several *Stock*, *Fleet*, *Obs* and *Imp* objects that are built into the DLMtool.  A list of available *Stock*, *Fleet*, *Obs*, and *Imp* objects can be found using the `avail` function.  
 
@@ -177,80 +202,135 @@ We can do the same thing for the *Fleet* objects (`avail("Fleet")`), the *Obs* o
 ## Recommended Method for Creating the Operating Model Object
 DLMtool V4.5 introduced a standardised system for initializing, populating, documenting, and importing OM objects. 
 
+The figure below shows our recommended workflow for importing an Operating Model (OM) into DLMtool:
 
-### Initialize OM
-We recommend that 
-
-```{r setwd, message=FALSE, warning=FALSE, include=FALSE}
-setwd(file.path(getwd(), 'ExampleOM'))
+```{r, echo=FALSE}
+knitr::include_graphics("images/OMinitWorkflow.png")
 ```
 
+### Set Working Directory
+We recommend creating a new directory for each OM. Each new R session should start by setting the working directory to this location. One of the easiest ways to do this is to create a new project in RStudio (File > New Project) and open this each time you revisit the analysis.
 
-new project 
+Alternatively, you can set the working directory with RStudio (Session > Set Working Directory) or directly in the R console, for example:
 
-
-```{r OM-init, message=FALSE, warning=FALSE, include=FALSE}
-OMinit('example', overwrite = TRUE)
+```{r , eval=FALSE}
+setwd("C:/MSE/MyOM")
 ```
 
+### Initialize a New OM 
 
+The `OMinit` function is used to create a blank OM spreadsheet and a skeleton OM documentation file in the working directory. 
+This is only required the first time a new OM is created. 
 
-```{r OM-init2, eval=FALSE, message=FALSE, warning=FALSE, include=FALSE}
-OMinit('MyOM')
+The `OMinit` function requires one argument, a name for the OM, and wil create two files in the working directory. For example `OMinit('MyOM')` will create *MyOM.xlsx* and *MyOM_source.rmd* in the working directory.
+
+*MyOM.xlsx* is a spreadsheet with sheets corresponding to the components of an OM: *Stock*, *Fleet*, *Obs*, and *Imp*, and *OM* and *Data* sheets. The first column in each sheet is populated with the names of the slots of the respective objects (Stock, Fleet, etc) and all slots are empty (except the *OM* sheet which has default values).
+
+The *MyOM_source.rmd* file can be opened in any text editor or RStudio, and contains a skeleton for the OM documentation.  
+
+More details on populating both these files are provided in the [Populate and Document OM] section below.
+
+### Create Source Documentation for Existing OM
+For existing OMs without documentation, the `OMinit` function can be used to create just the source documentation file in the working directory:
+
+```{r, eval=FALSE}
+OMinit('MyOM', `rmd`)
 ```
 
+### Using Templates
+Some users may wish to build an operating model based on other pre-existing Stock, Fleet, Obs, or Imp objects. This can be done by using the `templates` argument in `OMinit`. 
 
-### Populate and Document OM
+The `templates` argument requires a named list specifying the names of the objects to be used as templates.
 
+For example, `OMinit('Albacore2', templates=list(Stock=Albacore))` will result in a *Albacore2.xlsx* file being created with the *Stock* sheet populated with the values from the *Albacore* Stock object. 
 
+Other examples:
+```{r, eval=FALSE}
+OMinit('StockAndFleet', templates=list(Stock=Albacore, Fleet=Generic_FlatE))
 
+OMinit('ObsAndImp', templates=list(Obs=Generic_Obs, Imp=Perfect_Imp))
 
-### Compile OM Report
-```{r Doc, eval=FALSE}
-OMdoc()
 ```
 
+### Populate and Document OM 
+The OM is populated by adding values for each slot into the Excel spreadsheet.  
 
-### Import OM 
+To assist in documenting the rationale for the OM parameters, we recommended adding a short but informative description or rationale for the OM values in the '_source.rmd' file while the OM Excel file is being populated (open the rmd file and edit with any text editor or RStudio). Once complete, the '_source.rmd' file can be compiled into a HTML report and provides a complete documentation for the OM.  
+
+The '_source.rmd' file also contains additional information including a title for the OM report, author details, and an introduction section for additional information on the OM. 
+
+Instructions for completing the OM documentation are provided in '_source.rmd' file.
+
+The OM documentation file should be updated whenever values in the OM are changed. 
+
+### Compile OM Report from Excel
+Once the OM has been specified in the spreadsheet and documented in the '_source.rmd' file, it can be compiled into a OM Report using the `OMdoc` function. 
+
+The `OMdoc` function 
+
+```{r, eval=FALSE}
+OMdoc('MyOM')
+```
+
+In most cases it is not neccessary to provide the name of the '_source.rmd' file to `OMdoc`. By default the `OMdoc` function will look for the *rmd* file in working directory. For example, if the Excel file is named *MyOM* then `OMdoc` will look for *MyOM_source.rmd*, which is default name created by  `OMinit`.
+
+Additionally, if there is only one *xlsx* file in the working directory the name of the OM is not required, i.e., `OMdoc()`.
+
+Depending on the OM (particularly number of simulations`(OM@nsim)` and maximum age `OM@maxage)`), this may take some time as the historical simulations are run. 
+
+The resulting *MyOM.html* can opened in any web browser. It may also be possible to compile the OM report into a pdf (using `output="pdf_document"`) though this may require additional software.
 
 
+### Import OM from Excel
+The OM can be imported from the Excel file using the `XL2OM` function. 
 
+For example, to import the example OM created in the previous section:
 
-## Creating the Operating Model Object
-The built-in *Stock*, *Fleet*, *Obs*, and *Imp* objects means that it is straightforward to create an *Operating Model* and run the MSE using the DLMtool.  
+```{r, eval=FALSE}
+OM <- XL2OM('Example_Chile_hake')
+```
 
-The first step is to create the Operating Model object.  This is done using the `new` command, and specifying that we want to create a new object of class `OM`.
+## Other Methods to Import OM 
+Previous versions of DLMtool required the `new` command to create OM objects. This method is still available and is described in this section. 
 
-Here we will create a Operating Model object called `myOM`, and use the `Blue_shark` *Stock* object, the `Generic_fleet` *Fleet* object, the `Imprecise_Biased` *Observation* object, and the default `Perfect_Imp` *Imp* object:
+Here we will create a Operating Model object called `myOM`, and use the `Blue_shark` *Stock* object, the `Generic_Fleet` *Fleet* object, the `Imprecise_Biased` *Observation* object, and the default `Perfect_Imp` *Imp* object:
 
-```{r}
-myOM <- new('OM', Blue_shark, Generic_fleet, Imprecise_Biased, Perfect_Imp)
+```{r, eval=FALSE}
+BlueSharkOM <- new('OM', Blue_shark, Generic_Fleet, Imprecise_Biased, Perfect_Imp)
 ```
 
 If you use the `slotNames` function on the `myOM` object that was just created, you will see that it contains all of the information from the *Stock*, *Fleet*, *Obs*, and *Imp* objects.
 
-### Important changes - DLMtool V4.1 and greater
-DLMtool V4.1 introduced some important changes to the Operating Model object. The number of simulations (`nsim`) and the number of projection years (`proyears`) are now slots in the `OM` object, rather than arguments to `runMSE` (see [Management Strategy Evaluation]). This change was required to allow users to specify their own custom futures for parameters like *M*, growth, etc. The `OM` object also now has a new random seed slot in the operating model, which ensures that the MSE results are now exactly reproducible.
 
-You can modify the number of simulations, the number of projection years, or the value of the random seed by modifiying the relevant slots in the `OM` object:
-```{r}
-myOM@nsim 
-myOM@proyears
-myOM@seed
+### Compile OM Report from OM
+The `OMdoc` function can be used to generate an OM report directly from an OM object and an '_source.rmd' file. In this case it is necessary to provide the name of the '_source.rmd' file to `OMdoc`. For example, here we create an OM using existing objects from DLMtool, generate the '_source.rmd' documentation skeleton (only required once), and compile the OM report:
+
+```{r, eval=FALSE}
+BlueSharkOM <- new('OM', Blue_shark, Generic_Fleet, Imprecise_Biased, Perfect_Imp) 
+OMinit('BlueSharkOM', 'rmd', templates=list(Stock=Blue_shark, Fleet=Generic_Fleet, 
+                                            Obs=Imprecise_Biased, Imp=Perfect_Imp))
+# - Enter OM details in BlueSharkOM_source.rmd - 
+OMdoc(BlueSharkOM, 'BlueSharkOM_source.rmd')
 ```
 
-### Important changes - DLMtool V4.5 and greater
-Since DLMtool V4.5 the following slots have been added to the OM object:
+### Example OM Documentation
+An example of the OM documentation may be useful.  
 
-- `OM@interval`
-- `OM@pstar`
-- `OM@maxF`
-- `OM@reps`
+The following command creates example (already populated) *Example_Chile_hake.xlsx* and *Example_Chile_hake_source.rmd* files:
+```{r eval=FALSE}
+OMinit('example')
+```
 
-This was done so that an OM object is completely self-contained and includes all information used in the MSE. 
+Each slot in the OM Excel file has been populated and a rationale provided for each slot in the documentation source file. 
+
+The OM documentation can be compiled:
+```{r Doc, eval=FALSE}
+OMdoc('Example_Chile_hake')
+```
+
 
 ## Customizing the Operating Model
-We have now created a *Operating Model* object and can begin the MSE.  If you wish, you can jump ahead to the [Management Strategy Evaluation] section (although you may wish to read the [Management Procedures] section first).
+We have now created or imported a *Operating Model* object and can begin the MSE.  If you wish, you can jump ahead to the [Management Strategy Evaluation] section (although you may wish to read the [Management Procedures] section first).
 
 The remainder of this section will describe how to modify the existing *Stock*, *Fleet*, *Obs*, and *Imp* objects, as well as create new objects. 
 
@@ -259,12 +339,6 @@ The pre-defined *Stock*, *Fleet*, *Obs*, and *Imp* objects in DLMtool can be use
 To do this, the parameters of the *Operating Model* (or more specifically the *Stock*, *Fleet*, *Obs* and *Imp* objects from which it is built) must be specified in such a way that reflects the characteristics of the fishery. 
 
 There are a number of ways of doing this.
-
-
-
-
-
-
 
 ### Creating New Objects
 One method is to create empty *Stock*, *Fleet*, *Obs*, and *Imp* objects and manually populate them.  This can be done using the `new` command:
@@ -300,12 +374,12 @@ myStock@Linf <- 100
 
 This seemed to work okay.  However, if we try to run an MSE using this *Stock* object we will be confronted with an error.  This is because the Operating Model requires **two** values (lower and upper bounds) for the `Linf` parameter.  The DLMtool isn't smart enough (yet!) to detect this error before it is too late.  
 
-### Importing Objects
+### Importing Objects from a CSV File
 There may be cases where creating a blank object is useful.  More likely, however, is that users will import an object from a file, or modify a built-in object.
 
 This can be done by using the `new` command and specifying the location of a comma-separated-variable (CSV) file that contains the relevant information.
 
-#### Importing a Stock Object from a CSV File
+#### Importing a Stock Object 
 If we have a CSV file named *MyStock.csv* and stored in the directory *CSVs* (located within the working directory), we can import the *Stock* object using the following code:
 ```{r}
 myStock <- new("Stock", "CSVs/MyStock.csv")
@@ -323,7 +397,7 @@ knitr::include_graphics("images/Stock2.png")
 
 Click [here](images/Stock.png) for a larger version of the image.
 
-#### Importing a Fleet Object from a CSV File
+#### Importing a Fleet Object 
 A *Fleet* object can be imported in a similar way:
 ```{r}
 myFleet <- new("Fleet", "CSVs/myFleet.csv")
@@ -339,7 +413,7 @@ Click [here](images/Fleet.png) for a larger version of the image.
 
 **Note:** If the DLMtool cannot find the CSV file in the specified directory, a warning message will appear and a blank object will be created. 
 
-#### Importing an Observation Object from a CSV File
+#### Importing an Observation Object
 To import a *Obs* object from a CSV file you follow the same procedure:
 ```{r}
 myObs <- new("Obs", "CSVs/myObs.csv")
@@ -352,28 +426,28 @@ We can now stitch the four objects together into a new Operating Model:
 myOM <- new("OM", myStock, myFleet, myObs, myImp)
 ```
 
-In this example we did not include our newly made *Imp* object. By default the `new("OM")` command includes the `Perfect_Imp` Imp object.
+By default the `new("OM")` command includes the `Perfect_Imp` Imp object.
 
-#### Creating an Operating Model from an Excel File
-Sometimes, especially if you are conducting MSEs on a number of species, it is easier to have all of the parameters stored in a single Excel file.  This file can be imported directly as a *Operating Model* object.
+<!-- #### Creating an Operating Model from an Excel File -->
+<!-- Sometimes, especially if you are conducting MSEs on a number of species, it is easier to have all of the parameters stored in a single Excel file.  This file can be imported directly as a *Operating Model* object. -->
 
-The *Stock*, *Fleet*, *Obs*, and *Imp* parameters are structured exactly the same as described above, but here they are in separate tabs of a single spreadsheet rather than separate CSV files.
+<!-- The *Stock*, *Fleet*, *Obs*, and *Imp* parameters are structured exactly the same as described above, but here they are in separate tabs of a single spreadsheet rather than separate CSV files. -->
 
-The naming of the tabs for the Excel file is important.  The names of the three tabs relating to the *Stock*, *Fleet*, *Obs*, "*Imp* parameters must share a prefix followed by "Stock", "Fleet", "Obs", "Imp" respectively.  See the image below for an example.
+<!-- The naming of the tabs for the Excel file is important.  The names of the three tabs relating to the *Stock*, *Fleet*, *Obs*, "*Imp* parameters must share a prefix followed by "Stock", "Fleet", "Obs", "Imp" respectively.  See the image below for an example. -->
 
-```{r, echo=FALSE}
-knitr::include_graphics("images/XL2.png")
-```
+<!-- ```{r, echo=FALSE} -->
+<!-- knitr::include_graphics("images/XL2.png") -->
+<!-- ``` -->
 
-Click [here](images/XL.png) for a larger version of the image.
+<!-- Click [here](images/XL.png) for a larger version of the image. -->
 
-In this example we have two sets of parameters, imaginatively named "Example1" and "Example2".
+<!-- In this example we have two sets of parameters, imaginatively named "Example1" and "Example2". -->
 
-To create *Operating Model* objects from this file we use the following command:
-```{r}
-Example1OM <- OM_xl("CSVs/myXL.xlsx", "Example1")
-Example2OM <- OM_xl("CSVs/myXL.xlsx", "Example2")
-```
+<!-- To create *Operating Model* objects from this file we use the following command: -->
+<!-- ```{r} -->
+<!-- Example1OM <- OM_xl("CSVs/myXL.xlsx", "Example1") -->
+<!-- Example2OM <- OM_xl("CSVs/myXL.xlsx", "Example2") -->
+<!-- ``` -->
 
 ## Modifying Existing Objects
 Often the simplest way to creating a custom *Operating Model* object is to modify the existing objects in the DLMtool.  
@@ -419,7 +493,7 @@ MyOM <- new("OM", MyStock, MyFleet, MyObs, myImp)
 ## More on Customizing the Operating Model 
 In some circumstances there may be knowledge on the changes in fishing practices over the years, and it would be good to include this information in the *Operating Model*.  
 
-The *Operating Model* can be conditioned with respect to historical trends in the fishing mortality, and historical changes in the selectivity pattern.
+The *Operating Model* can be conditioned with respect to historical trends in the fishing mortality, and historical changes in the selectivity pattern. Remember to update and recompile the OM documentation whenever the OM is modified.
 
 ### Historical Trends in Fishing Mortality
 Suppose that we know the fishery began in 1950, and fishing effort increased slowly over the next decade, was relatively stable between 1960 and 1970, then increased dramatically over the next 10 years.  We also know that, while fishing effort stayed relatively constant from 1980 to around 2000, there has been a general decline in fishing effort in recent years.

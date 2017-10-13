@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Data-Limited Methods Toolkit (DLMtool)</title>
   <meta name="description" content="User guide for the DLMtool R package">
-  <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="Data-Limited Methods Toolkit (DLMtool)" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-07-20">
+<meta name="date" content="2017-10-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -137,19 +137,29 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.2.2" data-path="setupOM.html"><a href="setupOM.html#fleet-object"><i class="fa fa-check"></i><b>4.2.2</b> Fleet Object</a></li>
 <li class="chapter" data-level="4.2.3" data-path="setupOM.html"><a href="setupOM.html#observation-object"><i class="fa fa-check"></i><b>4.2.3</b> Observation Object</a></li>
 <li class="chapter" data-level="4.2.4" data-path="setupOM.html"><a href="setupOM.html#implementation-object"><i class="fa fa-check"></i><b>4.2.4</b> Implementation Object</a></li>
+<li class="chapter" data-level="4.2.5" data-path="setupOM.html"><a href="setupOM.html#important-changes---dlmtool-v4.1-and-greater"><i class="fa fa-check"></i><b>4.2.5</b> Important changes - DLMtool V4.1 and greater</a></li>
+<li class="chapter" data-level="4.2.6" data-path="setupOM.html"><a href="setupOM.html#important-changes---dlmtool-v4.5-and-greater"><i class="fa fa-check"></i><b>4.2.6</b> Important changes - DLMtool V4.5 and greater</a></li>
 </ul></li>
 <li class="chapter" data-level="4.3" data-path="setupOM.html"><a href="setupOM.html#existing-stock-fleet-obs-and-imp-objects"><i class="fa fa-check"></i><b>4.3</b> Existing Stock, Fleet, Obs, and Imp Objects</a></li>
-<li class="chapter" data-level="4.4" data-path="setupOM.html"><a href="setupOM.html#creating-the-operating-model-object"><i class="fa fa-check"></i><b>4.4</b> Creating the Operating Model Object</a><ul>
-<li class="chapter" data-level="4.4.1" data-path="setupOM.html"><a href="setupOM.html#important-changes---dlmtool-v4.1-and-greater"><i class="fa fa-check"></i><b>4.4.1</b> Important changes - DLMtool V4.1 and greater</a></li>
+<li class="chapter" data-level="4.4" data-path="setupOM.html"><a href="setupOM.html#recommended-method-for-creating-the-operating-model-object"><i class="fa fa-check"></i><b>4.4</b> Recommended Method for Creating the Operating Model Object</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="setupOM.html"><a href="setupOM.html#set-working-directory"><i class="fa fa-check"></i><b>4.4.1</b> Set Working Directory</a></li>
+<li class="chapter" data-level="4.4.2" data-path="setupOM.html"><a href="setupOM.html#initialize-a-new-om"><i class="fa fa-check"></i><b>4.4.2</b> Initialize a New OM</a></li>
+<li class="chapter" data-level="4.4.3" data-path="setupOM.html"><a href="setupOM.html#create-source-documentation-for-existing-om"><i class="fa fa-check"></i><b>4.4.3</b> Create Source Documentation for Existing OM</a></li>
+<li class="chapter" data-level="4.4.4" data-path="setupOM.html"><a href="setupOM.html#populate-and-document-om"><i class="fa fa-check"></i><b>4.4.4</b> Populate and Document OM</a></li>
+<li class="chapter" data-level="4.4.5" data-path="setupOM.html"><a href="setupOM.html#compile-om-report-from-excel"><i class="fa fa-check"></i><b>4.4.5</b> Compile OM Report from Excel</a></li>
+<li class="chapter" data-level="4.4.6" data-path="setupOM.html"><a href="setupOM.html#import-om-from-excel"><i class="fa fa-check"></i><b>4.4.6</b> Import OM from Excel</a></li>
 </ul></li>
-<li class="chapter" data-level="4.5" data-path="setupOM.html"><a href="setupOM.html#customizing-the-operating-model"><i class="fa fa-check"></i><b>4.5</b> Customizing the Operating Model</a><ul>
-<li class="chapter" data-level="4.5.1" data-path="setupOM.html"><a href="setupOM.html#creating-new-objects"><i class="fa fa-check"></i><b>4.5.1</b> Creating New Objects</a></li>
-<li class="chapter" data-level="4.5.2" data-path="setupOM.html"><a href="setupOM.html#importing-objects"><i class="fa fa-check"></i><b>4.5.2</b> Importing Objects</a></li>
+<li class="chapter" data-level="4.5" data-path="setupOM.html"><a href="setupOM.html#other-methods-to-import-om"><i class="fa fa-check"></i><b>4.5</b> Other Methods to Import OM</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="setupOM.html"><a href="setupOM.html#compile-om-report-from-om"><i class="fa fa-check"></i><b>4.5.1</b> Compile OM Report from OM</a></li>
 </ul></li>
-<li class="chapter" data-level="4.6" data-path="setupOM.html"><a href="setupOM.html#modifying-existing-objects"><i class="fa fa-check"></i><b>4.6</b> Modifying Existing Objects</a></li>
-<li class="chapter" data-level="4.7" data-path="setupOM.html"><a href="setupOM.html#more-on-customizing-the-operating-model"><i class="fa fa-check"></i><b>4.7</b> More on Customizing the Operating Model</a><ul>
-<li class="chapter" data-level="4.7.1" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-fishing-mortality"><i class="fa fa-check"></i><b>4.7.1</b> Historical Trends in Fishing Mortality</a></li>
-<li class="chapter" data-level="4.7.2" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-the-selectivity-pattern"><i class="fa fa-check"></i><b>4.7.2</b> Historical Trends in the Selectivity Pattern</a></li>
+<li class="chapter" data-level="4.6" data-path="setupOM.html"><a href="setupOM.html#customizing-the-operating-model"><i class="fa fa-check"></i><b>4.6</b> Customizing the Operating Model</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="setupOM.html"><a href="setupOM.html#creating-new-objects"><i class="fa fa-check"></i><b>4.6.1</b> Creating New Objects</a></li>
+<li class="chapter" data-level="4.6.2" data-path="setupOM.html"><a href="setupOM.html#importing-objects-from-a-csv-file"><i class="fa fa-check"></i><b>4.6.2</b> Importing Objects from a CSV File</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="setupOM.html"><a href="setupOM.html#modifying-existing-objects"><i class="fa fa-check"></i><b>4.7</b> Modifying Existing Objects</a></li>
+<li class="chapter" data-level="4.8" data-path="setupOM.html"><a href="setupOM.html#more-on-customizing-the-operating-model"><i class="fa fa-check"></i><b>4.8</b> More on Customizing the Operating Model</a><ul>
+<li class="chapter" data-level="4.8.1" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-fishing-mortality"><i class="fa fa-check"></i><b>4.8.1</b> Historical Trends in Fishing Mortality</a></li>
+<li class="chapter" data-level="4.8.2" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-the-selectivity-pattern"><i class="fa fa-check"></i><b>4.8.2</b> Historical Trends in the Selectivity Pattern</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="MPs.html"><a href="MPs.html"><i class="fa fa-check"></i><b>5</b> Management Procedures</a><ul>
@@ -314,35 +324,34 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Because DLMtool uses an age-structured model, <em>M</em> is calculated as a function of age:</p>
 <p><span class="math display">\[M_a = M\left(\frac{W_a}{W_\infty}\right)^b\]</span> where <span class="math inline">\(M_a\)</span> is natural mortality at age <span class="math inline">\(a\)</span> and <span class="math inline">\(W_a\)</span> is the mean weight at age <span class="math inline">\(a\)</span>. <em>M</em>-at-age is then rescaled so that the mean <em>M</em> of adult age classes (mean age of maturity and greater) is equal to the natural mortality rate sampled from the stock object (<code>Stock@M</code>).</p>
 <p>The <code>plotM</code> function can be used to visually inspect samples of the <em>M</em>-at-age, -length, and -weight that are generated by the model:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Albacore<span class="op">@</span>Mexp &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="op">-</span><span class="fl">0.315</span>, <span class="op">-</span><span class="fl">0.261</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Albacore@Mexp &lt;-<span class="st"> </span><span class="kw">c</span>(-<span class="fl">0.315</span>, -<span class="fl">0.261</span>)
 <span class="kw">plotM</span>(Albacore)</code></pre></div>
-<p><img src="userguide_files/figure-html/unnamed-chunk-126-1.png" width="672" /></p>
+<p><img src="userguide_files/figure-html/unnamed-chunk-132-1.png" width="672" /></p>
 </div>
 <div id="map-age-specific-m" class="section level2">
 <h2><span class="header-section-number">10.3</span> Map Age-Specific M</h2>
 <p>Usually the <code>M</code> slot contains two values, a lower and upper bound for the constant <em>M</em>-at-age. Users who wish for more control of <em>M</em>-at-age can use the <code>M</code> and <code>M2</code> slots in the <code>Stock</code> object to directly input values for <em>M</em>-at-age (<code>M</code> for lower bound and <code>M2</code> for upper bound). <code>maxage</code> values of <em>M</em> must be supplied for slots <code>M</code> and <code>M2</code>. One way to do this is to use the <code>ChooseM</code> function to map out the bounds for age-specific <em>M</em>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;OM&quot;</span>, Blue_shark, Generic_FlatE, Generic_obs, Perfect_Imp)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;OM&quot;</span>, Blue_shark, Generic_FlatE, Generic_Obs, Perfect_Imp)
 OM &lt;-<span class="st"> </span><span class="kw">ChooseM</span>(OM)</code></pre></div>
-<p><img src="images/chooseM_age.png" width="390" /></p>
+<p><img src="images/chooseM_age.png" /><!-- --></p>
 <p>Click <a href="images/chooseM_age.png">here</a> for a larger version of the image.</p>
 <p>Alternatively, users can input the values directly into the <code>M</code> and <code>M2</code> slots (must be length <code>maxage</code>):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;OM&quot;</span>, Blue_shark, Generic_FlatE, Generic_obs, Perfect_Imp)
-OM<span class="op">@</span>M &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.65</span>, <span class="fl">0.60</span>, <span class="fl">0.55</span>, <span class="fl">0.61</span>, <span class="fl">0.68</span>, <span class="fl">0.75</span>, <span class="fl">0.63</span>, <span class="fl">0.51</span>, <span class="fl">0.39</span>, <span class="fl">0.27</span>, <span class="fl">0.15</span>, <span class="fl">0.15</span>, <span class="fl">0.15</span>, <span class="fl">0.15</span>)
-OM<span class="op">@</span>M2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.85</span>, <span class="fl">0.8</span>, <span class="fl">0.75</span>, <span class="fl">0.7</span>, <span class="fl">0.76</span>, <span class="fl">0.83</span>, <span class="fl">0.9</span>, <span class="fl">0.78</span>, <span class="fl">0.66</span>, <span class="fl">0.54</span>, <span class="fl">0.42</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;OM&quot;</span>, Blue_shark, Generic_FlatE, Generic_Obs, Perfect_Imp)
+OM@M &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.7</span>, <span class="fl">0.65</span>, <span class="fl">0.60</span>, <span class="fl">0.55</span>, <span class="fl">0.61</span>, <span class="fl">0.68</span>, <span class="fl">0.75</span>, <span class="fl">0.63</span>, <span class="fl">0.51</span>, <span class="fl">0.39</span>, <span class="fl">0.27</span>, <span class="fl">0.15</span>, <span class="fl">0.15</span>, <span class="fl">0.15</span>, <span class="fl">0.15</span>)
+OM@M2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.85</span>, <span class="fl">0.8</span>, <span class="fl">0.75</span>, <span class="fl">0.7</span>, <span class="fl">0.76</span>, <span class="fl">0.83</span>, <span class="fl">0.9</span>, <span class="fl">0.78</span>, <span class="fl">0.66</span>, <span class="fl">0.54</span>, <span class="fl">0.42</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>)</code></pre></div>
 <p>The <code>plotM</code> function can then be used to visually display samples of the resulting <em>M</em> at age and size:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotM</span>(OM)</code></pre></div>
-<pre><code>## Note: Maximum age (15) is lower than assuming 1% of cohort survives to maximum age (22)</code></pre>
-<p><img src="userguide_files/figure-html/unnamed-chunk-130-1.png" width="672" /></p>
+<p><img src="userguide_files/figure-html/unnamed-chunk-136-1.png" width="672" /></p>
 </div>
 <div id="map-length-specific-m" class="section level2">
 <h2><span class="header-section-number">10.4</span> Map Length-Specific M</h2>
 <p>There is also the option to map length-specific <em>M</em> using the plotting tool:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;OM&quot;</span>, Blue_shark, Generic_FlatE, Generic_obs, Perfect_Imp)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;OM&quot;</span>, Blue_shark, Generic_FlatE, Generic_Obs, Perfect_Imp)
 OM &lt;-<span class="st"> </span><span class="kw">ChooseM</span>(OM, <span class="st">&quot;length&quot;</span>)</code></pre></div>
-<p><img src="images/chooseM_length.png" width="390" /></p>
+<p><img src="images/chooseM_length.png" /><!-- --></p>
 <p>Click <a href="images/chooseM_length.png">here</a> for a larger version of the image.</p>
 <p>This option uses the <a href="custom-parameters.html#custom-parameters">Custom Parameters</a> feature of DLMtool:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(OM<span class="op">@</span>cpars)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(OM@cpars)</code></pre></div>
 <pre><code>## List of 1
 ##  $ M_at_Length:&#39;data.frame&#39;: 42 obs. of  3 variables:
 ##   ..$ Lens: int [1:42] 0 5 10 15 20 25 30 35 40 45 ...
@@ -352,8 +361,7 @@ OM &lt;-<span class="st"> </span><span class="kw">ChooseM</span>(OM, <span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plotM</span>(OM)</code></pre></div>
 <pre><code>## valid custom parameters (OM@cpars) found: 
 ## M_at_Length</code></pre>
-<pre><code>## Note: Maximum age (15) is lower than assuming 1% of cohort survives to maximum age (28)</code></pre>
-<p><img src="userguide_files/figure-html/unnamed-chunk-135-1.png" width="672" /></p>
+<p><img src="userguide_files/figure-html/unnamed-chunk-141-1.png" width="672" /></p>
 
 </div>
 </div>
@@ -374,7 +382,7 @@ OM &lt;-<span class="st"> </span><span class="kw">ChooseM</span>(OM, <span class
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": null,
 "fontsettings": {

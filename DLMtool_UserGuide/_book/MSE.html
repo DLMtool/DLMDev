@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Data-Limited Methods Toolkit (DLMtool)</title>
   <meta name="description" content="User guide for the DLMtool R package">
-  <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="Data-Limited Methods Toolkit (DLMtool)" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-07-20">
+<meta name="date" content="2017-10-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -137,19 +137,29 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.2.2" data-path="setupOM.html"><a href="setupOM.html#fleet-object"><i class="fa fa-check"></i><b>4.2.2</b> Fleet Object</a></li>
 <li class="chapter" data-level="4.2.3" data-path="setupOM.html"><a href="setupOM.html#observation-object"><i class="fa fa-check"></i><b>4.2.3</b> Observation Object</a></li>
 <li class="chapter" data-level="4.2.4" data-path="setupOM.html"><a href="setupOM.html#implementation-object"><i class="fa fa-check"></i><b>4.2.4</b> Implementation Object</a></li>
+<li class="chapter" data-level="4.2.5" data-path="setupOM.html"><a href="setupOM.html#important-changes---dlmtool-v4.1-and-greater"><i class="fa fa-check"></i><b>4.2.5</b> Important changes - DLMtool V4.1 and greater</a></li>
+<li class="chapter" data-level="4.2.6" data-path="setupOM.html"><a href="setupOM.html#important-changes---dlmtool-v4.5-and-greater"><i class="fa fa-check"></i><b>4.2.6</b> Important changes - DLMtool V4.5 and greater</a></li>
 </ul></li>
 <li class="chapter" data-level="4.3" data-path="setupOM.html"><a href="setupOM.html#existing-stock-fleet-obs-and-imp-objects"><i class="fa fa-check"></i><b>4.3</b> Existing Stock, Fleet, Obs, and Imp Objects</a></li>
-<li class="chapter" data-level="4.4" data-path="setupOM.html"><a href="setupOM.html#creating-the-operating-model-object"><i class="fa fa-check"></i><b>4.4</b> Creating the Operating Model Object</a><ul>
-<li class="chapter" data-level="4.4.1" data-path="setupOM.html"><a href="setupOM.html#important-changes---dlmtool-v4.1-and-greater"><i class="fa fa-check"></i><b>4.4.1</b> Important changes - DLMtool V4.1 and greater</a></li>
+<li class="chapter" data-level="4.4" data-path="setupOM.html"><a href="setupOM.html#recommended-method-for-creating-the-operating-model-object"><i class="fa fa-check"></i><b>4.4</b> Recommended Method for Creating the Operating Model Object</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="setupOM.html"><a href="setupOM.html#set-working-directory"><i class="fa fa-check"></i><b>4.4.1</b> Set Working Directory</a></li>
+<li class="chapter" data-level="4.4.2" data-path="setupOM.html"><a href="setupOM.html#initialize-a-new-om"><i class="fa fa-check"></i><b>4.4.2</b> Initialize a New OM</a></li>
+<li class="chapter" data-level="4.4.3" data-path="setupOM.html"><a href="setupOM.html#create-source-documentation-for-existing-om"><i class="fa fa-check"></i><b>4.4.3</b> Create Source Documentation for Existing OM</a></li>
+<li class="chapter" data-level="4.4.4" data-path="setupOM.html"><a href="setupOM.html#populate-and-document-om"><i class="fa fa-check"></i><b>4.4.4</b> Populate and Document OM</a></li>
+<li class="chapter" data-level="4.4.5" data-path="setupOM.html"><a href="setupOM.html#compile-om-report-from-excel"><i class="fa fa-check"></i><b>4.4.5</b> Compile OM Report from Excel</a></li>
+<li class="chapter" data-level="4.4.6" data-path="setupOM.html"><a href="setupOM.html#import-om-from-excel"><i class="fa fa-check"></i><b>4.4.6</b> Import OM from Excel</a></li>
 </ul></li>
-<li class="chapter" data-level="4.5" data-path="setupOM.html"><a href="setupOM.html#customizing-the-operating-model"><i class="fa fa-check"></i><b>4.5</b> Customizing the Operating Model</a><ul>
-<li class="chapter" data-level="4.5.1" data-path="setupOM.html"><a href="setupOM.html#creating-new-objects"><i class="fa fa-check"></i><b>4.5.1</b> Creating New Objects</a></li>
-<li class="chapter" data-level="4.5.2" data-path="setupOM.html"><a href="setupOM.html#importing-objects"><i class="fa fa-check"></i><b>4.5.2</b> Importing Objects</a></li>
+<li class="chapter" data-level="4.5" data-path="setupOM.html"><a href="setupOM.html#other-methods-to-import-om"><i class="fa fa-check"></i><b>4.5</b> Other Methods to Import OM</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="setupOM.html"><a href="setupOM.html#compile-om-report-from-om"><i class="fa fa-check"></i><b>4.5.1</b> Compile OM Report from OM</a></li>
 </ul></li>
-<li class="chapter" data-level="4.6" data-path="setupOM.html"><a href="setupOM.html#modifying-existing-objects"><i class="fa fa-check"></i><b>4.6</b> Modifying Existing Objects</a></li>
-<li class="chapter" data-level="4.7" data-path="setupOM.html"><a href="setupOM.html#more-on-customizing-the-operating-model"><i class="fa fa-check"></i><b>4.7</b> More on Customizing the Operating Model</a><ul>
-<li class="chapter" data-level="4.7.1" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-fishing-mortality"><i class="fa fa-check"></i><b>4.7.1</b> Historical Trends in Fishing Mortality</a></li>
-<li class="chapter" data-level="4.7.2" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-the-selectivity-pattern"><i class="fa fa-check"></i><b>4.7.2</b> Historical Trends in the Selectivity Pattern</a></li>
+<li class="chapter" data-level="4.6" data-path="setupOM.html"><a href="setupOM.html#customizing-the-operating-model"><i class="fa fa-check"></i><b>4.6</b> Customizing the Operating Model</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="setupOM.html"><a href="setupOM.html#creating-new-objects"><i class="fa fa-check"></i><b>4.6.1</b> Creating New Objects</a></li>
+<li class="chapter" data-level="4.6.2" data-path="setupOM.html"><a href="setupOM.html#importing-objects-from-a-csv-file"><i class="fa fa-check"></i><b>4.6.2</b> Importing Objects from a CSV File</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="setupOM.html"><a href="setupOM.html#modifying-existing-objects"><i class="fa fa-check"></i><b>4.7</b> Modifying Existing Objects</a></li>
+<li class="chapter" data-level="4.8" data-path="setupOM.html"><a href="setupOM.html#more-on-customizing-the-operating-model"><i class="fa fa-check"></i><b>4.8</b> More on Customizing the Operating Model</a><ul>
+<li class="chapter" data-level="4.8.1" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-fishing-mortality"><i class="fa fa-check"></i><b>4.8.1</b> Historical Trends in Fishing Mortality</a></li>
+<li class="chapter" data-level="4.8.2" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-the-selectivity-pattern"><i class="fa fa-check"></i><b>4.8.2</b> Historical Trends in the Selectivity Pattern</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="MPs.html"><a href="MPs.html"><i class="fa fa-check"></i><b>5</b> Management Procedures</a><ul>
@@ -313,7 +323,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">6.2</span> Defining the Operating Model</h2>
 <p>The operating model is the ‘simulated reality’: a series of known simulations for testing various data-limited Management Procedures. Operating models can either be specified in detail according to each variable (e.g. sample natural mortality rate between 0.2 and 0.3) or alternatively the user can rapidly construct an operating model based on a set of predefined <code>Stock</code>, <code>Fleet</code> and <code>Observation</code> models. See Chapter <a href="setupOM.html#setupOM">4</a> for more details on the operating model.</p>
 <p>In this case we take the latter approach and pick the <code>Blue_shark</code> stock type, a generic fleet type and an observation model that generates data that can be both imprecise and biased. We will ignore implementation error and use the default <code>Perfect_Imp</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&#39;OM&#39;</span>, Blue_shark, Generic_fleet, Imprecise_Biased, Perfect_Imp)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&#39;OM&#39;</span>, Blue_shark, Generic_Fleet, Imprecise_Biased, Perfect_Imp)</code></pre></div>
 </div>
 <div id="choose-management-procedures" class="section level2">
 <h2><span class="header-section-number">6.3</span> Choose Management Procedures</h2>
@@ -350,7 +360,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h3><span class="header-section-number">6.4.2</span> Using <code>runMSE</code></h3>
 <p>Most of the arguments for the <code>runMSE</code> function have default values. The most important parameters to specify are the Operating Model object, the Management Procedures to include, the number of simulations, the number of projection years, and the interval for management.</p>
 <p>Here we will demonstrate running the blue shark operating model that we created above, for the five Management Procedures selected above. Note that in this example we have chosen to include 10 simulations (<code>nsim</code>=10) and left the other parameters at the default values.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM<span class="op">@</span>nsim &lt;-<span class="st"> </span><span class="dv">10</span> 
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM@nsim &lt;-<span class="st"> </span><span class="dv">10</span> 
 BSharkMSE &lt;-<span class="st"> </span><span class="kw">runMSE</span>(<span class="dt">OM=</span>OM, <span class="dt">MPs=</span>MPs)</code></pre></div>
 <pre><code>## Loading operating model</code></pre>
 <pre><code>## Note: Maximum age (15) is lower than assuming 1% of cohort survives to maximum age (30)</code></pre>
@@ -388,7 +398,7 @@ BSharkMSE &lt;-<span class="st"> </span><span class="kw">runMSE</span>(<span cla
 <li><code>savePack</code> - A logical value (<code>TRUE</code>/<code>FALSE</code>) to indicate if the packets should be save to current working directory</li>
 </ul>
 <p>Here we will run the blue shark MSE with 300 simulations. Note that the output is not printed out in the User Manual.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM<span class="op">@</span>nsim &lt;-<span class="st"> </span><span class="dv">300</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM@nsim &lt;-<span class="st"> </span><span class="dv">300</span>
 BSharkMSE &lt;-<span class="st"> </span><span class="kw">runMSErobust</span>(<span class="dt">OM=</span>OM, <span class="dt">MPs=</span>MPs, <span class="dt">name=</span><span class="st">&quot;bluesharkMSE&quot;</span>)</code></pre></div>
 <!-- # ```{r, runMSErobust, cache=TRUE, include=FALSE} -->
 <!-- # OM@nsim <- 300  -->
@@ -408,13 +418,13 @@ BSharkMSE &lt;-<span class="st"> </span><span class="kw">runMSErobust</span>(<sp
 <p>The MSE is now complete. We can use the <code>Converge</code> function to confirm that the number of simulations is sufficient and the MSE model has converged, by which we mean that the relative position of the Management Procedures are stable with respect to different performance metrics:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Converge</span>(BSharkMSE)</code></pre></div>
 <pre><code>## All MPs appear to have converged in 300 iterations (threshold = 2%)</code></pre>
-<p><img src="userguide_files/figure-html/unnamed-chunk-78-1.png" width="672" /></p>
+<p><img src="userguide_files/figure-html/unnamed-chunk-84-1.png" width="672" /></p>
 </div>
 <div id="a-quick-recap" class="section level2">
 <h2><span class="header-section-number">6.6</span> A Quick Recap</h2>
 <p>The next step is exploring the output of the MSE, and determining which Management Procedure best meets the management objectives.</p>
 <p>The information above is spread out over a number of sections and paragraphs, and may appear a little complex. In fact, other than the initial set up of the DLMtool, it only took 4 lines of code to run the MSE and check the model for convergence:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&#39;OM&#39;</span>, Blue_shark, Generic_fleet, Imprecise_Biased, <span class="dt">nsim=</span><span class="dv">300</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&#39;OM&#39;</span>, Blue_shark, Generic_Fleet, Imprecise_Biased, <span class="dt">nsim=</span><span class="dv">300</span>)
 MPs &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Fratio&quot;</span>, <span class="st">&quot;DCAC&quot;</span>, <span class="st">&quot;Fdem&quot;</span>, <span class="st">&quot;DD&quot;</span>, <span class="st">&quot;matlenlim&quot;</span>)
 BSharkMSE &lt;-<span class="st"> </span><span class="kw">runMSErobust</span>(<span class="dt">OM=</span>OM, <span class="dt">MPs=</span>MPs, <span class="dt">name=</span><span class="st">&quot;bluesharkMSE&quot;</span>)
 <span class="kw">Converge</span>(BSharkMSE)</code></pre></div>
@@ -439,7 +449,7 @@ BSharkMSE &lt;-<span class="st"> </span><span class="kw">runMSErobust</span>(<sp
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": null,
 "fontsettings": {

@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Data-Limited Methods Toolkit (DLMtool)</title>
   <meta name="description" content="User guide for the DLMtool R package">
-  <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="Data-Limited Methods Toolkit (DLMtool)" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-07-20">
+<meta name="date" content="2017-10-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -137,19 +137,29 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.2.2" data-path="setupOM.html"><a href="setupOM.html#fleet-object"><i class="fa fa-check"></i><b>4.2.2</b> Fleet Object</a></li>
 <li class="chapter" data-level="4.2.3" data-path="setupOM.html"><a href="setupOM.html#observation-object"><i class="fa fa-check"></i><b>4.2.3</b> Observation Object</a></li>
 <li class="chapter" data-level="4.2.4" data-path="setupOM.html"><a href="setupOM.html#implementation-object"><i class="fa fa-check"></i><b>4.2.4</b> Implementation Object</a></li>
+<li class="chapter" data-level="4.2.5" data-path="setupOM.html"><a href="setupOM.html#important-changes---dlmtool-v4.1-and-greater"><i class="fa fa-check"></i><b>4.2.5</b> Important changes - DLMtool V4.1 and greater</a></li>
+<li class="chapter" data-level="4.2.6" data-path="setupOM.html"><a href="setupOM.html#important-changes---dlmtool-v4.5-and-greater"><i class="fa fa-check"></i><b>4.2.6</b> Important changes - DLMtool V4.5 and greater</a></li>
 </ul></li>
 <li class="chapter" data-level="4.3" data-path="setupOM.html"><a href="setupOM.html#existing-stock-fleet-obs-and-imp-objects"><i class="fa fa-check"></i><b>4.3</b> Existing Stock, Fleet, Obs, and Imp Objects</a></li>
-<li class="chapter" data-level="4.4" data-path="setupOM.html"><a href="setupOM.html#creating-the-operating-model-object"><i class="fa fa-check"></i><b>4.4</b> Creating the Operating Model Object</a><ul>
-<li class="chapter" data-level="4.4.1" data-path="setupOM.html"><a href="setupOM.html#important-changes---dlmtool-v4.1-and-greater"><i class="fa fa-check"></i><b>4.4.1</b> Important changes - DLMtool V4.1 and greater</a></li>
+<li class="chapter" data-level="4.4" data-path="setupOM.html"><a href="setupOM.html#recommended-method-for-creating-the-operating-model-object"><i class="fa fa-check"></i><b>4.4</b> Recommended Method for Creating the Operating Model Object</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="setupOM.html"><a href="setupOM.html#set-working-directory"><i class="fa fa-check"></i><b>4.4.1</b> Set Working Directory</a></li>
+<li class="chapter" data-level="4.4.2" data-path="setupOM.html"><a href="setupOM.html#initialize-a-new-om"><i class="fa fa-check"></i><b>4.4.2</b> Initialize a New OM</a></li>
+<li class="chapter" data-level="4.4.3" data-path="setupOM.html"><a href="setupOM.html#create-source-documentation-for-existing-om"><i class="fa fa-check"></i><b>4.4.3</b> Create Source Documentation for Existing OM</a></li>
+<li class="chapter" data-level="4.4.4" data-path="setupOM.html"><a href="setupOM.html#populate-and-document-om"><i class="fa fa-check"></i><b>4.4.4</b> Populate and Document OM</a></li>
+<li class="chapter" data-level="4.4.5" data-path="setupOM.html"><a href="setupOM.html#compile-om-report-from-excel"><i class="fa fa-check"></i><b>4.4.5</b> Compile OM Report from Excel</a></li>
+<li class="chapter" data-level="4.4.6" data-path="setupOM.html"><a href="setupOM.html#import-om-from-excel"><i class="fa fa-check"></i><b>4.4.6</b> Import OM from Excel</a></li>
 </ul></li>
-<li class="chapter" data-level="4.5" data-path="setupOM.html"><a href="setupOM.html#customizing-the-operating-model"><i class="fa fa-check"></i><b>4.5</b> Customizing the Operating Model</a><ul>
-<li class="chapter" data-level="4.5.1" data-path="setupOM.html"><a href="setupOM.html#creating-new-objects"><i class="fa fa-check"></i><b>4.5.1</b> Creating New Objects</a></li>
-<li class="chapter" data-level="4.5.2" data-path="setupOM.html"><a href="setupOM.html#importing-objects"><i class="fa fa-check"></i><b>4.5.2</b> Importing Objects</a></li>
+<li class="chapter" data-level="4.5" data-path="setupOM.html"><a href="setupOM.html#other-methods-to-import-om"><i class="fa fa-check"></i><b>4.5</b> Other Methods to Import OM</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="setupOM.html"><a href="setupOM.html#compile-om-report-from-om"><i class="fa fa-check"></i><b>4.5.1</b> Compile OM Report from OM</a></li>
 </ul></li>
-<li class="chapter" data-level="4.6" data-path="setupOM.html"><a href="setupOM.html#modifying-existing-objects"><i class="fa fa-check"></i><b>4.6</b> Modifying Existing Objects</a></li>
-<li class="chapter" data-level="4.7" data-path="setupOM.html"><a href="setupOM.html#more-on-customizing-the-operating-model"><i class="fa fa-check"></i><b>4.7</b> More on Customizing the Operating Model</a><ul>
-<li class="chapter" data-level="4.7.1" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-fishing-mortality"><i class="fa fa-check"></i><b>4.7.1</b> Historical Trends in Fishing Mortality</a></li>
-<li class="chapter" data-level="4.7.2" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-the-selectivity-pattern"><i class="fa fa-check"></i><b>4.7.2</b> Historical Trends in the Selectivity Pattern</a></li>
+<li class="chapter" data-level="4.6" data-path="setupOM.html"><a href="setupOM.html#customizing-the-operating-model"><i class="fa fa-check"></i><b>4.6</b> Customizing the Operating Model</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="setupOM.html"><a href="setupOM.html#creating-new-objects"><i class="fa fa-check"></i><b>4.6.1</b> Creating New Objects</a></li>
+<li class="chapter" data-level="4.6.2" data-path="setupOM.html"><a href="setupOM.html#importing-objects-from-a-csv-file"><i class="fa fa-check"></i><b>4.6.2</b> Importing Objects from a CSV File</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="setupOM.html"><a href="setupOM.html#modifying-existing-objects"><i class="fa fa-check"></i><b>4.7</b> Modifying Existing Objects</a></li>
+<li class="chapter" data-level="4.8" data-path="setupOM.html"><a href="setupOM.html#more-on-customizing-the-operating-model"><i class="fa fa-check"></i><b>4.8</b> More on Customizing the Operating Model</a><ul>
+<li class="chapter" data-level="4.8.1" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-fishing-mortality"><i class="fa fa-check"></i><b>4.8.1</b> Historical Trends in Fishing Mortality</a></li>
+<li class="chapter" data-level="4.8.2" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-the-selectivity-pattern"><i class="fa fa-check"></i><b>4.8.2</b> Historical Trends in the Selectivity Pattern</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="MPs.html"><a href="MPs.html"><i class="fa fa-check"></i><b>5</b> Management Procedures</a><ul>
@@ -352,15 +362,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 ## [46] &quot;CV_L50&quot;     &quot;CV_LFC&quot;     &quot;CV_LFS&quot;     &quot;CV_wla&quot;     &quot;CV_wlb&quot;    
 ## [51] &quot;CV_steep&quot;   &quot;sigmaL&quot;     &quot;MaxAge&quot;     &quot;Units&quot;      &quot;Ref&quot;       
 ## [56] &quot;Ref_type&quot;   &quot;Log&quot;        &quot;params&quot;     &quot;PosMPs&quot;     &quot;MPs&quot;       
-## [61] &quot;OM&quot;         &quot;Obs&quot;        &quot;TAC&quot;        &quot;TACbias&quot;    &quot;Sense&quot;     
-## [66] &quot;CAL_bins&quot;   &quot;CAL&quot;        &quot;MPrec&quot;      &quot;MPeff&quot;      &quot;ML&quot;        
-## [71] &quot;Lbar&quot;       &quot;Lc&quot;         &quot;LHYear&quot;     &quot;nareas&quot;     &quot;Misc&quot;</code></pre>
+## [61] &quot;OM&quot;         &quot;Obs&quot;        &quot;TAC&quot;        &quot;Sense&quot;      &quot;CAL_bins&quot;  
+## [66] &quot;CAL&quot;        &quot;MPrec&quot;      &quot;MPeff&quot;      &quot;ML&quot;         &quot;Lbar&quot;      
+## [71] &quot;Lc&quot;         &quot;LHYear&quot;     &quot;nareas&quot;     &quot;Misc&quot;       &quot;TACbias&quot;</code></pre>
 <p>You do not have to enter data for every line of the data file, if data are not available simply put an ‘NA’ next to any given field.</p>
 <div id="example-fishery-data-csv-files" class="section level4">
 <h4><span class="header-section-number">8.3.1.1</span> Example Fishery Data CSV Files</h4>
 <p>There are also CSV files for these example Fishery Data objects that are included in the DLMtool package. To find the location where these files are located on your machine, use the <code>DLMDataDir</code> function:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">DLMDataDir</span>()</code></pre></div>
-<pre><code>## [1] &quot;C:/Program Files/R/R-3.3.3/library/DLMtool/&quot;</code></pre>
+<pre><code>## [1] &quot;C:/Users/arhor/Documents/R/win-library/3.4/DLMtool/&quot;</code></pre>
 <p>We can then load one of the example CSV files using the <code>new</code> function:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">China_rockfish2 &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&quot;Data&quot;</span>, <span class="kw">paste0</span>(<span class="kw">DLMDataDir</span>(),<span class="st">&quot;China_rockfish.csv&quot;</span>))</code></pre></div>
 <p>Alternatively, you can navigate to the data directory on your machine and examine the contents and structure of the CSV data files in MS Excel or other software.</p>
@@ -371,29 +381,29 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>Alternatively you can create a blank <code>Data</code> object and fill the slots directly in R. For example:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Madeup &lt;-<span class="st"> </span><span class="kw">new</span>(<span class="st">&#39;Data&#39;</span>)                             <span class="co">#  Create a blank DLM object</span></code></pre></div>
 <pre><code>## [1] &quot;Couldn&#39;t find specified csv file, blank DLM object created&quot;</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Madeup<span class="op">@</span>Name &lt;-<span class="st"> &#39;Test&#39;</span>                                 <span class="co">#  Name it</span>
-Madeup<span class="op">@</span>Cat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">20</span><span class="op">:</span><span class="dv">11</span><span class="op">*</span><span class="kw">rlnorm</span>(<span class="dv">10</span>,<span class="dv">0</span>,<span class="fl">0.2</span>),<span class="dt">nrow=</span><span class="dv">1</span>)   <span class="co">#  Generate fake catch data</span>
-Madeup<span class="op">@</span>Units &lt;-<span class="st"> &quot;Million metric tonnes&quot;</span>               <span class="co">#  State units of catch</span>
-Madeup<span class="op">@</span>AvC &lt;-<span class="st"> </span><span class="kw">mean</span>(Madeup<span class="op">@</span>Cat)                        <span class="co">#  Average catches for time t (DCAC)</span>
-Madeup<span class="op">@</span>t &lt;-<span class="st"> </span><span class="kw">ncol</span>(Madeup<span class="op">@</span>Cat)                          <span class="co">#  No. yrs for Av. catch (DCAC)</span>
-Madeup<span class="op">@</span>Dt &lt;-<span class="st"> </span><span class="fl">0.5</span>                                      <span class="co">#  Depletion over time t (DCAC)</span>
-Madeup<span class="op">@</span>Dep &lt;-<span class="st"> </span><span class="fl">0.5</span>                                     <span class="co">#  Depletion relative to unfished </span>
-Madeup<span class="op">@</span>vbK &lt;-<span class="st"> </span><span class="fl">0.2</span>                                     <span class="co">#  VB maximum growth rate</span>
-Madeup<span class="op">@</span>vbt0 &lt;-<span class="st"> </span>(<span class="op">-</span><span class="fl">0.5</span>)                                 <span class="co">#  VB theoretical age at zero length</span>
-Madeup<span class="op">@</span>vbLinf &lt;-<span class="st"> </span><span class="dv">200</span>                                  <span class="co">#  VB maximum length</span>
-Madeup<span class="op">@</span>Mort &lt;-<span class="st"> </span><span class="fl">0.1</span>                                    <span class="co">#  Natural mortality rate</span>
-Madeup<span class="op">@</span>Abun &lt;-<span class="st"> </span><span class="dv">200</span>                                    <span class="co">#  Current abundance</span>
-Madeup<span class="op">@</span>FMSY_M &lt;-<span class="st"> </span><span class="fl">0.75</span>                                 <span class="co">#  Ratio of FMSY/M</span>
-Madeup<span class="op">@</span>L50 &lt;-<span class="st"> </span><span class="dv">100</span>                                     <span class="co">#  Length at 50% maturity</span>
-Madeup<span class="op">@</span>L95 &lt;-<span class="st"> </span><span class="dv">120</span>                                     <span class="co">#  Length at 95% maturity</span>
-Madeup<span class="op">@</span>BMSY_B0 &lt;-<span class="st"> </span><span class="fl">0.35</span>                                <span class="co">#  BMSY relative to unfished</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Madeup@Name &lt;-<span class="st"> &#39;Test&#39;</span>                                 <span class="co">#  Name it</span>
+Madeup@Cat &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">20</span>:<span class="dv">11</span>*<span class="kw">rlnorm</span>(<span class="dv">10</span>,<span class="dv">0</span>,<span class="fl">0.2</span>),<span class="dt">nrow=</span><span class="dv">1</span>)   <span class="co">#  Generate fake catch data</span>
+Madeup@Units &lt;-<span class="st"> &quot;Million metric tonnes&quot;</span>               <span class="co">#  State units of catch</span>
+Madeup@AvC &lt;-<span class="st"> </span><span class="kw">mean</span>(Madeup@Cat)                        <span class="co">#  Average catches for time t (DCAC)</span>
+Madeup@t &lt;-<span class="st"> </span><span class="kw">ncol</span>(Madeup@Cat)                          <span class="co">#  No. yrs for Av. catch (DCAC)</span>
+Madeup@Dt &lt;-<span class="st"> </span><span class="fl">0.5</span>                                      <span class="co">#  Depletion over time t (DCAC)</span>
+Madeup@Dep &lt;-<span class="st"> </span><span class="fl">0.5</span>                                     <span class="co">#  Depletion relative to unfished </span>
+Madeup@vbK &lt;-<span class="st"> </span><span class="fl">0.2</span>                                     <span class="co">#  VB maximum growth rate</span>
+Madeup@vbt0 &lt;-<span class="st"> </span>(-<span class="fl">0.5</span>)                                 <span class="co">#  VB theoretical age at zero length</span>
+Madeup@vbLinf &lt;-<span class="st"> </span><span class="dv">200</span>                                  <span class="co">#  VB maximum length</span>
+Madeup@Mort &lt;-<span class="st"> </span><span class="fl">0.1</span>                                    <span class="co">#  Natural mortality rate</span>
+Madeup@Abun &lt;-<span class="st"> </span><span class="dv">200</span>                                    <span class="co">#  Current abundance</span>
+Madeup@FMSY_M &lt;-<span class="st"> </span><span class="fl">0.75</span>                                 <span class="co">#  Ratio of FMSY/M</span>
+Madeup@L50 &lt;-<span class="st"> </span><span class="dv">100</span>                                     <span class="co">#  Length at 50% maturity</span>
+Madeup@L95 &lt;-<span class="st"> </span><span class="dv">120</span>                                     <span class="co">#  Length at 95% maturity</span>
+Madeup@BMSY_B0 &lt;-<span class="st"> </span><span class="fl">0.35</span>                                <span class="co">#  BMSY relative to unfished</span></code></pre></div>
 </div>
 </div>
 <div id="working-with-data-objects" class="section level2">
 <h2><span class="header-section-number">8.4</span> Working With <code>Data</code> Objects</h2>
 <p>A generic summary function is available to visualize the data in a <code>Data</code> object:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(Atlantic_mackerel)</code></pre></div>
-<p><img src="userguide_files/figure-html/unnamed-chunk-118-1.png" width="672" /></p>
+<p><img src="userguide_files/figure-html/unnamed-chunk-124-1.png" width="672" /></p>
 <p>You can see what Management Procedures can and can’t be applied given your data and also what data are needed to get them working:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">Can</span>(Atlantic_mackerel)</code></pre></div>
 <pre><code>##  [1] &quot;AvC&quot;        &quot;BK&quot;         &quot;CC1&quot;        &quot;CC4&quot;        &quot;DAAC&quot;      
@@ -496,49 +506,14 @@ Madeup<span class="op">@</span>BMSY_B0 &lt;-<span class="st"> </span><span class
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Atlantic_mackerel &lt;-<span class="st"> </span><span class="kw">TAC</span>(Atlantic_mackerel, <span class="dt">MPs=</span><span class="st">&quot;DCAC&quot;</span>, <span class="dt">reps=</span><span class="dv">1000</span>)</code></pre></div>
 <p>The resulting distribution of the recommended TAC can be plotted using the <code>plot</code> function:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(Atlantic_mackerel)</code></pre></div>
-<p><img src="userguide_files/figure-html/unnamed-chunk-120-1.png" width="576" /></p>
+<p><img src="userguide_files/figure-html/unnamed-chunk-126-1.png" width="576" /></p>
 <p>We can also apply all the out control methods that can be run with the Fishery Data object to compare the resulting recommendations:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Atlantic_mackerel &lt;-<span class="st"> </span><span class="kw">TAC</span>(Atlantic_mackerel)
 <span class="kw">plot</span>(Atlantic_mackerel)</code></pre></div>
-<p><img src="userguide_files/figure-html/unnamed-chunk-121-1.png" width="672" /></p>
+<p><img src="userguide_files/figure-html/unnamed-chunk-127-1.png" width="672" /></p>
 <p>Alternatively, we can use <code>boxplot</code>, a generic function that calls the <code>boxplot.Data</code> function, to display the distribution of recommended TACs and report the statistics (median and standard deviation):</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">boxplot</span>(Atlantic_mackerel)</code></pre></div>
-<p><img src="userguide_files/figure-html/unnamed-chunk-122-1.png" width="576" /></p>
-<pre><code>##            MP Median   SD           Units
-## 1      DD4010   0.70 0.64 thousand tonnes
-## 2  Fratio4010   0.90 0.90 thousand tonnes
-## 3    DCAC4010   1.29 0.90 thousand tonnes
-## 4       HDAAC   2.35 0.85 thousand tonnes
-## 5        DAAC   2.94 1.42 thousand tonnes
-## 6   DBSRA4010   3.24 5.15 thousand tonnes
-## 7          DD   3.31 0.99 thousand tonnes
-## 8        DepF   3.36 1.74 thousand tonnes
-## 9      Fratio   3.75 2.14 thousand tonnes
-## 10       DynF   4.75 2.27 thousand tonnes
-## 11       Fdem   4.79 2.09 thousand tonnes
-## 12   Itarget4   4.98 0.47 thousand tonnes
-## 13       DCAC   5.74 1.61 thousand tonnes
-## 14      SPSRA   5.75 2.91 thousand tonnes
-## 15      DBSRA   6.06 5.40 thousand tonnes
-## 16   Gcontrol   6.53 0.04 thousand tonnes
-## 17   Rcontrol   6.53 0.00 thousand tonnes
-## 18  Rcontrol2   6.53 0.00 thousand tonnes
-## 19    DCAC_40   7.05 1.99 thousand tonnes
-## 20   Itarget1   7.07 0.64 thousand tonnes
-## 21    MCD4010   7.31 7.68 thousand tonnes
-## 22     Fadapt   8.13 0.06 thousand tonnes
-## 23        YPR   8.14 3.75 thousand tonnes
-## 24   DBSRA_40   9.98 8.57 thousand tonnes
-## 25      SPMSY  11.01 7.11 thousand tonnes
-## 26         BK  11.90 4.05 thousand tonnes
-## 27    SPslope  13.72 1.55 thousand tonnes
-## 28        MCD  14.47 6.98 thousand tonnes
-## 29      SPmod  16.37 3.62 thousand tonnes
-## 30        CC4  16.44 1.46 thousand tonnes
-## 31   GB_slope  16.46 2.30 thousand tonnes
-## 32       SBT1  18.36 3.14 thousand tonnes
-## 33        CC1  23.12 2.08 thousand tonnes
-## 34        AvC  23.96 5.47 thousand tonnes</code></pre>
+<p><img src="userguide_files/figure-html/unnamed-chunk-128-1.png" width="576" /></p>
 
 </div>
 </div>
@@ -560,7 +535,7 @@ Madeup<span class="op">@</span>BMSY_B0 &lt;-<span class="st"> </span><span class
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": null,
 "fontsettings": {

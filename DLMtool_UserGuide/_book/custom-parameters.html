@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Data-Limited Methods Toolkit (DLMtool)</title>
   <meta name="description" content="User guide for the DLMtool R package">
-  <meta name="generator" content="bookdown 0.4 and GitBook 2.6.7">
+  <meta name="generator" content="bookdown 0.5 and GitBook 2.6.7">
 
   <meta property="og:title" content="Data-Limited Methods Toolkit (DLMtool)" />
   <meta property="og:type" content="book" />
@@ -24,7 +24,7 @@
 
 
 
-<meta name="date" content="2017-07-20">
+<meta name="date" content="2017-10-12">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -137,19 +137,29 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li class="chapter" data-level="4.2.2" data-path="setupOM.html"><a href="setupOM.html#fleet-object"><i class="fa fa-check"></i><b>4.2.2</b> Fleet Object</a></li>
 <li class="chapter" data-level="4.2.3" data-path="setupOM.html"><a href="setupOM.html#observation-object"><i class="fa fa-check"></i><b>4.2.3</b> Observation Object</a></li>
 <li class="chapter" data-level="4.2.4" data-path="setupOM.html"><a href="setupOM.html#implementation-object"><i class="fa fa-check"></i><b>4.2.4</b> Implementation Object</a></li>
+<li class="chapter" data-level="4.2.5" data-path="setupOM.html"><a href="setupOM.html#important-changes---dlmtool-v4.1-and-greater"><i class="fa fa-check"></i><b>4.2.5</b> Important changes - DLMtool V4.1 and greater</a></li>
+<li class="chapter" data-level="4.2.6" data-path="setupOM.html"><a href="setupOM.html#important-changes---dlmtool-v4.5-and-greater"><i class="fa fa-check"></i><b>4.2.6</b> Important changes - DLMtool V4.5 and greater</a></li>
 </ul></li>
 <li class="chapter" data-level="4.3" data-path="setupOM.html"><a href="setupOM.html#existing-stock-fleet-obs-and-imp-objects"><i class="fa fa-check"></i><b>4.3</b> Existing Stock, Fleet, Obs, and Imp Objects</a></li>
-<li class="chapter" data-level="4.4" data-path="setupOM.html"><a href="setupOM.html#creating-the-operating-model-object"><i class="fa fa-check"></i><b>4.4</b> Creating the Operating Model Object</a><ul>
-<li class="chapter" data-level="4.4.1" data-path="setupOM.html"><a href="setupOM.html#important-changes---dlmtool-v4.1-and-greater"><i class="fa fa-check"></i><b>4.4.1</b> Important changes - DLMtool V4.1 and greater</a></li>
+<li class="chapter" data-level="4.4" data-path="setupOM.html"><a href="setupOM.html#recommended-method-for-creating-the-operating-model-object"><i class="fa fa-check"></i><b>4.4</b> Recommended Method for Creating the Operating Model Object</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="setupOM.html"><a href="setupOM.html#set-working-directory"><i class="fa fa-check"></i><b>4.4.1</b> Set Working Directory</a></li>
+<li class="chapter" data-level="4.4.2" data-path="setupOM.html"><a href="setupOM.html#initialize-a-new-om"><i class="fa fa-check"></i><b>4.4.2</b> Initialize a New OM</a></li>
+<li class="chapter" data-level="4.4.3" data-path="setupOM.html"><a href="setupOM.html#create-source-documentation-for-existing-om"><i class="fa fa-check"></i><b>4.4.3</b> Create Source Documentation for Existing OM</a></li>
+<li class="chapter" data-level="4.4.4" data-path="setupOM.html"><a href="setupOM.html#populate-and-document-om"><i class="fa fa-check"></i><b>4.4.4</b> Populate and Document OM</a></li>
+<li class="chapter" data-level="4.4.5" data-path="setupOM.html"><a href="setupOM.html#compile-om-report-from-excel"><i class="fa fa-check"></i><b>4.4.5</b> Compile OM Report from Excel</a></li>
+<li class="chapter" data-level="4.4.6" data-path="setupOM.html"><a href="setupOM.html#import-om-from-excel"><i class="fa fa-check"></i><b>4.4.6</b> Import OM from Excel</a></li>
 </ul></li>
-<li class="chapter" data-level="4.5" data-path="setupOM.html"><a href="setupOM.html#customizing-the-operating-model"><i class="fa fa-check"></i><b>4.5</b> Customizing the Operating Model</a><ul>
-<li class="chapter" data-level="4.5.1" data-path="setupOM.html"><a href="setupOM.html#creating-new-objects"><i class="fa fa-check"></i><b>4.5.1</b> Creating New Objects</a></li>
-<li class="chapter" data-level="4.5.2" data-path="setupOM.html"><a href="setupOM.html#importing-objects"><i class="fa fa-check"></i><b>4.5.2</b> Importing Objects</a></li>
+<li class="chapter" data-level="4.5" data-path="setupOM.html"><a href="setupOM.html#other-methods-to-import-om"><i class="fa fa-check"></i><b>4.5</b> Other Methods to Import OM</a><ul>
+<li class="chapter" data-level="4.5.1" data-path="setupOM.html"><a href="setupOM.html#compile-om-report-from-om"><i class="fa fa-check"></i><b>4.5.1</b> Compile OM Report from OM</a></li>
 </ul></li>
-<li class="chapter" data-level="4.6" data-path="setupOM.html"><a href="setupOM.html#modifying-existing-objects"><i class="fa fa-check"></i><b>4.6</b> Modifying Existing Objects</a></li>
-<li class="chapter" data-level="4.7" data-path="setupOM.html"><a href="setupOM.html#more-on-customizing-the-operating-model"><i class="fa fa-check"></i><b>4.7</b> More on Customizing the Operating Model</a><ul>
-<li class="chapter" data-level="4.7.1" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-fishing-mortality"><i class="fa fa-check"></i><b>4.7.1</b> Historical Trends in Fishing Mortality</a></li>
-<li class="chapter" data-level="4.7.2" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-the-selectivity-pattern"><i class="fa fa-check"></i><b>4.7.2</b> Historical Trends in the Selectivity Pattern</a></li>
+<li class="chapter" data-level="4.6" data-path="setupOM.html"><a href="setupOM.html#customizing-the-operating-model"><i class="fa fa-check"></i><b>4.6</b> Customizing the Operating Model</a><ul>
+<li class="chapter" data-level="4.6.1" data-path="setupOM.html"><a href="setupOM.html#creating-new-objects"><i class="fa fa-check"></i><b>4.6.1</b> Creating New Objects</a></li>
+<li class="chapter" data-level="4.6.2" data-path="setupOM.html"><a href="setupOM.html#importing-objects-from-a-csv-file"><i class="fa fa-check"></i><b>4.6.2</b> Importing Objects from a CSV File</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="setupOM.html"><a href="setupOM.html#modifying-existing-objects"><i class="fa fa-check"></i><b>4.7</b> Modifying Existing Objects</a></li>
+<li class="chapter" data-level="4.8" data-path="setupOM.html"><a href="setupOM.html#more-on-customizing-the-operating-model"><i class="fa fa-check"></i><b>4.8</b> More on Customizing the Operating Model</a><ul>
+<li class="chapter" data-level="4.8.1" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-fishing-mortality"><i class="fa fa-check"></i><b>4.8.1</b> Historical Trends in Fishing Mortality</a></li>
+<li class="chapter" data-level="4.8.2" data-path="setupOM.html"><a href="setupOM.html#historical-trends-in-the-selectivity-pattern"><i class="fa fa-check"></i><b>4.8.2</b> Historical Trends in the Selectivity Pattern</a></li>
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="5" data-path="MPs.html"><a href="MPs.html"><i class="fa fa-check"></i><b>5</b> Management Procedures</a><ul>
@@ -308,27 +318,34 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <h2><span class="header-section-number">9.1</span> Valid cpars names</h2>
 <p>The <code>cpars</code> slot requires a named list containing the custom parameter values. You can see the valid names for <code>cpars</code> by typing:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">validcpars</span>()</code></pre></div>
-<pre><code>##       [,1]          [,2]           [,3]          [,4]        
-##  [1,] &quot;Abias&quot;       &quot;AC&quot;           &quot;Aerr&quot;        &quot;age95&quot;     
-##  [2,] &quot;ageM&quot;        &quot;betas&quot;        &quot;Brefbias&quot;    &quot;CAA_ESS&quot;   
-##  [3,] &quot;CAA_nsamp&quot;   &quot;CAL_bins&quot;     &quot;CAL_binsmid&quot; &quot;CAL_ESS&quot;   
-##  [4,] &quot;CAL_nsamp&quot;   &quot;CALcv&quot;        &quot;Cbias&quot;       &quot;Crefbias&quot;  
-##  [5,] &quot;Csd&quot;         &quot;Dbias&quot;        &quot;dep&quot;         &quot;Derr&quot;      
-##  [6,] &quot;dFfinal&quot;     &quot;DR&quot;           &quot;EffLower&quot;    &quot;EffUpper&quot;  
-##  [7,] &quot;EffYears&quot;    &quot;Esd&quot;          &quot;Find&quot;        &quot;FMSY_Mbias&quot;
-##  [8,] &quot;Frac_area_1&quot; &quot;hs&quot;           &quot;Irefbias&quot;    &quot;Isd&quot;       
-##  [9,] &quot;K&quot;           &quot;Kbias&quot;        &quot;Kgrad&quot;       &quot;Krand&quot;     
-## [10,] &quot;Ksd&quot;         &quot;L5&quot;           &quot;L50&quot;         &quot;L50_95&quot;    
-## [11,] &quot;L95&quot;         &quot;LatASD&quot;       &quot;Len_age&quot;     &quot;LenCV&quot;     
-## [12,] &quot;lenMbias&quot;    &quot;LFCbias&quot;      &quot;LFR&quot;         &quot;LFS&quot;       
-## [13,] &quot;LFSbias&quot;     &quot;Linf&quot;         &quot;Linfbias&quot;    &quot;Linfgrad&quot;  
-## [14,] &quot;Linfrand&quot;    &quot;Linfsd&quot;       &quot;LR5&quot;         &quot;M&quot;         
-## [15,] &quot;M_at_Length&quot; &quot;Marray&quot;       &quot;Mat_age&quot;     &quot;maxage&quot;    
-## [16,] &quot;Mbias&quot;       &quot;Mgrad&quot;        &quot;Mrand&quot;       &quot;Msd&quot;       
-## [17,] &quot;Perr&quot;        &quot;Prob_staying&quot; &quot;procsd&quot;      &quot;qcv&quot;       
-## [18,] &quot;qinc&quot;        &quot;R0&quot;           &quot;recgrad&quot;     &quot;Recsd&quot;     
-## [19,] &quot;Rmaxlen&quot;     &quot;Size_area_1&quot;  &quot;Spat_targ&quot;   &quot;t0&quot;        
-## [20,] &quot;t0bias&quot;      &quot;V&quot;            &quot;Vmaxlen&quot;     &quot;Wt_age&quot;</code></pre>
+<pre><code>##       [,1]           [,2]          [,3]         
+##  [1,] &quot;Abias&quot;        &quot;AC&quot;          &quot;Aerr&quot;       
+##  [2,] &quot;age95&quot;        &quot;ageM&quot;        &quot;betas&quot;      
+##  [3,] &quot;Brefbias&quot;     &quot;CAA_ESS&quot;     &quot;CAA_nsamp&quot;  
+##  [4,] &quot;CAL_bins&quot;     &quot;CAL_binsmid&quot; &quot;CAL_ESS&quot;    
+##  [5,] &quot;CAL_nsamp&quot;    &quot;CALcv&quot;       &quot;Cbias&quot;      
+##  [6,] &quot;Crefbias&quot;     &quot;Csd&quot;         &quot;Dbias&quot;      
+##  [7,] &quot;dep&quot;          &quot;Derr&quot;        &quot;dFfinal&quot;    
+##  [8,] &quot;DR&quot;           &quot;EffLower&quot;    &quot;EffUpper&quot;   
+##  [9,] &quot;EffYears&quot;     &quot;Esd&quot;         &quot;Fdisc&quot;      
+## [10,] &quot;Find&quot;         &quot;FMSY_Mbias&quot;  &quot;Frac_area_1&quot;
+## [11,] &quot;hs&quot;           &quot;Irefbias&quot;    &quot;Isd&quot;        
+## [12,] &quot;K&quot;            &quot;Kbias&quot;       &quot;Kgrad&quot;      
+## [13,] &quot;Krand&quot;        &quot;Ksd&quot;         &quot;L5&quot;         
+## [14,] &quot;L50&quot;          &quot;L50_95&quot;      &quot;L95&quot;        
+## [15,] &quot;LatASD&quot;       &quot;Len_age&quot;     &quot;LenCV&quot;      
+## [16,] &quot;lenMbias&quot;     &quot;LFCbias&quot;     &quot;LFR&quot;        
+## [17,] &quot;LFS&quot;          &quot;LFSbias&quot;     &quot;Linf&quot;       
+## [18,] &quot;Linfbias&quot;     &quot;Linfgrad&quot;    &quot;Linfrand&quot;   
+## [19,] &quot;Linfsd&quot;       &quot;LR5&quot;         &quot;M&quot;          
+## [20,] &quot;M_at_Length&quot;  &quot;Marray&quot;      &quot;Mat_age&quot;    
+## [21,] &quot;maxage&quot;       &quot;Mbias&quot;       &quot;Mgrad&quot;      
+## [22,] &quot;Mrand&quot;        &quot;Msd&quot;         &quot;Perr&quot;       
+## [23,] &quot;Prob_staying&quot; &quot;procsd&quot;      &quot;qcv&quot;        
+## [24,] &quot;qinc&quot;         &quot;R0&quot;          &quot;recgrad&quot;    
+## [25,] &quot;Recsd&quot;        &quot;Rmaxlen&quot;     &quot;Size_area_1&quot;
+## [26,] &quot;Spat_targ&quot;    &quot;t0&quot;          &quot;t0bias&quot;     
+## [27,] &quot;V&quot;            &quot;Vmaxlen&quot;     &quot;Wt_age&quot;</code></pre>
 <p>A warning message will alert you if variables appear in the named <code>cpars</code> list that are not in <code>validcpars()</code>, and these will be ignored in the MSE.</p>
 </div>
 <div id="correlated-samples" class="section level2">
@@ -337,9 +354,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>For example, if you wish to supply correlated samples of the von Bertalanffy growth parameters, you would create three vectors of length <code>nsim</code> containing the samples of Linf, K, and t0.</p>
 <p>If the vectors are shorter than <code>nsim</code> they will simply be recycled. An error message will alert you if the vectors are not the same length.</p>
 <p>As a demonstration, we will use the <code>ForceCor</code> function to generate correlated samples of <em>M</em>, <em>K</em>, <em>L50</em>, and <em>Linf</em> and examine the <code>cpars</code> slot in the resulting OM object:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM &lt;-<span class="st"> </span><span class="kw">ForceCor</span>(DLMtool<span class="op">::</span>testOM)</code></pre></div>
-<p><img src="userguide_files/figure-html/unnamed-chunk-124-1.png" width="672" /></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(OM<span class="op">@</span>cpars)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM &lt;-<span class="st"> </span><span class="kw">ForceCor</span>(DLMtool::testOM)</code></pre></div>
+<p><img src="userguide_files/figure-html/unnamed-chunk-130-1.png" width="672" /></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(OM@cpars)</code></pre></div>
 <pre><code>## List of 4
 ##  $ M   : num [1:48] 0.382 0.39 0.396 0.353 0.4 ...
 ##  $ K   : num [1:48] 0.174 0.176 0.187 0.163 0.196 ...
@@ -348,8 +365,8 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>You can see that the <code>OM@cpars</code> slot is a list of length 4 and contains named vectors with 48 correlated samples of the four parameters.</p>
 <p>Because the <code>OM@cpars</code> slot contains these values, the <em>M</em>, <em>K</em>, <em>L50</em>, and <em>Linf</em> values in the OM, e.g. <code>OM@M</code> will be ignored.</p>
 <p>Any additional custom parameters can be added to <code>cpars</code> using this same approach. For example, to provide custom (in this case uncorrelated) samples of <em>t0</em>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM<span class="op">@</span>cpars<span class="op">$</span>t0 &lt;-<span class="st"> </span><span class="kw">runif</span>(OM<span class="op">@</span>cpars, <span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>)
-<span class="kw">str</span>(OM<span class="op">@</span>cpars)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">OM@cpars$t0 &lt;-<span class="st"> </span><span class="kw">runif</span>(OM@cpars, -<span class="dv">1</span>, <span class="dv">0</span>)
+<span class="kw">str</span>(OM@cpars)</code></pre></div>
 <pre><code>## List of 5
 ##  $ M   : num [1:48] 0.382 0.39 0.396 0.353 0.4 ...
 ##  $ K   : num [1:48] 0.174 0.176 0.187 0.163 0.196 ...
@@ -381,7 +398,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
 <script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
 <script>
-require(["gitbook"], function(gitbook) {
+gitbook.require(["gitbook"], function(gitbook) {
 gitbook.start({
 "sharing": null,
 "fontsettings": {

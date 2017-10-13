@@ -7,7 +7,7 @@ The fishery selection or vulnerability to the fishing gear in DLMtool is modelle
 Here we set up a Operating Model with dome-shaped selectivity and plot a sample of the selectivity-at-age and -length using the `plotSelect` function:
 
 ```{r}
-OM <- new("OM", Albacore, FlatE_Dom, Generic_obs, Perfect_Imp, nsim=5)
+OM <- new("OM", Albacore, FlatE_Dom, Generic_Obs, Perfect_Imp, nsim=5)
 plotSelect(OM, sim=1)
 ```
 

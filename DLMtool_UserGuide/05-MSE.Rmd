@@ -21,7 +21,7 @@ The operating model is the 'simulated reality': a series of known simulations fo
 In this case we take the latter approach and pick the `Blue_shark` stock type, a generic fleet type and an observation model that generates data that can be both imprecise and biased. We will ignore implementation error and use the default `Perfect_Imp`.
 
 ```{r}
-OM <- new('OM', Blue_shark, Generic_fleet, Imprecise_Biased, Perfect_Imp)
+OM <- new('OM', Blue_shark, Generic_Fleet, Imprecise_Biased, Perfect_Imp)
 ```
 
 ## Choose Management Procedures
@@ -134,7 +134,7 @@ The next step is exploring the output of the MSE, and determining which Manageme
 
 The information above is spread out over a number of sections and paragraphs, and may appear a little complex. In fact, other than the initial set up of the DLMtool, it only took 4 lines of code to run the MSE and check the model for convergence:
 ```{r, eval=FALSE}
-OM <- new('OM', Blue_shark, Generic_fleet, Imprecise_Biased, nsim=300)
+OM <- new('OM', Blue_shark, Generic_Fleet, Imprecise_Biased, nsim=300)
 MPs <- c("Fratio", "DCAC", "Fdem", "DD", "matlenlim")
 BSharkMSE <- runMSErobust(OM=OM, MPs=MPs, name="bluesharkMSE")
 Converge(BSharkMSE)
