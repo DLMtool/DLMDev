@@ -77,7 +77,7 @@ copyDataObject("MSE", fromData, pkgpath)
 
 
 # --- OM Objects ----
-copyDataObject("OM", fromData, pkgpath)
+# copyDataObject("OM", fromData, pkgpath)
 
 
 # --- Build OM Objects ----
@@ -85,7 +85,7 @@ copyDataObject("OM", fromData, pkgpath)
 
 
 ## --- Build OM from CSV ----
-createOM <- function(Stock, Fleet=Generic_fleet, Obs=Generic_obs, Imp=Perfect_Imp, 
+createOM <- function(Stock, Fleet=Generic_Fleet, Obs=Generic_Obs, Imp=Perfect_Imp, 
                      Name="OM", Source=NULL, RoxygenFile) {
   OM <- new("OM", Stock, Fleet, Obs, Imp)
   if (!is.null(Source)) OM@Source <- Source
@@ -131,12 +131,12 @@ for (om in region_agency) {
     ind <- which(grepl(unlist(strsplit(stocks[X], ".csv")), fleets))
     if (length(ind) == 1) {
       Fleet <- new("Fleet", file.path(fromData, "buildOMfromCSV", om, "Fleet", fleets[ind]))
-    } else Fleet <- Generic_fleet
+    } else Fleet <- Generic_Fleet
     # Obs 
     ind <- which(grepl(unlist(strsplit(stocks[X], ".csv")), obs))
     if (length(ind) == 1) {
       Obs <- new("Obs", file.path(fromData, "buildOMfromCSV", om, "Obs", obs[ind]))
-    } else Obs <- Generic_obs  
+    } else Obs <- Generic_Obs  
     # Imp 
     ind <- which(grepl(unlist(strsplit(stocks[X], ".csv")), imp))
     if (length(ind) == 1) {
@@ -272,7 +272,7 @@ createOM_SRA <- function(Dir, nsim=nsim, nits=5000, burnin=200, RoxygenFile) {
   obsfile <- file.path(Dir, fls[grep("Obs", fls)])
   if (length(obsfile) > 1) {
     Obs <- new("Obs", obsfile)
-  } else Obs <- Generic_obs
+  } else Obs <- Generic_Obs
   
   impfile <- file.path(Dir, fls[grep("Imp", fls)])
   if (length(impfile) > 1) {
