@@ -1,0 +1,9 @@
+Name,Ten percent overages,
+TACSD,0.05,0.1
+TACFrac,1.05,1.15
+ESD,0.05,0.1
+EFrac,1.05,1.15
+SizeLimSD,0.01,0.02
+SizeLimFrac,0.99,1.01
+DiscMort,0,0
+Source,made up by Tom,
