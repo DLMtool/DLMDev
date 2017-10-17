@@ -181,44 +181,44 @@ for (om in region_agency) {
 
 
 # --- Build OM from SS ---- 
-createOM_SS <- function(SSdir, Name=NULL, Source=NULL, Author = "No author provided", 
-                        nsim=100, RoxygenFile) {
-  
-  temp <- SS2DLM(SSdir, nsim, Name=Name, Source=Source, Author=Author)
-  Name <- paste0(temp@Name, "_SS")
-  assign(Name, temp)
-  path <- file.path(dataDir, paste0(Name, ".RData"))
-  message("\nSaving ", paste(Name, collapse = ", "), 
-          " as ", paste(basename(path), collapse = ", "), " to ", dataDir, "\n")	 
-  save(list=Name, file = path, compress = "bzip2")
-  
-  # Write roxygen 
-  chk <- file.exists(file.path(pkgpath, 'R/', RoxygenFile))
-  if(!chk) file.create(file.path(pkgpath, 'R/', RoxygenFile)) # make empty file 
-  clss <- class(temp)
-  cat("#'  ", Name, " ", clss,
-      "\n#'", 
-      "\n#'  An object of class ", clss, " (from SS using SS2DLM)",
-      "\n#'  ", temp@Source,
-      "\n#' \n",
-      '"', Name, '"\n\n\n', sep="", append=TRUE, 
-      file=file.path(pkgpath, 'R/', RoxygenFile)) 
-  
-  rm(temp)	
-}
-
-region_agency <- list.files(file.path(fromData, "buildOMfromSS"))
-
-for (om in region_agency) {
-  stocks <- list.files(file.path(fromData, "buildOMfromSS", om))
-  for (x in seq_along(stocks))  {
-    SSdir <- file.path(fromData, "buildOMfromSS", om, stocks[x]) 
-    Name <- stocks[x]
-    Source <- om
-    Author <- om
-    createOM_SS(SSdir, Name, Source, Author, nsim=100, RoxygenFile)
-  }
-}    
+# createOM_SS <- function(SSdir, Name=NULL, Source=NULL, Author = "No author provided", 
+#                         nsim=100, RoxygenFile) {
+#   
+#   temp <- SS2DLM(SSdir, nsim, Name=Name, Source=Source, Author=Author)
+#   Name <- paste0(temp@Name, "_SS")
+#   assign(Name, temp)
+#   path <- file.path(dataDir, paste0(Name, ".RData"))
+#   message("\nSaving ", paste(Name, collapse = ", "), 
+#           " as ", paste(basename(path), collapse = ", "), " to ", dataDir, "\n")	 
+#   save(list=Name, file = path, compress = "bzip2")
+#   
+#   # Write roxygen 
+#   chk <- file.exists(file.path(pkgpath, 'R/', RoxygenFile))
+#   if(!chk) file.create(file.path(pkgpath, 'R/', RoxygenFile)) # make empty file 
+#   clss <- class(temp)
+#   cat("#'  ", Name, " ", clss,
+#       "\n#'", 
+#       "\n#'  An object of class ", clss, " (from SS using SS2DLM)",
+#       "\n#'  ", temp@Source,
+#       "\n#' \n",
+#       '"', Name, '"\n\n\n', sep="", append=TRUE, 
+#       file=file.path(pkgpath, 'R/', RoxygenFile)) 
+#   
+#   rm(temp)	
+# }
+# 
+# region_agency <- list.files(file.path(fromData, "buildOMfromSS"))
+# 
+# for (om in region_agency) {
+#   stocks <- list.files(file.path(fromData, "buildOMfromSS", om))
+#   for (x in seq_along(stocks))  {
+#     SSdir <- file.path(fromData, "buildOMfromSS", om, stocks[x]) 
+#     Name <- stocks[x]
+#     Source <- om
+#     Author <- om
+#     createOM_SS(SSdir, Name, Source, Author, nsim=100, RoxygenFile)
+#   }
+# }    
 
 # --- Build OM from iSCAM ----   
 createOM_iSCAM <- function(iSCAMdir, Name=NULL, Source=NULL, Author = "No author provided", 

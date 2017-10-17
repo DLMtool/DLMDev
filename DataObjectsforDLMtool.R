@@ -152,7 +152,7 @@ slot_ripper<-function(filenam,slots){
 }
 
 getDescription <- function(class=c("Stock", "Fleet", "Obs", "Imp", "Data"), 
-                           Rdloc='C:/Users/Adrian/Documents/GitHub/DLMtool/man',
+                           Rdloc='../DLMtool/man',
                            Outloc=NULL) {
   class <- match.arg(class)
   if (is.null(Outloc)) Outloc <- tempdir()
