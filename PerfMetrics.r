@@ -28,11 +28,11 @@ setClass("PM", representation(Name = "character",  Description="character",
                               Label="label.class", extra="numeric"))
 
 
-setMethod("initialize", "PM", function(.Object) {
-  .Object@Ref <- 0.8
-  .Object@Stat <- "mean"
-  .Object
-})
+
+
+
+
+
 
 
 

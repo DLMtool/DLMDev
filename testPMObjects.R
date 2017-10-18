@@ -1,3 +1,234 @@
+library(DLMtool)
+MSEobj <- runMSE(testOM)
+# 
+# setClass("PMobj", representation(Name = "character",  Description="character",  
+#                                  Func = "function", Ref="numeric", Stat="character",
+#                                  RP="numeric",  Y1="numeric", Y2="numeric", 
+#                                  Label="label.class", extra="numeric"))
+
+
+setClass("PMobj", representation(Prob='data.frame', Mean='numeric', Stat='array', 
+                                 name = "character",  caption='character', 
+                                 ref='numeric', RP='numeric', y1='numeric', y2='numeric', 
+                                 MSEobj="MSE"))
+
+
+NOAA_Rebuild <- function(MSEobj=NULL, name="NOAA Rebuilding (MSA)",
+                         caption='B>BMSY', ref=0.5, RP=0.8, y1=1, y2=NULL) {
+  y1 <- CheckYrs(MSEobj, y1, y2)[1]
+  y2 <- CheckYrs(MSEobj, y1, y2)[2]
+  PM <- MSEobj@B_BMSY[,,y1:y2] 
+
+  out <- new("PMobj")
+  if (!is.null(ref)) {
+    out@Prob <- as.data.frame(apply(PM > ref, c(1,2), mean)) # nsim by nMP
+    colnames(out@Prob) <- MSEobj@MPs
+    out@Mean <- signif(apply(out@Prob, 2, mean),2)
+  } 
+
+  out@Stat <- PM # nsim by nMP by nyr
+  out@name <- name 
+  out@caption <- caption
+  out@ref <- ref 
+  out@RP <- RP 
+  out@y1 <- y1 
+  out@y2 <- y2 
+  out@MSEobj <- MSEobj
+  out 
+}
+
+DFO_Overfishing <- function(MSEobj=NULL, name="DFO_Overfishing ",
+                         caption='F>FMSY', ref=1, RP=0.8, y1=1, y2=NULL) {
+  y1 <- CheckYrs(MSEobj, y1, y2)[1]
+  y2 <- CheckYrs(MSEobj, y1, y2)[2]
+  PM <- MSEobj@F_FMSY[,,y1:y2] 
+  
+  out <- new("PMobj")
+  if (!is.null(ref)) {
+    out@Prob <- as.data.frame(apply(PM > ref, c(1,2), mean)) # nsim by nMP
+    colnames(out@Prob) <- MSEobj@MPs
+    out@Mean <- signif(apply(out@Prob, 2, mean),2)
+  } 
+  
+  out@Stat <- PM # nsim by nMP by nyr
+  out@name <- name 
+  out@caption <- caption
+  out@ref <- ref 
+  out@RP <- RP 
+  out@y1 <- y1 
+  out@y2 <- y2 
+  out@MSEobj <- MSEobj
+  out 
+}
+
+
+
+
+
+
+
+
+
+
+setMethod("show", signature = (object="PMobj"), function(object) {
+  cat(object@name)
+  cat("\nYears: ", object@y1, "-", object@y2)
+  # make caption 
+  cap <- NULL
+  if(is.character(object@caption)) {
+    cap <- object@caption
+    sign <- NULL
+    trycap <- unlist(strsplit(cap, ">"))
+    if (length(trycap) > 1) {
+      sign <- ">"
+      cap <- trycap
+    } else {
+      trycap <- unlist(strsplit(cap, "<"))
+      if (length(trycap) > 1) {
+        sign <- "<"
+        cap <- trycap
+      } 
+    }
+    if (!is.null(sign) && is.numeric(object@ref)) {
+      if (object@ref != 1) cap <- paste(c(cap[1], sign, object@ref, cap[2]), collapse = " ")
+      if (object@ref == 1) cap <- paste(c(cap[1], sign, cap[2]), collapse = " ")
+    } else cap <- trycap
+  }
+  if (!is.null(cap)) cat("\n", cap)
+  cat("\n")
+  nMP <- object@MSEobj@nMPs
+  nsim <- object@MSEobj@nsim
+  nprint <- min(nsim, 10)
+  df <- object@Prob[1:nprint,]
+  if (nsim > (nprint+1)) {
+    df <- rbind(df,
+                rep(".", nMP+1),
+                rep(".", nMP+1),
+                rep(".", nMP+1),
+                object@Prob[nprint+1,])
+    rownames(df)[nrow(df)] <- nsim
+  }
+  print(df)
+  
+  cat("\nMean\n")
+  print(object@Mean)
+})
+
+DFO_Overfishing(MSEobj)
+NOAA_Rebuild(MSEobj)
+
+
+object <- list(DFO_Overfishing, NOAA_Rebuild, NOAA_Rebuild)
+
+
+testplot <- function(MSEobj, PMlist, ref=NULL) {
+  if (class(PMlist) != 'list') stop("PMlist must be list of PM functions")
+  
+  nPMs <- length(PMlist) # make even
+  if (nPMs %% 2 > 0) PMlist[[nPMs+1]] <- PMlist[[1]]
+  nPMs <- length(PMlist)
+  if (!is.null(ref)) ref <- rep(ref, 100)[1:nPMs]
+  nplot <- nPMs/2
+  for (xx in 1:nplot) {
+    # calc x 
+    
+    # calc y 
+    
+    
+    
+    
+  }
+  
+  
+}
+
+testplot(MSEobj, PMlist, caption="hi")
+
+
+
+object
+
+
+
+plot(MSEobj)
+
+
+
+
+
+
+
+
+
+
+
+
+
+tt <- NOAA_Rebuild(MSEobj, Name="hi")
+
+
+
+PMobj <- NOAA_Rebuild
+tt <- function(PMobj) {
+  PMobj(MSEobj)
+  
+}
+
+
+
+CheckYrs <- function(MSEobj, y1, y2) {
+  if (length(y2) == 0 || !is.finite(y2)) y2 <- MSEobj@proyears
+  if (length(y1) == 0 || !is.finite(y1)) {
+    y1 <- 1 
+  } else {
+    if (y1 < 0) y1 <- y2 - abs(y1) + 1 
+    if (y1 == 0) y1 <- 1
+  }
+  if (y1 <= 0) {
+    y1 <- 1
+    warning("y1 is negative. Defaulting to y1 = 1", call.=FALSE)
+  }
+  if (y1 >= y2) {
+    y1 <- y2 - 4 
+    warning("y1 is greater or equal to y2. Defaulting to y1 = y2-4", call.=FALSE)
+    
+  }
+  c(y1,y2)
+}
+
+
+  
+  
+  
+  
+PM <- new("PM")
+PM
+
+
+NOAA_Rebuild <- new("PM")
+
+
+PM(NOAA_Rebuild)
+
+
+
+SB_SB02 <- new("PM")
+SB_SB02@Name <- "Spawning Biomass Relative to SB0"
+SB_SB02@Func <- function(MSEobj, PMobj) {
+  y1 <- ChkYrs(MSEobj, PMobj)[1]
+  y2 <- ChkYrs(MSEobj, PMobj)[2]
+  var <- MSEobj@SSB / array(MSEobj@OM$SSB0, dim=dim(MSEobj@SSB)) 
+  var[,,y1:y2]
+} 
+SB_SB02@Label <- function(MSEobj, PMobj) {
+  y1 <- ChkYrs(MSEobj, PMobj)[1]
+  y2 <- ChkYrs(MSEobj, PMobj)[2]
+  bquote(italic("SB") * "/" * italic("SB"[0]) ~ "(Years" ~ .(y1) ~ "-" ~ .(y2) * ")")
+}
+
+
+
+
 # library(DLMtool)
 # library(ggplot2)
 # library(gridExtra)
