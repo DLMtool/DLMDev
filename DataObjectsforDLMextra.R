@@ -301,6 +301,7 @@ createOM_SRA <- function(Dir, nsim=nsim, nits=5000, burnin=200, RoxygenFile) {
   chk <- file.exists(file.path(pkgpath, 'R/', RoxygenFile))
   if(!chk) file.create(file.path(pkgpath, 'R/', RoxygenFile)) # make empty file 
   clss <- class(temp)
+  temp@Source <- gsub("\n", "", temp@Source)
   cat("#'  ", Name, " ", clss,
       "\n#'", 
       "\n#'  An object of class ", clss, " (built using StochasticSRA)",
