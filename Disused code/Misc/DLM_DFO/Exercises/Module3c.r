@@ -1,22 +1,24 @@
 
-# =====================================================================================
-# === DLMtool Exercise 3c: Custom performance analysis ================================
-# =====================================================================================
+# ================================================================================
+# === DLMtool Exercise 3c: Processing data  ======================================
+# ================================================================================
 #
-# In the previous exercises you have used the runMSE() to conduct an MSE and 
-# have stored your MSE runs in a series of objects (MSE1, MSE2, MSE3...). 
-# 
-# Using plotting techniques you have been able to vizualise the data stored in
-# these MSE objects. 
+# The DLMtool package has an object class 'Data' which standardizes the 
+# format of fishery data allowing multiple management procedures to be applied 
+# to the same data. 
 #
-# In this exercise you will find out more about where data are stored in 
-# MSE objects which allows you to design your own performance metrics and
-# conduct your own evalution of simulation conditions.
+# Also standardized is the way in which MPs access the data in a Data object. 
 #
-# Since we are dealing with R objects, data, arrays and such, this will be 
-# one of the more 'programmy' of the exercises. Sorry! What's important
-# however is that you know that these outputs exist, that they can be
-# accessed and that you can come up with your own ways to interpret them.
+# This Data object - MP relationship serves as the foundation for much of the 
+# remaining DLMtool functionality, so it's handy to become familiar with it. 
+#
+# In this set of exercises we will explore the pre-defined Data objects in the
+# DLMtool package,  learn how to import a Data object from a CSV file, and also 
+# learn how to create a Data object in R. 
+#
+# DLMtool also includes functions that help diagnose situations where data are 
+# sufficient for a particular management procedure and also situations where
+# data are required to get MPs working. 
 
 
 
@@ -27,198 +29,312 @@ setup()
 
 
 
-# === Task 1: Finding MSE data in an MSE object ==================================
+
+# === Task 1 === Explore the example Data objects in DLMtool =====================
+#
+# DLMtool has a number of built-in example fishery Data objects. For previous 
+# classes of DLMtool objects we used the avail() function to find what objects 
+# were available. 
+#
+# We can do exactly the same thing for objects of class 'Data':
+
+avail('Data')
+
+# The 'avail' function tells us how many objects of class 'Data' are loaded 
+# into the R session.
+#
+# Let's take a look at the first pre-defined data object 'Atlantic_mackerel'.
+#
+# Just like other objects, we can use the 'slotNames' function to 
+# explore the Data object:
+
+slotNames(Atlantic_mackerel)
+
+# You can see from the documentation that the `Data` object contains many 
+# slots, and a lot of information can be stored in this object, including 
+# biological parameters, fishery statistics such as time-series of catch, and 
+# past management recommendations.
+#
+# The first slot 'Name' unsurprisingly contains the Name of the Fishery Data:
+
+Atlantic_mackerel@Name 
+
+# The second slot 'Year' contains the years corresponding to the fishery data:
+
+Atlantic_mackerel@Year 
+
+# The third slot 'Cat' contains the total catch data, where the catches correspond
+# to the years in the 'Year' slot:
+
+Atlantic_mackerel@Cat 
+
+# Similarly, the fourth slot 'Ind' contains the index of abundance. Like 'Cat' 
+# the 'Ind' slot is the same length as 'Year':
+
+Atlantic_mackerel@Ind 
+
+# Just like for the other objects in DLMtool, we can access the documentation 
+# for all of the slots in the `Data` class by typing:
+
+class?Data
+
+# Spend some time looking at the remaining slots and their formatting.
+#
+# Q1.1  In your case study are there additional data that could be included
+#       in an analysis for which there does not appear to be a slot?
+#
+# Q1.2  One of the slots in a Data object is LHYear, this is the last 
+#       historical year before MSE projection (where MPs start making
+#       management recommendations). Can you think why this slot is 
+#       necessary for some MPs?
+
+
+
+# === Task 2 === Import Data from a formatted .csv file ===========================
+#
+# Perhaps the easiest way to get fishery data into DLMtool for non-R users 
+# is to populate a .csv file in the correct format.
+#
+# A number of example .csv files are available in DLMtool. These CSVs 
+# files are located in the installation directory of the DLMtool library on your 
+# machine. The exact location of the files will vary between operating systems 
+# and machines.
+#
+# Probably the easiest way to understand the formatting is to open an example, 
+# e.g. Simulation_1.csv in Excel or Notepad.
+#
+# We can locate the example data files using the `DLMDataDir` function: 
+
+DLMDataDir()
+
+# Navigate to this directory on your machine to access the example CSV data 
+# files and open one of the files (e.g. Simulation_1.csv) in Excel.
+#
+# Each row represents a data input and a guide to their names can be found in 
+# the documentation for the Data object. 
 # 
-# First, lets create an example MSE object so that we can see what the
-# MSE data look like. For a change, rather than build an operating model 
-# from the component Stock, Fleet, Obs and Imp objects we are going to 
-# search for a pre-built operating model (class OM).
-
-avail('OM')
-
-# Lets run an MSE for the default MPs using the Yellowfin tuna operating
-# model:
-
-SWO <- runMSE(Swordfish_OM)
-
-# Similarly to other DLMtool objects you can find out more about MSE 
-# objects like SWO using the built-in help documentation:
-
-class?MSE
-
-# Alternatively you can see a concise summary of names using:
-
-slotNames(SWO)
-
-# For example we can see that the MSE was run for 5 MPs
-
-SWO@nMPs
-
-# For a total of 50 projected years:
-
-SWO@proyears
-
-# and 48 simulations
-
-SWO@nsim
-
-# Two of the slots in an MSE object are tables containing the sampled
-# observation error variables (biases, error in data) and the simulated 
-# conditions of the operating models. You can get a glance at each of 
-# these using the function head():
-
-head(SWO@Obs)
-head(SWO@OM)
-
-# Let say you wanted to see what the distribution of sampled stock
-# depletion levels (SSB today relative to SSB unfished) for the SWO 
-# operating model looks like, you could use the R histogram function:
-
-dev.off() # re-set plotting window
-hist(SWO@OM$Depletion, col='blue')
-
-# Here we can see the 48 simulations distributed between 30% and
-# 65% of unfished spawning biomass (SSB0)
-#
-# Various time series data are also included in the MSE which are 
-# specific to the simulation, the MP that was used and the projected
-# year. 
-#
-# For example the slot B_BMSY is the biomass relative to BMSY
-# over the projection. If you wanted to plot this for a particular
-# MP, say DCAC, you would first locate the MP number. The MSE
-# object contains a record of the MPs that were run in the slot
-# MPs:
-
-SWO@MPs
-
-# Here we can see that DCAC is the second MP of the 5 that were 
-# run.
+# In this iteration of DLMtool the formatting of the data is rather inflexible 
+# and has to be done quite carefully.
 # 
-# Looking at the help documentation we can see that the B_BMSY
-# data are organised in order of simulation, MP and projected
-# year. 
+# Here are some rules to ensure MP compatibility:
+#
+#  - Catches are in weight and are the same unit as absolute abundance estimates
+#
+#  - Time series of catches, effort and corresponding years are identical in 
+#    length and do not contain NA values
+#
+#  - CAL_bins are the breakpoints of the catch-at-length classes and must 
+#    therefore be a vector that is 1 element longer than the number of columns 
+#    in the catch-at length frequency data. 
+#
+#  - Normalize time series of relative abundance indices to have a mean of 1
+#  
+#
+# In this exercise we will import a CSV file into our R session. We will use one 
+# of the example CSV data files that are included in DLMtool. 
+#
+# We will import the 'Cobia' data file. Just like the other objects that we've 
+# covered so far, we create a new object of class Data with the 'new' function. 
+#
+# We must tell the 'new' function the location of the CSV data file that we want 
+# to import. If this file is not located, a warning message will alert us that 
+# a blank Data object has been created instead.
+#
+# The DLMDataDir function can be used to find the correct directory for an 
+# example CSV file:
+
+Dir <- DLMDataDir("Cobia")
+
+# This file is:
+
+Dir
+
+# Next we use the 'new' function and include the location of the CSV file as the 
+# second argument to the function:
+
+CobiaData <- new("Data", Dir)
+
+CobiaData@Name 
+
+# We have successfully imported a formatted CSV data file into R in a format that
+# allows it to be used by DLMtool MPs. 
+#
+# We could also create our own .csv file (ensuring that it is formatted correctly)
+# and populate it with our own fishery data. We will look at this in more detail 
+# in the optional exercises below.
+
+
+
+# === Task 3 === Visualize some of the data ========================================
 # 
-# This is confirmed by checking the dimensions of the B_BMSY array:
+# After importing a Data object we may wish to visualize the data. A generic 
+# and rather basic function 'summary' is available to visualize `Data` objects.
+#
+# While not particularly asthetically pleasing, this plot provides a quick-
+# glance confirmation that the data have been read in correctly.
 
-dim(SWO@B_BMSY)
+summary(Cobia)
 
-# We can now extract the B/BMSY data for our particular MP# DCAC 
-# (MP 2 of 5) and plot the trajectories:
+# We can do the same for the 'Atlantic_mackerel' Data object:
 
-DCAC_biomass<-SWO@B_BMSY[,2,]
+summary(Atlantic_mackerel)
 
-DCAC_biomass<-t(DCAC_biomass) # transpose the matrix for plotting
-
-matplot(DCAC_biomass,type='l')
-
-# We can also superimpose a line representing the BMSY reference
-# level
-
-abline(h=1,col="#99999995",lwd=5,lty=2)
-
-# Hopefully these examples are helping to illustrate why R is
-# such a powerful environment for packaging something like
-# DLMtool - the potential for customization is endless. 
+# The 'summary' function generates a plot showing the catch data, the index of 
+# relative abundance, and distributions of some the parameters that are specified 
+# in the Data object (e.g., von Bertalanffy growth parameters, M, and depletion).
 
 
-# Q1.1  Try to produce a similar projection plot for F relative 
-#       to FMSY for the MP 'matlenlim' 
+
+# === Task 4 === Determining which MPs can be applied to the Data object =========
+#
+# Different Management Procedures (MPs) require different data types. In data
+# limited settings it is typical to have many missing types of data (e.g. catch
+# at age data, an estimate of stock depletion) and as a result we may only be 
+# able to run a subset of the MPs that are available.  
 # 
-# Q1.2  Create a histogram for an observation error variable in 
-#       the table SWO@Obs
+# Three functions are available to diagnose which MPs can be applied to a given 
+# Data object. 
+#
+# The 'Can' function will display all of the available MPs that are able to be 
+# applied to the Data object. 
+#
+# For example, we can identify all of the MPs that can be applied to the 'Cobia'
+# Data object (note the 'Can' function may take a few seconds to run):
+
+Can(Cobia) 
+
+# We can see that over 25 MPs can be applied to the Cobia data set. However, there 
+# are almost 100 MPs included in DLMtool, suggesting that some key data types 
+# are missing. 
+#
+# We can use the 'Cant' function to determine which MPs cannot be applied:
+
+Cant(Cobia)
+
+# The Cant function list all of the MPs that cannot be applied to the data set, 
+# and provides a brief message explaining why.
+#
+# The final function 'Needed' can be used to identify which additional data are 
+# required before the remaining MPs can be applied to the data object:
+
+Needed(Cobia)
+
+# The 'Needed' function returns a list of the MPs that cannot be applied to the 
+# current data set, together with the names of the data types that are required
+# by each MP that are currently missing.
+
+# We can consult the documentation on the 'Data' object for more information on 
+# each of these slots.
+
+class?Data
+
+# Q4.1  What data types are commonly required by MPs that are not available 
+#       for Cobia?
+#
+# Q4.2  How could data collection be prioritized?
+#
+# Q4.3  The data-type 'Dep' appears a lot in the Needed(Cobia) output. This
+#       represents an estimate of stock depletion. Why does this pose a 
+#       logical problem in the scope of data-limited fisheries?
 
 
 
-# === Task 2: Custom performance metrics ==================================
+# === Task 5 === Populating a `Data` Object in R ===============================
+#
+# Many fisheries analysts use R as a data-processing tool and may also have 
+# fishery data available to them in an R session.
 # 
-# You may be irritated that so far your own idea of 'good 
-# performance' has not been reflected in any of the existing
-# MSE plots. 
+# In this Section we generate a blank Data object and fill in some of the 
+# data slots. 
 #
-# In this section we're going to interrogate the MSE object
-# to make your own performance metrics.
+#
+# First we create a blank Data object named 'Madeup':
+
+Madeup <- new('Data')                     #  Create a blank DLM object
+
+# Next we will some of the slots with some made-up data:
+
+Madeup@Name <- 'Madeup'                   #  Name it
+Madeup@Cat <- matrix(20:11*rlnorm(10,0,0.2),nrow=1) #  Fake catch data
+Madeup@Units <- "Million metric tonnes"   #  State units of catch
+Madeup@AvC <- mean(Madeup@Cat)            #  Average catches for time t (DCAC)
+Madeup@t <- ncol(Madeup@Cat)              #  No. yrs for Av. catch (DCAC)
+Madeup@Dt <- 0.5                          #  Depletion over time t (DCAC)
+Madeup@Dep <- 0.5                         #  Depletion relative to unfished 
+Madeup@vbK <- 0.2                         #  VB maximum growth rate
+Madeup@vbt0 <- (-0.5)                     #  VB theoretical age at zero length
+Madeup@vbLinf <- 200                      #  VB maximum length
+Madeup@Mort <- 0.1                        #  Natural mortality rate
+Madeup@Abun <- 200                        #  Current abundance
+Madeup@FMSY_M <- 0.75                     #  Ratio of FMSY/M
+Madeup@L50 <- 100                         #  Length at 50% maturity
+Madeup@L95 <- 120                         #  Length at 95% maturity
+Madeup@BMSY_B0 <- 0.35                    #  BMSY relative to unfished
+
+
+# Note that in order to be compatible with Output and Input MPs, the
+# object must have a 'position' for each input. For vectors this it is OK
+# to use a single value (ie one position) as this is considered the first 
+# position of a vector (of nsim long potentially). 
+#
+# However, time-series data are matrices that have n positions (nsim) rows 
+# with columns for the years of data. So in this case, our made up catch
+# data Madeup@Cat is assigned a matrix with only one row. 
+#
+# It's an annoying but powerful convention as it allows MPs to be applied 
+# to both real data (e.g. 1 position, 1 row in the Cat matrix) and 
+# simulated data (many rows, one per simulation) in an MSE analysis. This 
+# means that exactly the same MP code is applied in both MSE testing and 
+# the generation of real management advice. 
+#
+# Let's check what MPs can and cannot be applied to our fictional data set:
+
+Can(Madeup)
+Cant(Madeup)
+Needed(Madeup)
+
+# In this set of exercises we have examined the contents of the Data object 
+# class.
+#
+# We have also seen how to import Data objects from a formatted CSV 
+# file, as well as created and populated our own Data object in R. Finally, we 
+# used the 'Can', 'Cant', and 'Needed' functions to determine which MPs can be 
+# applied to our data, which MPs cannot be applied, and what additional data are 
+# required in order to run those MPs.
 # 
-# For the purposes of this example you care about not dropping 
-# below a depletion level of 80% BMSY and want high short-term
-# economic yields (over the next 5 years).
+# In the next set of exercises we will apply MPs to our Data objects, plot the 
+# output of the MPs, and examine the sensitivity of the MPs to the different 
+# input data. 
 #
-# We've already seen the B_BMSY slot, we now have to summarize
-# these data with respect to a reference level of 80%, 
-# calculating the fraction, by MP, that dropped below this
-# level. 
+# If you have extra time and are looking for additional challenges you can 
+# complete the optional exercises below. 
+
+
+
+# === Optional tasks ==============================================================
+
+# === Task 6 === Import a Data object from a CSV file ==========================
 #
-# Using the R function 'apply' this is surprisingly easy:
-
-P80 <- apply(SWO@B_BMSY < 0.8, 2, mean)
-
-# By MP (the second dimension of the B_BMSY array) we have 
-# summed the instances where B_BMSY was less than 80%
-# and divided them by the total number of simulations
-# and projected years. This returns the fraction (interpreted 
-# as a probability) of dropping below 80% of BMSY. 
+# Create a blank CSV data file and populate it your own data for a fishery that 
+# you work with. Import the CSV file from the new location, and use the 'summary'
+# function to visualize your modified data. Use the 'Can', 'Cant', and 'Needed' 
+# functions to determine which MPs can be run on your modified data set.
 #
-# Since future catches are arranged in the same type of
-# array:
-
-dim(SWO@C)  # simulation x MP x projected year
-
-# we can apply a similar apply funciton to calculate mean 
-# expected yield over the first 5 years of the projection:
-
-MY5<-apply(SWO@C[,,1:5],2,mean)
-
-# The two custom performance metrics can now be plotted to 
-# reveal the trade-off among MPs:
-
-plot(P80,MY5,col='white',xlab="Prob. B < 0.8BMSY",
-                         ylab="Expected Yield 5yr")
-
-text(P80,MY5,SWO@MPs,col='blue')
-
-# Its not a particularly attractive plot but it reveals a
-# clear trade-off between biological and economic metrics. 
+# Remember some data-limited MPs only need a few data types to provide a 
+# management recommendation. 
 
 
-# Q2.1 Produce a trade-off plot that reflects long-term 
-#      economic interests (ie the last 5 years)
-#
-# Q2.2 How does the trade-off differ from the previous plot
-#      that showed short-term economic interests?
-#
-# Q2.3 Can you explain this difference and what does this 
-#      mean in a hypothetical management situation?
+# === Task 7 === Determining which MPs can be applied to the Data object =======
+# 
+# Create a blank Data object and populate it with simulated data created 
+# by runMSE (tip: use the argument 'Hist=TRUE' to simulate only historical data.) 
+# Populate the Observation error slots in the Data object and visualize the data 
+# object.
 
 
-
-# === Optional tasks ====================================================
-
-# Task 3: do your own VOI analysis. What observation parameters
-#         affected these new custom performance metrics?
-
-# Task 4: organize your new performance metrics in a table and
-#         save them to disk somewhere. See R help for two 
-#         functions: cbind() and write.csv(). 
-
-
-
-# === Advanced tasks ====================================================
-
-# Task 5: reading the help documentation for VOI you realise that
-#         you can send custom performance metrics to the VOI
-#         function. Format your metrics correctly and use the 
-#         standard VOI funciton to reveal VOI and CCU.
-
-
-# Task 6: Calculate the average inter-annual variability in yield 
-#         for each MP 
-
-
-
-# ==================================================================================
-# === End of Exercise 3c ===========================================================
-# ==================================================================================
-
+# ==============================================================================
+# === End of Exercise 3c =======================================================
+# ==============================================================================
 
 
 

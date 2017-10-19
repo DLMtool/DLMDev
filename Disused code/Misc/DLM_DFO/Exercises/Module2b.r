@@ -69,7 +69,7 @@ avail("Imp")
 #
 # and assign the new OM object the name `myOM`.
 
-myOM <- new("OM", Blue_shark, IncE_Dom, Imprecise_Unbiased, Perfect_Imp)
+myOM <- new("OM", Blue_shark, IncE_HDom, Imprecise_Unbiased, Perfect_Imp)
 
 
 
@@ -83,7 +83,7 @@ myOM <- new("OM", Blue_shark, IncE_Dom, Imprecise_Unbiased, Perfect_Imp)
 # plot():
 
 plot(Blue_shark)             # plot the Stock 
-plot(IncE_Dom, Blue_shark)   # plot the Fleet dynamics
+plot(IncE_HDom, Blue_shark)  # plot the Fleet dynamics
 plot(Imprecise_Unbiased)     # plot Obs 
 plot(Perfect_Imp)            # plot Imp 
 
@@ -132,13 +132,15 @@ Pplot(myMSE)
 # Each column of this plot shows the simulated fishing rate relative to FMSY 
 # and the biomass relative to BMSY for a different management procedure.
 #
-# In this MSE, 5 default MPs were evaluated over 50 projected years into 
+# In this MSE, 6 default MPs were evaluated over 50 projected years into 
 # the future:
 #
-# AvC      Average historical catches are used as TAC
-# DCAC     Depletion-Corrected Average Catch (MacCall 2009)
-# FMSYref  Fishing at FMSY with perfect knowledge of current biomass
-# curE     Fishing at current effort levels
+# AvC        Average historical catches are used as TAC
+# DCAC       Depletion-Corrected Average Catch (MacCall 2009)
+# FMSYref    Fishing at FMSY with perfect knowledge of current biomass
+# curE       Fishing at current effort levels
+# matlenlim  Size selectivity follows maturity at length curve
+# MRreal     Area 1 becomes an MPA with total reallocation of effort to area 2  
 #
 # Pplot includes some aggregate performance metrics in the panels such as 
 # the probabilty of overfishing (POF) and the magnitude of yield relative 

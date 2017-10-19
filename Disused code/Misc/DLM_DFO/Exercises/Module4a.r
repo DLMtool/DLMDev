@@ -1,335 +1,413 @@
 
-# ================================================================================
-# === DLMtool Exercise 4a: Processing data  ======================================
-# ================================================================================
+# ==============================================================================
+# === DLMtool Exercise 4a: Advanced operating model specification ==============
+# ==============================================================================
 #
-# The DLMtool package has an object class 'Data' which standardizes the 
-# format of fishery data allowing multiple management procedures to be applied 
-# to the same data. 
+# In this Exercise we will look at some of the more advanced methods to specify 
+# and modify an Operating Model.
 #
-# Also standardized is the way in which MPs access the data in a Data object. 
+# We will learn how to include historical trends in fishing effort and time-
+# varying selectivity in the Operating Model. 
+# 
+# In many settings analysts wish to include include correlated parameters in the
+# MSE. In this exercise you will learn how to do this and investigate the impact
+# that correlated parameters have on the performance of MPs in the MSE.
+# 
+# Finally, we will look at methods condition the OM object on fishery data or
+# the output from a stock assessment.
 #
-# This Data object - MP relationship serves as the foundation for much of the 
-# remaining DLMtool functionality so it handy to become familiar with it. 
-#
-# In this set of exercises we will explore the pre-defined Data objects in the
-# DLMtool package,  learn how to import a Data object from a CSV file, and also 
-# how to create a Data object in R. 
-#
-# DLMtool also includes functions that help diagnose situations where data are 
-# sufficient for a particular management procedure and also situations where
-# data are required to get MPs working. 
+ 
 
 
-
-# === Setup (only required if new R session) =====================================
+# === Setup (only required if new R session) ===================================
 
 library(DLMtool)  
 setup()
 
 
 
-
-# === Task 1 === Explore the example Data objects in DLMtool =====================
+# === Task 1 === Specifying historical effort trends  ==========================
 #
-# DLMtool has a number of built-in example fishery Data objects. For previous 
-# classes of DLMtool objects we used the avail() function to find what objects 
-# were available. 
-#
-# We can do exactly the same thing for objects of class 'Data':
-
-avail('Data')
-
-# The 'avail' function tells us how many objects of class 'Data' are loaded 
-# into the R session.
-#
-# Let's take a look at the first pre-defined data object 'Atlantic_mackerel'.
-#
-# Just like other objects, we can use the 'slotNames' function to 
-# explore the Data object:
-
-slotNames(Atlantic_mackerel)
-
-# You can see from the documentation that the `Data` object contains many 
-# slots, and a lot of information can be stored in this object, including 
-# biological parameters, fishery statistics such as time-series of catch, and 
-# past management recommendations.
-#
-# The first slot 'Name' unsurprisingly contains the Name of the Fishery Data:
-
-Atlantic_mackerel@Name 
-
-# The second slot 'Year' contains the years corresponding to the fishery data:
-
-Atlantic_mackerel@Year 
-
-# The third slot 'Cat' contains the total catch data, where the catches correspond
-# to the years in the 'Year' slot:
-
-Atlantic_mackerel@Cat 
-
-# Similarly, the fourth slot 'Ind' contains the index of abundance. Like 'Cat' 
-# the 'Ind' slot is the same length as 'Year':
-
-Atlantic_mackerel@Ind 
-
-# Just like for the other objects in DLMtool, we can access the documentation 
-# for all of the slots in the `Data` class by typing:
-
-class?Data
-
-# Spend some time looking at the remaining slots and their formatting.
-#
-# Q1.1  In your case study are there additional data that could be included
-#       in an analysis for which there does not appear to be a slot?
-#
-# Q1.2  One of the slots in a Data object is LHYear, this is the last 
-#       historical year before MSE projection (where MPs start making
-#       management recommendations). Can you think why slot is necessary
-#       for some MPs?
-
-
-
-# === Task 2 === Import Data from a formatted .csv file ===========================
-#
-# Perhaps the easiest way to get fishery data into DLMtool for non-R users 
-# is to populate a .csv file in the correct format.
-#
-# A number of example .csv files are available in DLMtool. These CSVs 
-# files are located in the installation directory of the DLMtool library on your 
-# machine. The exact location of the files will vary between operating systems 
-# and machines.
-#
-# Probably the easiest way to understand the formatting is to open an example, 
-# e.g. Simulation_1.csv in Excel or Notepad.
-#
-# We can locate the example data files using the `DLMDataDir` function: 
-
-DLMDataDir()
-
-# Navigate to this directory on your machine to access the example CSV data 
-# files and open one of the files (e.g. Simulation_1.csv) in Excel.
-#
-# Each row represents a data input and a guide to their names can be found in 
-# the documentation for the Data object. 
+# The trend in historical fishing effort can be an important driver of MP
+# performance.
 # 
-# In this iteration of DLMtool the formatting of the data is rather inflexible 
-# and has to be done quite carefully.
-# 
-# Here are some rules to ensure MP compatibility:
+# Suppose that we know the fishery began 50 years ago, and fishing effort 
+# increased slowly over the first decade, was relatively stable in the next two 
+# decades at 1/4 of historical maximum, then increased dramatically over the 
+# next 10 years.  
 #
-#  - Catches are in weight and are the same unit as absolute abundance estimates
+# We also know that while fishing effort stayed relatively constant 
+# at this high level, there has been a general decline in fishing effort in 
+# last 5 years down to about half of the historical high.
 #
-#  - Time series of catches, effort and corresponding years are identical in 
-#    length and do not contain NA values
+# This information can be included in the Operating Model by using the 
+# 'ChooseEffort' function.  The 'ChooseEffort' function takes an existing 
+# 'Fleet' object as its first argument, and allows the user to manually map out 
+# the range for the historical trend in fishing effort.  The 'ChooseEffort' 
+# function then returns the updated Fleet object.  
 #
-#  - CAL_bins are the breakpoints of the catch-at-length classes and must 
-#    therefore be a vector that is 1 element longer than the number of columns 
-#    in the catch-at length frequency data. 
+# Let's base our initial Fleet object on the 'Generic_fleet' object included in 
+# DLMtool:
+
+MyFleet <- Generic_Fleet
+
+# Next we will use the 'ChooseEffort' function to map out the relative fishing 
+# effort over the last 50 years. 
+# Use the 'ChooseEffort' to map the trend in historical relative fishing effort 
+# outlined in the above scenario. Take note to:
+#   - make sure fishing effort is zero in the first year (Year 0)
+#   - increase effort in first ten years to around 1/4 of maximum level
+#   - then increase to maximum level within 10 years and remain relatively
+#       constant until last 5 years where it declines to about 1/2 of 
+#       historical maximum.
+#   - include bounds on the fishing effort for each the year vertices 
+
+MyFleet <- ChooseEffort(MyFleet)
+
+# You may notice that some of the slots in the 'MyFleet' object have been 
+# updated. The 'EffLower', 'EffUpper', and 'EffYears' slots now contain the 
+# bounds and year vertices that we drew using 'ChooseEffort':
+
+MyFleet@EffLower
+MyFleet@EffUpper
+
+# Compare this to the original:
+
+Generic_Fleet@EffLower
+Generic_Fleet@EffUpper
+Generic_Fleet@EffYears
+
+# Rather than drawing effort we could just modify these slot directly. E.g: 
+
+MyFleet@EffLower <- c(0, 0.2, 0.9, 0.9, 0.45)
+MyFleet@EffUpper <- c(0, 0.25, 1, 1, 0.55)
+MyFleet@EffYears <- c(1, 10, 21, 45, 50)
+
+# We can see the difference in historical fishing effort when we plot the 
+# two Fleet objects (you may need to expand the size of the plotting window):
+
+plot(Generic_Fleet, Albacore, 50)
+
+plot(MyFleet, Albacore, 50)
+
+# Note that we need to include a 'Stock' object when plotting a 'Fleet' object.
+# We have also chosen to include 50 random samples so that we can see the 
+# difference in the historical fishing effort more clearly.
+
+# Does this different pattern of historical fishing effort have any impact on 
+# the performance of the MPs?
 #
-#  - Normalize time series of relative abundance indices to have a mean of 1
-#  
+# It is straightforward to answer this question by creating two operating models
+# and running two MSEs.
 #
-# In this exercise we will import a CSV file into our R session. We will use one 
-# of the example CSV data files that are included in DLMtool. You will note that 
-# these have identical names to the pre-defined Data objects in DLMtool.
+# Specify the two OM objects (the only difference between the two is the 
+# different historical fishing effort):
+
+OM1 <- new("OM", Albacore, Generic_Fleet, Generic_Obs, Perfect_Imp, nsim=150)
+
+OM2 <- new("OM", Albacore, MyFleet, Generic_Obs, Perfect_Imp, nsim=150)
+
+# Run the two MSEs using the different the two OMs:
+
+MSE1 <- runMSE(OM1)
+
+MSE2 <- runMSE(OM2)
+
+# And finally, plot the results for each MSE:
+
+NOAA_plot(MSE1)
+
+NOAA_plot(MSE2)
+
+# We can see that there is some difference in performance in some MPs and 
+# less so with others. 
 #
-# We will import the 'Cobia' data file. Just like the other objects that we've 
-# covered so far, we create a new object of class Data with the 'new' function. 
-# We must tell the 'new' function the location of the CSV data file that we want 
-# to import. If this file is not located, a warning message will alert us that 
-# a blank Data object has been created instead.
+# This rapid comparision of MSE results can be very useful in determining the
+# implications and importance of alternative hypotheses or scenarios. 
 #
-# The DLMDataDir function can be used to find the correct directory for an 
-# example CSV file:
+# It may be the case the trends in historical fishing effort are controversial
+# but the MSE results reveal that the performance of the MPs of interest are 
+# relatively unaffected by historical effort. 
 
-Dir <- DLMDataDir("Cobia")
+# Q1.1  Why does the 'curE' method (current effort) have a lower long-term 
+#       yield and higher probablity of not overfishing in the second MSE?
 
-# Next we use the 'new' function and include the location of the CSV file as the 
-# second argument to the function:
 
-CobiaData <- new("Data", Dir)
 
-CobiaData@Name 
-
-# We have successfully imported a formatted CSV data file into R in a format that
-# allows it to be used by DLMtool MPs. 
+# === Task 2 === Time varying selectivity  =====================================
 #
-# We could also create our own .csv file (ensuring that it is formatted correctly)
-# and populate it with our own fishery data. We will look at this in more detail 
-# in the optional exercises below.
-
-
-
-# === Task 3 === Visualize some of the data ========================================
-# 
-# After importing a Data object we may wish to visualize the data. A generic 
-# and rather basic function 'summary' is available to visualize `Data` objects.
+# In many situations there have been changes in selectivity of the fishery 
+# throughout the history of exploitation - either through the development of 
+# different gears or changes to regulations.
 #
-# While not particularly asthetically pleasing, this plot provides a quick-
-# glance confirmation that the data have been read in correctly.
-
-summary(Cobia)
-
-# We can do the same for the 'Atlantic_mackerel' Data object:
-
-summary(Atlantic_mackerel)
-
-# The 'summary' function generates a plot showing the catch data, the index of 
-# relative abundance, and distributions of some the parameters that are specified 
-# in the Data object (e.g., von Bertalanffy growth parameters, M, and depletion).
-
-
-
-# === Task 4 === Determining which MPs can be applied to the Data object =========
+# Suppose that we knew there had been changes in the selectivity pattern 
+# of the fishery over time. This information can be included in the Operating 
+# Model by using the 'ChooseSelect' function.
 #
-# Different Management Procedures (MPs) require different data types. In data
-# limited settings it is typical to have many missing types of data (e.g. catch
-# at age data, an estimate of stock depletion) and as a result we may only be 
-# able to run a subset of the MPs that are available.  
-# 
-# Three functions are available to diagnose which MPs can be applied to a given 
-# Data object. 
+# Like the 'ChooseEffort' function described above, the 'ChooseSelect'
+# function takes a Fleet object as the first argument, and returns an updated 
+# Fleet object.
 #
-# The 'Can' function will display all of the available MPs that are able to be 
-# applied to the Data object. 
+# Suppose that the fishery began in 1968, and the selectivity pattern changed 
+# in 1970 and then again in 1990, perhaps because of changes in fishing 
+# regulations.  These change points in the selectivity curve can be mapped by 
+# the following command:
+
+MyFleet <- ChooseSelect(MyFleet, Albacore, FstYr=1968, SelYears=c(1970, 1990))
+
+# A message in the R console alerts us that we must input the last historical 
+# year. This is used to calculate the number of historical years.
 #
-# For example, we can identify all of the MPs that can be applied to the 'Cobia'
-# Data object (note the 'Can' function may take a few seconds to run):
-
-Can(Cobia) 
-
-# We can see that over 25 MPs can be applied to the Cobia data set. However, there 
-# are almost 100 MPs included in DLMtool, suggesting that some key data types 
-# are missing. 
+# Type the current year (2017 at time of writing) into the console and press 
+# 'Enter'
 #
-# We can use the 'Cant' function to determine which MPs cannot be applied:
-
-Cant(Cobia)
-
-# The Cant function list all of the MPs that cannot be applied to the data set, 
-# and provides a brief message explaining why.
+# An interactive plot now appears where we must out the bounds for the length at 
+# 5% selection (L5), the length at full selection (LFS), and the selectivity at 
+# maximum length (Vmaxlen) for each year where selectivity has changed (here 
+# 1968 [the first year], 1970, and 1990).
 #
-# The final function 'Needed' can be used to identify which additional data are 
-# required before the remaining MPs can be applied to the data object:
-
-Needed(Cobia)
-
-# The 'Needed' function returns a list of the MPs that cannot be applied to the 
-# current data set, together with the names of the data types that are required
-# by each MP that are currently missing.
-
-# We can consult the documentation on the 'Data' object for more information on 
-# each of these slots.
-
-class?Data
-
-# Q4.1  What data types are commonly required by MPs that are not available 
-#       for Cobia?
+# Note that the two dashed vertical lines labelled 'L50' represent the range of
+# values for length at 50% maturity. 
 #
-# Q4.2  How would you suggest that data collection should be prioritized?
+# Use the plot to map out some different selectivity curves for each year.
 #
-# Q4.3  The data-type 'Dep' appears a lot in the Needed(Cobia) output. This
-#       represents an estimate of stock depletion. Why does this pose a 
-#       logical problem in the scope of data-limited fisheries?
-
-
-
-# === Task 5 === Populating a `Data` Object in R ===============================
+# When 'ChooseSelect' is used, the 'L5Lower', 'L5Upper', 'LFSLower', 'LFSUpper', 
+# 'VmaxLower', 'VmaxUpper', and 'SelYears' slots are updated in the Fleet
+# object. If these slots are populated, the values in the 'L5', 'LFS', and 
+# 'Vmaxlen' slots are ignored in the operating model. 
 #
-# Many fisheries analysts use R as a data-processing tool and may also have 
-# fishery data available to them in an R session.
-# 
-# In this Section we generate a blank Data object and fill in some of the 
-# data slots. 
+# Similarly to the 'ChooseEffort' function we can change the historical 
+# selectivity by updating the relevant slots in the Fleet object. 
+
+
+
+# === Task 3 === Preserving correlation among parameters =======================
+#
+# By default the MSE draws samples from a uniform distribution for each input 
+# parameter. However, there are often cases where we may wish to preserve 
+# correlation between different input parameters. 
+#
+# A common example of this is correlation among the von Bertalanffy growth 
+# parameters (Linf, K) which like the intercept and slope in linear regression
+# analyis are often found to be strongly negatively correlated when estimated 
+# from growth data. 
 #
 #
-# First we create a blank Data object named 'Madeup':
+# Let's create a OM object using the Sole Stock object, and the Generic_fleet,
+# Generic_obs, Perfect_Imp, and 150 simulations:
 
-Madeup <- new('Data')                     #  Create a blank DLM object
+OM <- new("OM", Sole, Generic_Fleet, Generic_Obs, Perfect_Imp, nsim=150)
 
-# Next we will some of the slots with some made-up data:
+# We can examine the interval for the von Bertalanffy growth parameters:
 
-Madeup@Name <- 'Madeup'                   #  Name it
-Madeup@Cat <- matrix(20:11*rlnorm(10,0,0.2),nrow=1) #  Fake catch data
-Madeup@Units <- "Million metric tonnes"   #  State units of catch
-Madeup@AvC <- mean(Madeup@Cat)            #  Average catches for time t (DCAC)
-Madeup@t <- ncol(Madeup@Cat)              #  No. yrs for Av. catch (DCAC)
-Madeup@Dt <- 0.5                          #  Depletion over time t (DCAC)
-Madeup@Dep <- 0.5                         #  Depletion relative to unfished 
-Madeup@vbK <- 0.2                         #  VB maximum growth rate
-Madeup@vbt0 <- (-0.5)                     #  VB theoretical age at zero length
-Madeup@vbLinf <- 200                      #  VB maximum length
-Madeup@Mort <- 0.1                        #  Natural mortality rate
-Madeup@Abun <- 200                        #  Current abundance
-Madeup@FMSY_M <- 0.75                     #  Ratio of FMSY/M
-Madeup@L50 <- 100                         #  Length at 50% maturity
-Madeup@L95 <- 120                         #  Length at 95% maturity
-Madeup@BMSY_B0 <- 0.35                    #  BMSY relative to unfished
+OM@Linf
+OM@K 
 
+# And natural mortality:
 
-# Note that in order to be compatible with Output and Input MPs, the
-# object must have a 'position' for each input. For vectors this it is OK to 
-# use a single value (ie one position) as this is considered the first 
-# position of a vector (of nsim long potentially). 
+OM@M 
+
+# By default, DLMtool will draw samples uniformly from within this range for 
+# each parameter and assume that there is no correlation between them. 
 #
-# However time-series data are matrices that have n positions (nsims) rows 
-# with columns for the years of data. So in this case our made up catch
-# data Madeup@Cat is assigned a matrix with only one row. 
+# If we have information on the correlation structure between different input 
+# parameters, it is possible include sampled parameters that maintaing these 
+# correlations by adding them to the 'cpars' (custom parameters) slot in the 
+# OM object.
 #
-# Its an annoying but powerful convention as it allows MPs to be applied to
-# both real data (e.g. 1 position, 1 row in the Cat matrix) and simulated
-# data in an MSE analysis. This means the same MP code is applied in both 
-# MSE testing and data analysis. 
+# At the moment the 'cpars' slot is an empty list, which indicates that there are 
+# no custom parameters in this OM object 
+
+OM@cpars 
+
+# The 'ForceCor' function has been developed to force typical correlations 
+# among estimated parameters to generate realistic samples for natural mortality 
+# rate (M), growth rate (K), average asymptotic length (Linf) and length at 50%
+# maturity (L50).
 #
-# Let's check what MPs can and cannot be applied to our fictional data set:
+# We can use this function to generate correlated samples of M, Linf, K, and L50:
 
-Can(Madeup)
-Cant(Madeup)
-Needed(Madeup)
+CorOM <- ForceCor(OM)
 
-# In this set of exercises we have examined the contents of the Data object 
-# class.
+# The 'ForceCor' function generates a plot which shows the original intervals
+# for each parameter (blue shading) and the 150 correlated samples that were 
+# generated (black dots) as well as the distribution of the samples for 
+# each parameter (histograms).
 #
-# We have also seen how to import Data objects from a formatted CSV 
-# file, as well as created and populated our own Data object in R. Finally, we 
-# used the 'Can', 'Cant', and 'Needed' functions to determine which MPs can be 
-# applied to our data, which MPs cannot be applied, and what additional data are 
-# required in order to run those MPs.
-# 
-# In the next set of exercises we will apply MPs to our Data objects, plot the 
-# output of the MPs, and examine the sensitivity of the MPs to the different 
-# input data. 
+# Note that the 'ForceCor' function returns an object of class OM. This is 
+# identical to the original OM object that we provided it, with the exception
+# that the 'cpars' slot is now populated with the correlated samples that were
+# generated:
+
+CorOM@cpars 
+
+# We can display the names of the parameters in the 'cpars' slots:
+
+names(CorOM@cpars)
+
+# Note that the MSE will now ignore the parameters with these names in the 
+# standard OM object, and use these correlated samples instead.
 #
-# If you have extra time and are looking for additional challenges you can 
-# complete the optional exercises below. 
+# We can now run a MSE both with and without the correlated samples and determine
+# if it has a significant impact on the performance of the MPs:
 
+MSE1 <- runMSE(OM)
 
+MSE2 <- runMSE(CorOM)
 
-# === Optional tasks ==============================================================
+NOAA_plot(MSE1)
 
-# === Task 6 === Import a Data object from a CSV file ==========================
+NOAA_plot(MSE2)
+
+# Based on this single plot it appears that in this case the correlated growth
+# and mortality parameters have had a small impact on the relative performance of
+# the MPs. This is a fairly typical result, it doesn't however stop many 
+# assessment scientists from insisting that correlated growth parameters are vital
+# in determining the results of MSEs!
 #
-# Create a blank CSV data file and populate it your own data for a fishery that 
-# you work with. Import the CSV file from the new location, and use the 'summary'
-# function to visualize your modified data. Use the 'Can', 'Cant', and 'Needed' 
-# functions to determine which MPs can be run on your modified data set.
+# It is possible to include a range of other correlated parameters in the 'cpars'
+# slot. The DLMtool manuscript includes greater detail on this (in the Help folder)
+# We will examine this in more detail in the next two tasks.
+
+
+
+# === Task 4 === Conditioning OM by SRA ========================================
 #
-# Remember some data-limited MPs only need a few data types to provide a 
-# management recommendation. 
+# Sometimes it is possible to use existing data to generate realistic samples of 
+# operating model parameters. For example, if a time-series of catch-at-age (CAA)
+# exists, together with a time-series of historical catches (Chist), it may be 
+# possible to use a stock-reduction analysis (SRA) to determine a range of fishing
+# mortality rates and estimates of depletion that correspond to these data.
+#
+# The 'StochasticSRA' function can be used to generate correlated samples of 
+# stock depletion (D), selectivity parameters (L5, LFS) and historical fishing 
+# effort. This function takes an OM object, together with CAA and Chist data and
+# returns an OM object with the 'cpars' slot updated.
+
+# A Stock object, CAA, and Chist data are provided in the Exercises/Data/SRA 
+# directory.
+
+# First we create a new Stock object by importing the CSV:
+
+StockRER <- new("Stock", "D:/DLM_DFO/Exercises/Data/SRA/Stock_RER.csv")
+
+StockRER@Name 
+
+# This Stock object is based on the long-lived Rougheye Rockfish from British
+# Columbia, Canada.
+#
+# Next we create an OM object. Here we are using Generic_fleet, Generic_obs 
+# and Perfect_Imp:
+
+OM <- new("OM", StockRER, Generic_Fleet, Generic_Obs, Perfect_Imp)
+
+# To run the StochasticSRA analysis we need to import the CAA and Chist data, 
+# and convert them to the correct format :
+
+CAA <- as.matrix(read.csv("D:/DLM_DFO/Exercises/Data/SRA/CAA.csv"))
+Chist <- as.numeric(as.matrix(read.csv("D:/DLM_DFO/Exercises/Data/SRA/Chist.csv")))
+
+# And run the 'StochasticSRA' analysis (this may take some time):
+
+OMSRA <- StochasticSRA(OM, CAA, Chist, nits = 2000)
+
+# The 'StochasticSRA' function has updated the 'cpars' slot with correlated 
+# samples of several parameters including growth parameters, natural mortality, 
+# selectivity parameters, recruitment deviations, and historical fishing effort:
+
+names(OMSRA@cpars)
+
+# We can examine some of the information contained in the 'cpars' slot by 
+# plotting. For example, the estimated historical trends in fishing mortality:
+
+matplot(t(OMSRA@cpars$Find), type="l", ylab="Apical Fishing mortality rate")
+
+# Or the correlation between fishing mortality rate in the last historical year
+# and the current level of depletion:
+
+plot(OMSRA@cpars$Find[,44], OMSRA@cpars$dep, xlab="Last year fishing rate", 
+     ylab="Depletion")
 
 
-# === Task 7 === Determining which MPs can be applied to the Data object =======
-# 
-# Create a blank Data object and populate it with simulated data created 
-# by runMSE (tip: use the argument 'Hist=TRUE' to simulate only historical data.) 
-# Populate the Observation error slots in the Data object and visualize the data 
-# object.
+# The OMSRA object with the correlated custom parameters derived from the 
+# StochasticSRA analysis can then be used to run a MSE:
+
+MSE <- runMSE(OMSRA)
+
+# Q4.1  What is the difference in MSE results between rockfish OMs that 
+#       include/exclude custom parameters (tip: you can use new('list') to
+#       generate a blank list in @cpars) 
+
+
+
+# === Task 5 === Conditioning OM by SS =========================================
+#
+# There may also be cases where stock assessment has been carried out and we wish 
+# to use this information to populate our OM object. DLMtool includes a function
+# 'SS2DLM' which reads in the files from a fitted SS3 model to populate the 
+# various slots of an operating model with the MLE parameter estimates.
+#
+# Here we will look at an example from a SS3 model that has been fitted to 
+# Yellowfin Tuna from the Indian Ocean:
+
+# We use the 'SS2DLM' function, and specify:
+#   - the location of the directory containing the SS3 files
+#   - a name for the Name slot in the OM object 
+#   - the number of simulations we wish to include 
+
+SSout <- SS2DLM(SSdir = "D:/DLM_DFO/Exercises/Data/SS/", Name = "fromSS", nsim = 100)
+
+# The 'SS2DLM' function returns an object of class OM with the slots populated 
+# from the MLE estimates in the SS3 model run.
+
+# For example, the range of the von Bertalanffy parameters:
+
+SSout@Linf 
+SSout@K 
+
+# The 'SS2DLM' function also provides samples of some correlated parameters and
+# populates the 'cpars' slots:
+
+str(SSout@cpars)
+
+# There are a couple of small issues with the OM object generated by SS2DLM 
+# (these will be fixed in the next version of DLMtool). We need to do a little 
+# bit of tweaking to make a valid OM object: 
+
+Stock <- SubOM(SSout, "Stock")
+Fleet <- SubOM(SSout, "Fleet")
+Obs <- SubOM(SSout, "Obs")
+Imp <- Perfect_Imp
+
+SSOM <- new("OM", Stock, Fleet, Obs, Imp, nsim=SSout@nsim)
+SSOM@hcv <- 0
+SSOM@cpars <- SSout@cpars
+
+
+# The SSOM variable is now a OM object populated with the parameters estimates
+# and correlated parameters from the Ss3 output.
+
+# We can examine the OM object generated from the SS output using the 'plot'
+# function:
+
+plot(SSOM)
+
+# And we can run a MSE using the OM object created by 'SS2DLM':
+
+MSE <- runMSE(SSOM)
+
+NOAA_plot(MSE)
+
+
+# Q5.1  Examine SSOM using the plot function. Are there any parts of the 
+#       operating model that you think are too certain and do not reflect
+#       credible ranges of uncertainty?
 
 
 # ==============================================================================
 # === End of Exercise 4a =======================================================
 # ==============================================================================
+
 
 
 

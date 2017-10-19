@@ -1,253 +1,245 @@
 
 # =====================================================================================
-# === DLMtool Exercise 3b: Selecting MPs and other MSE outputs ========================
+# === DLMtool Exercise 3b: Custom performance analysis ================================
 # =====================================================================================
 #
-# So far, every MSE we have undertaken has used the default Management Procedures.
-# There are 5 default MPs and they are:
-#
-# AvC:        TAC set to average historical catches
-# DCAC:       TAC set to Depletion-Corrected Average Catch (MacCall 2009)
-# FMSYref:    reference MP where TAC is FMSY x current biomass known perfectly
-# curE:       TAE set to current effort levels
-# matlenlim:  size limit where the selectivity matches maturity at length
-#
-# Close to 100 MPs are included in the current version of DLMtool. These include
-# output (TAC) control MPs and input control MPs (TAE, spatial and size limit)
+# In the previous exercises you have used the runMSE() to conduct an MSE and 
+# have stored your MSE runs in a series of objects (MSE1, MSE2, MSE3...). 
 # 
-# In the first half of this set of exercises we will select a greater range of
-# MPs for MSE testing. 
-# 
-# In the second half of these exercises will we learn how
-# to check for convergence in the performance of these MPs and how to diagnose
-# which data are deriving performance for these MPs. 
+# Using plotting techniques you have been able to vizualise the data stored in
+# these MSE objects. 
+#
+# In this exercise you will find out more about where data are stored in 
+# MSE objects which allows you to design your own performance metrics and
+# conduct your own evalution of simulation conditions.
+#
+# Since we are dealing with R objects, data, arrays and such, this will be 
+# one of the more 'programmy' of the exercises. Sorry! What's important
+# however is that you know that these outputs exist, that they can be
+# accessed and that you can come up with your own ways to interpret them.
 
 
 
-# === Setup (only required if new R session) =====================================
+# === Setup  =====================================================================
 
 library(DLMtool)  
 setup()
 
+# A large number of additional DLMtool case studies are available in 
+# a package called DLMextra. You can easily get all these extra case
+# studies by using the function DLMextra()
 
+DLMextra()
 
-# === Task 1 === Selecting MPs for MSE testing ===================================
-#
-# For previous classes of DLMtool objects we used the avail() function to find
-# what objects were available. You can use the same approach for DLMtool 
-# MPs that are split into output control MPs (that set TACs) and input control
-# MPs that set TAE, size limits or spatial closures.
-#
-# Finding these and looking up the help documentation for these is simple:
+# Just like DLMtool you need to load this library of extra data in
+# each R session in which you want to use it:
 
-avail('Output')
-avail('Input')
-?DD
-?MRreal
+library(DLMextra)
 
-# To run an MSE using your own MP selection you have to add an argument to
-# the runMSE function that is just a vector of the MPs names you wish to test.
-
-myMPs<-c("MCD","SBT1","DBSRA","DD","IT5",                  # Output controls
-         "DDes","EtargetLopt","ItargetE1","MRreal","DTe40")# Input controls
-
-
-MSE3<-runMSE(testOM,MPs=myMPs)
-
-NOAA_plot(MSE3)
-
-
-# Q1.1  Which MPs performed the best?
-#
-# Q1.2  Which MPs were dominated?
-#
-# Q1.3  Suppose that this MSE was for a fishery you are involved in - which
-#       MP would you choose for management. NOTE, read the documentation 
-#       for the MP to make sure it is feasible in your fishery. 
-#
-# Q1.4  In Q1.3 were there any MPs you would not choose because they were 
-#       not feasible? Why were they not considered feasible?
-
-
-
-# === Task 2: Checking covergence of performance ==============================
+# You'll need these additional operating models for this exercise!
 # 
-# In all of the MSE runs so far, unbeknownst to you, just 48 simulations 
-# have been used to test the MPs. That doesn't sound like a lot, but 
-# what number of simulations is sufficient? 
-#
-# In many studies an arbitrary number of 1000 simulations are used, 
-# presumably because it 'sounds like quite a lot'. But of course this 
-# might be wasted computation. 
-#
-# When answering the question 'what number of simulations is enough', 
-# a more principled answer is enough that your performance metrics 
-# don't change as more simulations are undertaken - that there is 
-# convergence in performance.
+# By having a seperate non-CRAN library we can store all kinds of
+# additional data and materials including operating models that you
+# develop. That way they will alwasy be available to you and others
+# from the online repository. 
+
+
+
+# === Task 1: Finding MSE data in an MSE object ==================================
 # 
-# DLMtool contains functions for checking convergence of MSE 
-# performance metrics. Here you use the function Converge()
-# to see whether typical performance metrics have stabilized with
-# additional simlulations:
+# First, lets create an example MSE object so that we can see what the
+# MSE data look like. For a change, rather than build an operating model 
+# from the component Stock, Fleet, Obs and Imp objects we are going to 
+# search for a pre-built operating model (class OM) that came with the
+# DLMextra package:
 
-Converge(MSE3)
+avail('OM')
 
-# Converge either produces 1 or 2 plots. Each has 5 panels that
-# are some typical performance metrics.
+# Lets run an MSE for the default MPs using the swordfish operating
+# model:
+
+SWO <- runMSE(Swordfish_OM)
+
+# Similarly to other DLMtool objects you can find out more about MSE 
+# objects like SWO using the built-in help documentation:
+
+class?MSE
+
+# Alternatively you can see a concise summary of names using:
+
+slotNames(SWO)
+
+# For example we can see that the MSE was run for 6 MPs
+
+SWO@nMPs
+
+# For a total of 50 projected years:
+
+SWO@proyears
+
+# and 48 simulations
+
+SWO@nsim
+
+# Two of the slots in an MSE object are tables containing the sampled
+# observation error variables (biases, error in data) and the simulated 
+# conditions of the operating models. You can get take a loot at the 
+# first few rows of these tables using the R function head():
+
+head(SWO@Obs)
+head(SWO@OM)
+
+# Let say you wanted to see what the distribution of sampled stock
+# depletion levels (SSB today relative to SSB unfished) for the SWO 
+# operating model looks like, you could use the R histogram function:
+
+dev.off() # re-set plotting window
+hist(SWO@OM$Depletion, col='blue')
+
+# Here we can see the 48 simulations distributed between 30% and
+# 60% of unfished spawning biomass (SSB0)
 #
-# The first plot shows the mean performance of all MPs as simulations
-# are added. The second plot just shows MPs for which performance was 
-# not stable by the final simulation (in this case simulation 48). 
+# Various time series data are also included in the MSE which are 
+# specific to the simulation, the MP that was used and the projected
+# year. 
 #
-# Look at the first of the two plots with many lines, one for each MP.
+# For example the slot B_BMSY is the biomass relative to BMSY
+# over the projection. If you wanted to plot this for a particular
+# MP, say DCAC, you would first locate the MP number.
 #
-# You may notice that in the first 20 simulations, the absolute 
-# performance of the MPs changes a lot but in many cases the lines are
-# quite parallel and the ranking of the MPs is stable long before
-# absolute performance is stable. 
-#
-# This phenomenon occurs because DLMtool deliberately samples identical
-# future conditions for all MPs. 
-#
-# Since all MPs share the same future and are often vulnerable to the 
-# same changes in mean simulated conditions (e.g. if you sampled a 
-# simulation with high future productivity it would benefit all MPs 
-# similarly) the ranking stabalizes quickly even when absolute 
-# performance does not. This simulation design ensure that correct 
-# MP selection can occur with the mininum of simulations. 
+# The MSE object contains a record of the MPs that were run in the 
+# slot MPs:
+
+SWO@MPs
+
+# Here we can see that DCAC is the second MP of the 6 that were 
+# run.
 # 
-# In this check of convergence three MPs nominally failed to converge
-# and are highlighted in the second plot (MCD, DBSRA and IT5). 
-#
-# To conduct more simulations you can change a slot in the operating
-# model, nsim: 
-
-testOM@nsim<-100
-
-# You also have to change the random seed of the operating model so 
-# that you get a new set of simulations (we want new simulations
-# because we are about to use joinMSE(), see below)
-
-testOM@seed<-2
-
-# Now run the new MSE
-
-
- # myMPs<-c("MCD","DBSRA","IT5")# 
-
-MSE4<-runMSE(testOM,MPs=myMPs)
-
-Converge(MSE4)
-
-# Now the x-axis runs to 100 and all MPs are deemed to have converged.
-#
-# Note that you can also 'glue' together MSE objects that have the same 
-# operating model and MPs to get more simulations:
-
-MSE5<-joinMSE(list(MSE3,MSE4))
-
-Converge(MSE5)
-
-
-#  Q2.1  Given that convergence never occurs exactly, what threshold
-#        would be sufficient in your applications and why? 
-#
-#  Q2.2  Can you think of a more principled test of convergence than
-#        the 'within 2%' criteria of Converge()?
-
-
-
-# === Task 3: Value of information analysis =======================================
-#
-# In the MSE we are simulating data quality using the observation error 
-# model (class Obs). For example some simulations may have biased catches 
-# and imprecise catches. 
-#
-# Since for each of these simulations we also have performance metrics,
-# we can track which observation processes are driving performance and
-# to what extent. 
+# Looking at the help documentation we can see that the B_BMSY
+# data are organised in order of simulation, MP and projected
+# year. 
 # 
-# DLMtool includes a series of Value-Of-Information functions. Try this
-# for our new MSE object MSE5:
+# This is confirmed by checking the dimensions of the B_BMSY array:
 
-VOI(MSE5,ncomp=3,maxrow=5)
+dim(SWO@B_BMSY)
 
-# VOI produces a multipanel plot where each row corresponds to an MP and 
-# each column is an observation variable. The VOI function automatically
-# identifies those observation variables most strongly related to 
-# performance and plots them in order of importance (left-most column 
-# is the most strongly correlated). The color of the points reflects 
-# the strength of the correlation. 
+# We can now extract the B/BMSY data for our particular MP# DCAC 
+# (MP 2 of 6) and plot the trajectories:
 
+DCAC_biomass<-SWO@B_BMSY[,2,]
 
-# Q3.1  The top-left panel of the second to last plot shows the most 
-#       important observation variable for the MP MCD. This is the 
-#       variable Dbias which is the simulated bias in estiamtes of 
-#       current stock depletion. 
-#       
-#       What does the shape of this VOI curve tell you about the 
-#       asymmetry in risk of underestimating stock level (Dbias < 1) 
-#       versus overestimating stock level (Dbias > 1)
-#
-# Q3.2  Why is the row of VOI plots blank for the MP 'MRreal'? 
-#
-# Q3.3  If you were to use DBSRA for managing this case study, 
-#       what is the relative importance of improving the accuracy of
-#       depletion information (Dbias) as opposed to natural mortality
-#       rate (Mbias)?
+DCAC_biomass<-t(DCAC_biomass) # transpose the matrix for plotting
+
+matplot(DCAC_biomass,type='l',xlab="Projection year", ylab="B/BMSY",main="DCAC Biomass Projection")
+
+# We can also superimpose a line representing the BMSY reference
+# level
+
+abline(h=1,col="#99999995",lwd=5)
+
+# Hopefully these examples are helping to illustrate why R is
+# such a powerful environment for packaging something like
+# DLMtool - there is huge potential for customization. 
 
 
-
-# === Task 4: Cost of current uncertainties =====================================
-#
-# Similarly to value of information analysis, the cost of current 
-# uncertainties (CCU) looks at how performance is determined by the
-# sampled conditions of the operating model. 
-#
-# In VOI analysis we are looking for how errors and biases in 
-# observed data drive performance. In cost of current 
-# uncertainties we ask how uncertainty in operating model parameters 
-# relates to performance. In other words what aspects about a fishery
-# do we need to know better to improve management performance? 
+# Q1.1  Try to produce a similar projection plot for F relative 
+#       to FMSY for the MP 'matlenlim' 
 # 
-# When we used the VOI function above we actually produced the CCU
-# plots first. If you cycle back through the plots you can see them.
-# They are the plots titled 'Operating model parameters:'
-
-
-# Q4.1  Looking at the plot that shows CCU for DDes, EtargetLopt,
-#       ItargetE1, MRreal and DTe40, which condition of the 
-#       operating model is most strongly determining performance?
-#
-# Q4.2  Linfgrad is the mean gradient in maximum size (Linf). Can 
-#       you explain why negative gradients in Linf lead to lower
-#       yields?
+# Q1.2  Create a histogram for an observation error variable in 
+#       the table SWO@Obs
 
 
 
-# === Optional tasks ===========================================================
-
-# Task 5: another way of conducting value of information analysis or
-#         cost of current uncertainties analysis is to change one
-#         operating model parameter at a time and re-run the MSE then
-#         examine overall performance. E.g. do two MSEs one for high 
-#         levels of Dbias and one with low levels of Dbias.
+# === Task 2: Custom performance metrics ==================================
 # 
-
-# Q5.1   Do this alternative VOI / CCU method for a variable that was 
-#        important in the examples above. Do the MSE results 
-#        corroborate the result from the methods above that use a 
-#        single MSE analysis?
+# You may be irritated that so far your own idea of 'good 
+# performance' has not been reflected in any of the existing
+# MSE plots. 
 #
-# Q5.2   How is this alternative form of VOI analysis fundamentally
-#        different (hint: would you still have picked the same MPs
-#        in both of these MSEs)?
+# In this section we're going to interrogate the MSE object
+# to make your own performance metrics.
+# 
+# For the purposes of this example you care about not dropping 
+# below a depletion level of 80% BMSY and want high short-term
+# economic yields (over the next 5 years).
+#
+# We've already seen the B_BMSY slot, we now have to summarize
+# these data with respect to a reference level of 80%, 
+# calculating the fraction, by MP, that dropped below this
+# level. 
+#
+# Using the R function 'apply' this is surprisingly easy:
+
+P80 <- apply(SWO@B_BMSY < 0.8, 2, mean)
+
+# By MP (the second dimension of the B_BMSY array) we have 
+# summed the instances where B_BMSY was less than 80%
+# and divided them by the total number of simulations
+# and projected years. This returns the fraction (interpreted 
+# as a probability) of dropping below 80% of BMSY. 
+#
+# Since future catches are arranged in the same type of
+# array:
+
+dim(SWO@C)  # simulation x MP x projected year
+
+# we can apply a similar apply funciton to calculate mean 
+# expected yield over the first 5 years of the projection:
+
+MY5<-apply(SWO@C[,,1:5],2,mean)
+
+# The two custom performance metrics can now be plotted to 
+# reveal the trade-off among MPs:
+
+plot(P80,MY5,col='white',xlab="Prob. B < 0.8BMSY",
+                         ylab="Expected Yield 5yr")
+
+text(P80,MY5,SWO@MPs,col='blue')
+
+# Its not a particularly attractive plot but it reveals a
+# clear trade-off between biological and economic metrics. 
+
+
+# Q2.1 Produce a trade-off plot that reflects long-term 
+#      economic interests (ie the last 5 years)
+#
+# Q2.2 How does the trade-off differ from the previous plot
+#      that showed short-term economic interests?
+#
+# Q2.3 Can you explain this difference and what does this 
+#      mean in a hypothetical management situation?
+
+
+
+# === Optional tasks ====================================================
+
+# Task 3: do your own VOI analysis. What observation parameters
+#         affected these new custom performance metrics?
+
+# Task 4: organize your new performance metrics in a table and
+#         save them to disk somewhere. See R help for two 
+#         functions: cbind() and write.csv(). 
+
+
+
+# === Advanced tasks ====================================================
+
+# Task 5: reading the help documentation for VOI you realise that
+#         you can send custom performance metrics to the VOI
+#         function. Format your metrics correctly and use the 
+#         standard VOI funciton to reveal VOI and CCU.
+
+
+# Task 6: Calculate the average inter-annual variability in yield 
+#         for each MP 
 
 
 
 # ==================================================================================
 # === End of Exercise 3b ===========================================================
 # ==================================================================================
+
+
 
 
 

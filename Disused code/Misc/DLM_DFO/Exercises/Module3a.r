@@ -1,14 +1,26 @@
 
 # =====================================================================================
-# === DLMtool Exercise 3a: Modifying operating models  ================================
+# === DLMtool Exercise 3a: Selecting MPs and other MSE outputs ========================
 # =====================================================================================
-# 
-# The operating models of DLMtool include a rather large number of slots. These 
-# control the various aspects of the simulations and can be modified to match the 
-# specific conditions of a given fishery.
 #
-# In this excercise you will learn more about DLMtool operating models and how
-# to customize them for a given fishery case study. 
+# So far, every MSE we have undertaken has used the default Management Procedures.
+# There are 5 default MPs and they are:
+#
+# AvC:        TAC set to average historical catches
+# DCAC:       TAC set to Depletion-Corrected Average Catch (MacCall 2009)
+# FMSYref:    reference MP where TAC is FMSY x current biomass known perfectly
+# curE:       TAE set to current effort levels
+# matlenlim:  size limit where the selectivity matches maturity at length
+#
+# Close to 100 MPs are included in the current version of DLMtool. These include
+# output (TAC) control MPs and input control MPs (TAE, spatial and size limit)
+# 
+# In the first half of this set of exercises we will select a greater range of
+# MPs for MSE testing. 
+# 
+# In the second half of these exercises will we learn how
+# to check for convergence in the performance of these MPs and how to diagnose
+# which data are deriving performance for these MPs. 
 
 
 
@@ -19,189 +31,235 @@ setup()
 
 
 
-# === Task 1: Loading objects from .csv files ====================================
+# === Task 1 === Selecting MPs for MSE testing ===================================
 #
-# One of the most tractable and easy-to-understand ways of populating 
-# operating models is to load the Stock, Fleet, Obs and Imp objects from 
-# .csv files.
+# For previous classes of DLMtool objects we used the avail() function to find
+# what objects were available. You can use the same approach for DLMtool 
+# MPs that are split into output control MPs (that set TACs) and input control
+# MPs that set TAE, size limits or spatial closures.
 #
-# These are essentially excel tables which have a row for slot in these 
-# objects. The good thing about using .csv files is that the file serves as a
-# dated record of what was specified and they are easy to examine on most
-# computers. 
+# Finding these and looking up the help documentation for these is simple:
+
+avail('Output')
+avail('Input')
+?DD
+?MRreal
+
+# To run an MSE using your own MP selection you have to add an argument to
+# the runMSE function that is just a vector of the MPs names you wish to test.
+
+myMPs<-c("MCD","SBT1","DBSRA","DD","IT5",                  # Output controls
+         "DDes","EtargetLopt","ItargetE1","MRreal","DTe40")# Input controls
+
+
+MSE3<-runMSE(testOM,MPs=myMPs)
+
+NOAA_plot(MSE3)
+
+
+# Q1.1  Which MPs performed the best?
 #
-# The data folder for this workshop contains examples of .csv files for stock, 
-# fleet, observation and implementation models. 
+# Q1.2  Which MPs were dominated?
 #
-# You can take a look at one of these in excel or a text editor: 
-# "Exercises/Data/CSV/Albacore.csv"
+# Q1.3  Suppose that this MSE was for a fishery you are involved in - which
+#       MP would you choose for management. NOTE, read the documentation 
+#       for the MP to make sure it is feasible in your fishery. 
 #
-# It is relatively straightforward to convert this .csv to a DLMtool object 
-# by just specifying the location of the file:
+# Q1.4  In Q1.3 were there any MPs you would not choose because they were 
+#       not feasible? Why were they not considered feasible?
 
-Albacore <- new('Stock', "D:/DLM_FAO/Exercises/Data/CSV/Albacore.csv")
 
-# Each fow of the csv is a slot in the stock object e.g natural mortality
-# rate:
 
-Albacore@M
-
-# You can list all the slots in any object using 
-
-slotNames(Albacore)
-
-# And can find out more about what these slots represent by using the help
-# documentation for objects of class Stock:
-
-class?Stock
-
-# In most cases these slots reflect the upper and lower bounds of a 
-# random uniform distribution e.g. M sampled between 0.35 and 0.45
+# === Task 2: Checking covergence of performance ==============================
 # 
-# Don't worry, DLMtool allows you to specify any type of model for sampling
-# operating model parameters and will preserve complex cross-correlations
-# among these if you wish. We will cover these features in a later 
-# exercise.
+# In all of the MSE runs so far, unbeknownst to you, just 48 simulations 
+# have been used to test the MPs. That doesn't sound like a lot, but 
+# what number of simulations is sufficient? 
 #
-# Similarly to Stock objects, Fleets, Obs and Imp objects can be read from
-# csv files. E.g:
-
-ICCATobs <- new('Obs',"D:/DLM_FAO/Exercises/Data/CSV/ICCATobs.csv")
-
-Longline <- new('Fleet',"D:/DLM_FAO/Exercises/Data/CSV/Longline.csv")
-
-Overages <- new('Imp',"D:/DLM_FAO/Exercises/Data/CSV/Overages.csv")
-
-
-
-# === Task 2: Modify existing objects ============================================
+# In many studies an arbitrary number of 1000 simulations are used, 
+# presumably because it 'sounds like quite a lot'. But of course this 
+# might be wasted computation. 
 #
-# Probably the most commonly used approach to specifying DLMtool operating 
-# models is to copy an existing object and change various aspects of it. 
-# This ensures that there is a default entry for all required slots and that
-# preliminary MSEs will therefore run. 
+# When answering the question 'what number of simulations is enough', 
+# a more principled answer is enough that your performance metrics 
+# don't change as more simulations are undertaken - that there is 
+# convergence in performance.
+# 
+# DLMtool contains functions for checking convergence of MSE 
+# performance metrics. Here you use the function Converge()
+# to see whether typical performance metrics have stabilized with
+# additional simlulations:
+
+Converge(MSE3)
+
+# Converge either produces 1 or 2 plots. Each has 5 panels that
+# are some typical performance metrics.
 #
-# First, as a reference, create a new operating model with default settings 
-# using Stock, Fleet, Obs and Imp objects:
-
-myOM1 <- new("OM", Mackerel, FlatE_HDom, Imprecise_Unbiased, Perfect_Imp)
-
-# Run the MSE and store the results in an object MSE1:
-
-MSE1 <- runMSE(myOM1)
-
-# Now, for each of these objects, copy them and change some of their 
-# attributes:
-
-Mack2 <- Mackerel  
-
-Mack2@Name <- "MackerelMod"  # Change the name of the stock 
-Mack2@M <- c(0.2, 0.35)      # Higher natural mortality 
-Mack2@D <- c(0.05, 0.3)      # More uncertain level of current stock depletion 
-
-# Now do the same with the 'Flat trend in effort - heavy dome-
-# shaped selectivity' fleet type FlatE_HDom:
-
-Fleet2 <- FlatE_HDom 
-Fleet2@Name <- "Modified_Fleet" 
-Fleet2@nyears <- 80          # Increase the number of historical fishery years
-Fleet2@Esd <- c(0.1, 0.2)    # Less inter-annual variability in fishing effort
-Fleet2@Vmaxlen <- c(0.7, 1)  # Increase vulnerability of large-sized individuals
-
-# Using the plot command, compare the original and modified Objects:
-
-plot(Mackerel, incVB = FALSE) 
-plot(Mack2, incVB = FALSE)
-
-plot(FlatE_HDom, Mackerel)
-plot(Fleet2, Mack2)
-
-# Create a new operating model from the modified Stock and fleet objects and 
-# rerun the MSE storing the new MSE outputs in an object MSE2:
-
-myOM2 <- new("OM", Mack2, Fleet2, Imprecise_Unbiased, Perfect_Imp)
-MSE2 <- runMSE(myOM2)
-
-
-
-# === Task 3 Compare MSE results for the default and modified operating models ====
+# The first plot shows the mean performance of all MPs as simulations
+# are added. The second plot just shows MPs for which performance was 
+# not stable by the final simulation (in this case simulation 48). 
 #
-# Now that two MSEs have been run it is instructive to compare results.
+# Look at the first of the two plots (you have to press the 'back' 
+# arrow in the top lefts of the 'Plots' panel) with many lines, one 
+# for each MP.
 #
-# Looking at the help documentation for NOAA_plot:
-
-?NOAA_plot
-
-# We can see an argument 'panel' which allows us to make plots in sequence
+# You may notice that in the first 20 simulations, the absolute 
+# performance of the MPs changes a lot but in many cases the lines are
+# quite parallel and the ranking of the MPs is stable long before
+# absolute performance is stable (ie they share the same ups and 
+# downs). 
 #
-# That means that we can create a four panel plot (2 x 2) and visualize the 
-# results of the two MSEs together
-
-par(mfrow=c(2, 2))
-NOAA_plot(MSE1, panel=F)
-mtext('Top row of panels is MSE1', 3, outer=T, line=-1.5)
-NOAA_plot(MSE2, panel=F)
-mtext('Bottom row of panels is MSE2', 1, outer=T, line=-1)
-
-
-# Q3.1  How does absolute performance of the MPs differ between the two MSEs?
+# This phenomenon occurs because DLMtool deliberately samples identical
+# future conditions for all MPs. 
 #
-# Q3.2  How does the pattern in MP performance vary among the two MSEs?
+# Since all MPs share the same future and are often vulnerable to the 
+# same changes in mean simulated conditions (e.g. if you sampled a 
+# simulation with high future productivity it would benefit all MPs 
+# similarly) the ranking stabilizes quickly even when absolute 
+# performance does not. This simulation design ensure that correct 
+# MP selection can occur with the mininum number of simulations. 
+# 
+# In this check of convergence, two MPs nominally failed to converge
+# and are highlighted in the second plot (SBT1, MRreal). 
 #
-# Q3.3  Are any MPs 'dominated' with respect to all metrics and can therefore
-#       be discarded?
+# To conduct more simulations you can change a slot in the operating
+# model, nsim: 
+
+testOM@nsim<-100
+
+# You also have to change the random seed of the operating model so 
+# that you get a new set of simulations (we want new simulations
+# because we are about to use joinMSE(), see below)
+
+testOM@seed<-3
+
+# Now run the new MSE
+
+MSE4<-runMSE(testOM,MPs=myMPs)
+
+Converge(MSE4)
+
+# Now the x-axis runs to 100 and all MPs are deemed to have converged.
 #
-# Q3.4  What are the prevalent trade-offs - what compromises are managers
-#       facing?
+# If you are wondering what convergence means in this context why not
+# simply check the help documentation:
+
+?Converge
+
+# Note that you can also 'glue' together MSE objects that have the same 
+# operating model and MPs to get more simulations:
+
+MSE5<-joinMSE(list(MSE3,MSE4))
+
+Converge(MSE5)
 
 
-
-# === Optional tasks ============================================================
-
-# Task 7: Modify the Perfect_Info observation error model to have 
-# potentially high biases in reported catches. Similarly to above,
-# run a comparative MSE. 
+#  Q2.1  Given that convergence never occurs exactly, what threshold
+#        would be sufficient in your applications and why? 
 #
-# Q7  Which MPs are most affected by larger biases in reported
-#     catches?
+#  Q2.2  Can you think of a more principled test of convergence than
+#        the 'within 2%' criteria of Converge()?
 
 
-# Task 8: Run two comparative MSEs for 2 observation error models,
-# Imprecise_Biased and Precise_Unbiased. 
+
+# === Task 3: Value of information analysis =======================================
 #
-# Q8.1  What is the potential value of better quality data for the 
-#       various MPs?
+# In the MSE we are simulating data quality using the observation error 
+# model (class Obs). For example some simulations may have biased catches 
+# and imprecise catches. 
 #
-# Q8.2  Has data quality affected all MPs equally?
+# Since for each of these simulations we also have performance metrics,
+# we can track which observation processes are driving performance and
+# to what extent. 
+# 
+# DLMtool includes a series of Value-Of-Information functions. Try this
+# for our new MSE object MSE5:
+
+VOI(MSE5,ncomp=3,maxrow=5)
+
+# VOI produces a multipanel plot where each row corresponds to an MP and 
+# each column is an observation variable. The VOI function automatically
+# identifies those observation variables most strongly related to 
+# performance and plots them in order of importance (left-most column 
+# is the most strongly correlated). The color of the points reflects 
+# the strength of the correlation. 
+#
+# Note VOI will produce multiple plots (in this case 4, two for 
+# observation model parameters and two for operating model parameters).
+# You will have to use the forward and backward arrows in the top-left
+# of the Plots panel to view these. 
 
 
-# Task 9: Create a new implementation error object and add catch
-# overages. Compare MSE results for an operating model with 
-# perfect implementation error. 
+# Q3.1  The top-left panel of the second to last plot shows the most 
+#       important observation variable for the MP 'MCD'. This is the 
+#       variable Dbias which is the simulated bias in estiamtes of 
+#       current stock depletion. 
+#       
+#       What does the shape of this VOI curve tell you about the 
+#       asymmetry in risk of underestimating stock level (Dbias < 1) 
+#       versus overestimating stock level (Dbias > 1)
+#
+# Q3.2  Why is the row of 'Observation model parameters' VOI plots 
+#       (last plot) blank for the MP 'MRreal'? 
+#
+# Q3.3  If you were to use MCD for managing this case study, 
+#       what is the relative importance of improving the accuracy of
+#       depletion information (Dbias) as opposed to bias in annual
+#       catches (Cbias)?
 
 
 
-# === Advanced tasks ===========================================================
+# === Task 4: Cost of current uncertainties =====================================
+#
+# Similarly to value of information analysis, the cost of current 
+# uncertainties (CCU) looks at how performance is determined by the
+# sampled conditions of the operating model. 
+#
+# In VOI analysis we are looking for how errors and biases in 
+# observed data drive performance. In cost of current 
+# uncertainties we ask how uncertainty in operating model parameters 
+# relates to performance. In other words what aspects about a fishery
+# do we need to know better to have greater confidence over management
+# performance? 
+# 
+# When we used the VOI function above we actually produced the CCU
+# plots first. If you cycle back through the plots you can see them.
+# They are the plots titled 'Operating model parameters:'
 
-# Task 10: It is possible to prescribe operating model conditions 
-# (historical simulation conditions) that are not possible. Find 
-# a way to break runMSE()
+
+# Q4.1  Looking at the plot that shows CCU for MCD and IT5, which 
+#       condition of the operating model is most strongly determining
+#       performance?
+#
+# Q4.2  Linfgrad is the mean gradient in maximum size (Linf). Can 
+#       you explain why declining maximim size (negative gradients) 
+#       leads to lower yields?
 
 
-# Task 11: Find out which operating model parameter is most 
-# influential in determining the performance of all of the 
-# MPs in the toolkit
+
+# === Optional tasks ===========================================================
+
+# Task 5: another way of conducting value of information analysis or
+#         cost of current uncertainties analysis is to change one
+#         operating model parameter at a time and re-run the MSE then
+#         examine overall performance. E.g. do two MSEs one for high 
+#         levels of Dbias and one with low levels of Dbias.
+# 
+
+# Q5.1   Do this alternative VOI / CCU method for a variable that was 
+#        important in the examples above. Do the MSE results 
+#        corroborate the result from the methods above that use a 
+#        single MSE analysis?
+#
+# Q5.2   How is this alternative form of VOI analysis fundamentally
+#        different (hint: would you still have picked the same MPs
+#        in both of these MSEs)?
+
 
 
 # ==================================================================================
 # === End of Exercise 3a ===========================================================
 # ==================================================================================
-
-
-
-
-
-
 
 
 
