@@ -4,11 +4,10 @@
 
 
 library(DLMtool)
-library(DLMdata)
+library(DLMextra)
 
 pms <- try(avail("PM"), silent=TRUE )
 if (class(pms) =="try-error") pms <- NULL
-
 
 localDir <- getwd()
 pkgpath <- file.path(localDir, "../DLMtool")
