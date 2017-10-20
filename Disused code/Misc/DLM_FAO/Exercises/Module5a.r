@@ -398,6 +398,75 @@ NOAA_plot(MSE)
 #       credible ranges of uncertainty?
 
 
+
+# === Task 6 === Documenting OMs ================================================
+#
+# Where possible it is desirable to fully document the rationale for the 
+# specification of a particular operating model. 
+#
+# DLMtool includes a set of tools for doing this. The function OMinit() creates
+# an operating model folder with a .xlsx file for OM parameter specification
+# and a .rmd file for adding text explanations for the OM parameters that were
+# selected. 
+# 
+# Lets start by building an example (you will need to create your own 'myOM'
+# directory):
+
+setwd("C:/myOM")     # set the working directory
+OMinit("testfish")   # create the .xlsx and .rmd files
+
+# Open the testfish.xlsx workbook in the C:/myOM folder.
+#
+# You can see that it has sheets for each of the DLMtool objects 
+# required to build a full OM. Just like the .csv files you can specify
+# Stock, Fleet, Imp and Obs models in these, The sheets contain the 
+# correct names of each parameter value.
+# 
+# You'll notice that there are also sheets for other OM parameters
+# and real fishery Data. 
+#
+# Navigate to the OM sheet and you will see some default values have
+# been added. Remember you can find out what these mean using the 
+# built-in help
+
+class?OM
+
+# Now open in Rstudio, the testfish_source.rmd file. 
+# This is a single R file containing headings for each object type
+# (e.g. Stock and Fleet) and each parameter for each object type. 
+# 
+# Since we created a new OM folder using OMinit and have not added
+# our own personalized description, this file includes some guidance
+# text and mostly "No justification provided" under each parameter. 
+# 
+# Lets create an example to see what this could have looked like
+# for a fully specified (.xlsx) and fully justificed (.rmd) OM (you
+# will need to create your own 'example' directory):
+
+setwd("C:/example")
+OMinit('example')
+ 
+# If you navigate to "C:/example" you will see an example OM using
+# the parameters for the Chilean Hake operating model. 
+# 
+# Not only are most parameters assigned values, there is justifica-
+# tion text for each in the .rmd file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # ==============================================================================
 # === End of Exercise 5a =======================================================
 # ==============================================================================
