@@ -1,6 +1,6 @@
 
 # ====================================================================================
-# === DLMtool Exercise 6a: Robustness testing and MP selection =======================
+# === DLMtool Exercise Xa: Robustness testing and MP selection =======================
 # ====================================================================================
 #
 # In a range of management settings there may be relative confidence over a
@@ -34,7 +34,7 @@ MPs<-c("Ltarget1","Ltarget4","Itarget4","HDAAC","Fratio","IT5", "IT10",
        "DDe","DD","matlenlim","MCD","ITM","TCPUE","TCPUE_e","AvC")
 
 BFTref<-new('OM',Bluefin_tuna,       # Bluefin stock dynamics
-                 Generic_fleet,      # A generic fleet
+                 Generic_Fleet,      # A generic fleet
                  Precise_Unbiased,   # Good quality data
                  Perfect_Imp)        # Perfect adherence to management
 
@@ -53,7 +53,7 @@ NOAA_plot(Ref)
 
 
 BFTrob<-new('OM',Bluefin_tuna,        # Bluefin stock dynamics (same)
-                 Generic_fleet,       # A generic fleet (same)
+                 Generic_Fleet,       # A generic fleet (same)
                  Imprecise_Biased,    # Bad quality data
                  Perfect_Imp)         # Perfect adherence to managament
 
@@ -123,7 +123,7 @@ Overages@TACFrac<-c(1.15, 1.25)  # between 15% and 25% overages in TACs
 Overages@EFrac<-c(1.15, 1.25)    # between 15% and 25% overages in TAEs
 
 BFTrob3<-new('OM',Bluefin_tuna,  # Bluefin stock dynamics (same)
-            Generic_fleet,       # A generic fleet (same)
+            Generic_Fleet,       # A generic fleet (same)
             Precise_Unbiased,    # Good quality data (same)
             Overages)            # 15% and 25% overages
 
@@ -143,7 +143,7 @@ NOAA_plot(Rob3)
 
 
 # ==================================================================================
-# === End of Exercise 6a ===========================================================
+# === End of Exercise Xa ===========================================================
 # ==================================================================================
 
 

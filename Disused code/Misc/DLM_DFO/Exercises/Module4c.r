@@ -40,25 +40,25 @@ avail('Input')
 
 curE
 
-# As illustrated by curE, an Input control MP returns a vector of 6 numbers.
-# These six numbers represent four characteristics:
-#
-# 1  Allocation
-# 2  Effort
-# 3  Spatial closure
+# As illustrated by curE, an Input control MP returns a set of 7 recommendations
+# regarding:
+
+# 1  Effort (TAE relative to last historical year)
+# 2  Spatial closure
+# 3  Allocation
 # 4  Length at 5% retention
 # 5  Length at 100% retention
 # 6  Upper slot limit
 # 7  Retention of the maximum length class
 #
-# 1 - Allocation is the first number and specifies how much fishing effort is
-# reallocated given a spatial closure.
-#
-# 2 - Effort is a number presenting the fraction of current (todays) total 
+# 1 - Effort is a number presenting the fraction of current (todays) total 
 # effort that is recommended (the TAE)
 #
-# 3 - Spatial is a vector 2 long (there are 2 areas in DLMtool models) that 
+# 2 - Spatial is a vector 2 long (there are 2 areas in DLMtool models) that 
 # is the fraction of todays effort by area.
+#
+# 3 - Allocation is the first number and specifies how much fishing effort is
+# reallocated given a spatial closure.
 #
 # 4 - LR5 is a number that is the size at 5% retention
 #
@@ -68,26 +68,16 @@ curE
 #
 # 7 - Rmaxlen is a number (a fraction) which is the retention at maximum length
 #
-# The curE MP does not include any spatial reductions in effort 
-# 
-#     Spatial<-c(1,1)
-#
-# therefore does not require spatial reallocation of
-# effort 
-#
-#     Allocate<-1
-#
-# and keeps effort constant at current levels
+# The curE MP just keeps effort constant at current levels
 #
 #     Effort<-1
 #
-# Since there are no specified changes to size limits the vulnerability 
+# Since there are no specified changes to size limits the retention 
 # parameters are not specified 
 #
-#     LR5 <- LFR <- HS <- Rmaxlen <- NA
-#
-# To highlight the difference examine spatial control MP 'MRreal' that 
-# closes area 1 to fishing and reallocates fishing to the open area 2:
+# To highlight the differences among Input control MPs examine spatial 
+# control MP 'MRreal' that closes area 1 to fishing and reallocates 
+# fishing to the open area 2:
 
 MRreal
 
@@ -104,7 +94,7 @@ matlenlim
 
 # === Task 2: Modify the TCPUE MP to provide effort advice ================
 #
-# Here we will copy and modify the code from exercise 5b to specify 
+# Here we will copy and modify the code from exercise 4b to specify 
 # a new version of the target catch per unit effort MP (TCPUE) from
 # exercise 4b that provides effort recommendations:
 
@@ -126,8 +116,6 @@ TCPUE_e<-function(x,Data,reps){
   
   rec <- new("InputRec")
   rec@Effort <- Data@MPeff[x] * ratio
-  rec@Allocate <- 1
-  rec@Spatial <- c(1,1)
   rec
   
 }
@@ -140,8 +128,8 @@ TCPUE_e<-function(x,Data,reps){
 #
 # and
 #
-#  2. The final line of the MP is now a vector where the second 
-#  position is our new TAE recommendation.
+# The final line of the MP is our input control recommendatation that
+# only modified the Effort.
 #
 # That is all. 
 #
@@ -220,12 +208,9 @@ SWO@Frac_area_1<-c(0.20, 0.25)
 
 MRreal75<-function(x,Data,reps){
 
-  Allocate <- 1         # Full reallocation of area 1 effort
-  Effort <- 1           # Current effort
-  Spatial <- c(0.75, 1) # 75% reduction in area 1
-  Vuln <- rep(NA, 2)    # no change in vulnerability
-  c(Allocate, Effort, Spatial, Vuln)
-  
+  rec <- new("InputRec")
+  rec@Spatial <- c(0.75, 1) # 75% reduction in area 1
+  rec  
 }
 
 class(MRreal75)<-"Input"
@@ -236,12 +221,9 @@ sfExport("MRreal75")
 
 MRreal50<-function(x,Data,reps){
   
-  Allocate <- 1         # Full reallocation of area 1 effort
-  Effort <- 1           # Current effort
-  Spatial <- c(0.50, 1) # 50% reduction in area 1
-  Vuln <- rep(NA, 2)    # no change in vulnerability
-  c(Allocate, Effort, Spatial, Vuln)
-  
+  rec <- new("InputRec")
+  rec@Spatial <- c(0.5, 1) # 75% reduction in area 1
+  rec  
 }
 
 class(MRreal50)<-"Input"
@@ -254,7 +236,8 @@ MSE8<-runMSE(SWO,MPs=c("MRreal","MRreal75","MRreal50"))
 
 NOAA_plot(MSE8)
 
-# Q3.1  How differently dot the MPs perform?
+# Q3.1  Can you explain why the 100% closure has a higher
+#       probability of overfishing?
 
 # Q3.2  How viscous does the stock have to be before
 #       the closure MPs perform appreciably differently?
