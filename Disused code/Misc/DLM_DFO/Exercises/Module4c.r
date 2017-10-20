@@ -1,6 +1,6 @@
 
 #=====================================================================================
-# === DLMtool Exercise 5c: Custom MPs - Input controls ===============================
+# === DLMtool Exercise 4c: Custom MPs - Input controls ===============================
 # ====================================================================================
 
 # The previous exercise 5b looked at the anatomy of an output control MP and
@@ -46,20 +46,27 @@ curE
 # 1  Allocation
 # 2  Effort
 # 3  Spatial closure
-# 4  Length Vulnerability
+# 4  Length at 5% retention
+# 5  Length at 100% retention
+# 6  Upper slot limit
+# 7  Retention of the maximum length class
 #
-# Allocation is the first number and specifies how much fishing effort is
+# 1 - Allocation is the first number and specifies how much fishing effort is
 # reallocated given a spatial closure.
 #
-# Effort is a number presenting the fraction of current (todays) total 
+# 2 - Effort is a number presenting the fraction of current (todays) total 
 # effort that is recommended (the TAE)
 #
-# Spatial is a vector 2 long (there are 2 areas in DLMtool models) that 
+# 3 - Spatial is a vector 2 long (there are 2 areas in DLMtool models) that 
 # is the fraction of todays effort by area.
 #
-# Vuln is a vector 2 long, where the first term represents the length at
-# 5% vulnerability and the second number is the shortest length at 100%
-# vulnerability.
+# 4 - LR5 is a number that is the size at 5% retention
+#
+# 5 - LFR is a number that is the size at 100% retention
+#
+# 6 - HS is the size above which there is zero retention
+#
+# 7 - Rmaxlen is a number (a fraction) which is the retention at maximum length
 #
 # The curE MP does not include any spatial reductions in effort 
 # 
@@ -72,12 +79,12 @@ curE
 #
 # and keeps effort constant at current levels
 #
-#     Effort<-1.
+#     Effort<-1
 #
 # Since there are no specified changes to size limits the vulnerability 
 # parameters are not specified 
 #
-#     Vuln<-c(NA,NA).
+#     LR5 <- LFR <- HS <- Rmaxlen <- NA
 #
 # To highlight the difference examine spatial control MP 'MRreal' that 
 # closes area 1 to fishing and reallocates fishing to the open area 2:
@@ -99,7 +106,7 @@ matlenlim
 #
 # Here we will copy and modify the code from exercise 5b to specify 
 # a new version of the target catch per unit effort MP (TCPUE) from
-# exercise 5b that provides effort recommendations:
+# exercise 4b that provides effort recommendations:
 
 TCPUE_e<-function(x,Data,reps){
   
@@ -117,10 +124,11 @@ TCPUE_e<-function(x,Data,reps){
   if(ratio < (1 - mc)) ratio <- 1 - mc # if currentI < targetI
   if(ratio > (1 + mc)) ratio <- 1 + mc # if currentI > targetI
   
-  TAE <- Data@MPeff[x] * ratio
-  
-  # no reallocation, new effort, no spatial, Vuln unchanged
-  c(1,               TAE,        1,  1,      NA, NA)
+  rec <- new("InputRec")
+  rec@Effort <- Data@MPeff[x] * ratio
+  rec@Allocate <- 1
+  rec@Spatial <- c(1,1)
+  rec
   
 }
 
@@ -266,7 +274,7 @@ NOAA_plot(MSE8)
 
 
 # ==================================================================================
-# === End of Exercise 5c ===========================================================
+# === End of Exercise 4c ===========================================================
 # ==================================================================================
 
 
