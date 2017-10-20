@@ -1,6 +1,6 @@
 
 # ====================================================================================
-# === DLMtool Exercise 6b: Time-varying parameters and ecosystem considerations ======
+# === DLMtool Exercise Xb: Time-varying parameters and ecosystem considerations ======
 # ====================================================================================
 #
 # Similarly to the observation processes and fishing efficiency changes 
@@ -77,7 +77,7 @@ NOAA_plot(Rob)
 
 
 # ==================================================================================
-# === End of Exercise 6b ===========================================================
+# === End of Exercise Xb ===========================================================
 # ==================================================================================
 
 
