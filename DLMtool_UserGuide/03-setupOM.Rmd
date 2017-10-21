@@ -234,21 +234,21 @@ More details on populating both these files are provided in the [Populate and Do
 For existing OMs without documentation, the `OMinit` function can be used to create just the source documentation file in the working directory:
 
 ```{r, eval=FALSE}
-OMinit('MyOM', `rmd`)
+OMinit('MyOM', files=`rmd`)
 ```
 
 ### Using Templates
-Some users may wish to build an operating model based on other pre-existing Stock, Fleet, Obs, or Imp objects. This can be done by using the `templates` argument in `OMinit`. 
+Some users may wish to build an operating model based on other pre-existing OM, Stock, Fleet, Obs, or Imp objects. 
 
-The `templates` argument requires a named list specifying the names of the objects to be used as templates.
-
-For example, `OMinit('Albacore2', templates=list(Stock=Albacore))` will result in a *Albacore2.xlsx* file being created with the *Stock* sheet populated with the values from the *Albacore* Stock object. 
+For example, `OMinit('Albacore2', Albacore)` will result in a *Albacore2.xlsx* file being created with the *Stock* sheet populated with the values from the *Albacore* Stock object. 
 
 Other examples:
 ```{r, eval=FALSE}
-OMinit('StockAndFleet', templates=list(Stock=Albacore, Fleet=Generic_FlatE))
+OMinit('StockAndFleet', Stock=Albacore, Fleet=Generic_FlatE)
 
-OMinit('ObsAndImp', templates=list(Obs=Generic_Obs, Imp=Perfect_Imp))
+OMinit('ObsAndImp', Obs=Generic_Obs, Imp=Perfect_Imp)
+
+OMinit('BorrowOM', OtherOM)
 
 ```
 

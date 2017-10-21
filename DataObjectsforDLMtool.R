@@ -151,7 +151,7 @@ slot_ripper<-function(filenam,slots){
   
 }
 
-getDescription <- function(class=c("Stock", "Fleet", "Obs", "Imp", "Data"), 
+getDescription <- function(class=c("Stock", "Fleet", "Obs", "Imp", "Data", "OM"), 
                            Rdloc='../DLMtool/man',
                            Outloc=NULL) {
   class <- match.arg(class)
@@ -193,6 +193,7 @@ getDescription("Fleet", Outloc=Outloc)
 getDescription("Obs", Outloc=Outloc)
 getDescription("Imp", Outloc=Outloc)
 getDescription("Data", Outloc=Outloc)
+getDescription("OM", Outloc=Outloc)
 
 
 
