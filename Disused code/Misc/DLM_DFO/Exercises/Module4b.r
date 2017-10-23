@@ -131,15 +131,15 @@ THC<-function(x, Data, reps){
   
   # Find the position of third highest catch
   
-  THCpos<-order(DLM_data@Cat[x,],decreasing=T)[3]
+  THCpos<-order(Data@Cat[x,],decreasing=T)[3]
   
   # Make this the mean TAC recommendation
   
-  THCmu<-DLM_data@Cat[x,THCpos]
+  THCmu<-Data@Cat[x,THCpos]
   
-  # A sample of the THC is taken according to a fixed CV of 10% 
-  
-  trlnorm(reps, THCmu, 0.1) # this is a lognormal distribution
+  # A sample of the THC is taken according to a fixed CV of 10%
+  THCmu * exp(rnorm(reps, -0.1^2/2, 0.1)) # this is a lognormal distribution
+
   
 }
 
@@ -148,7 +148,7 @@ THC<-function(x, Data, reps){
 THC<-function(x, Data, reps){
   THCpos<-order(Data@Cat[x,],decreasing=T)[3]
   THCmu<-Data@Cat[x,THCpos]
-  trlnorm(reps, THCmu, 0.1)
+  THCmu * exp(rnorm(reps, -0.1^2/2, 0.1))
 }
 
 # We can quickly test our new MP for the example Data object
@@ -156,25 +156,14 @@ THC<-function(x, Data, reps){
 THC(x=1,Data,reps=10)
 
 # Now that we know it works, to make the function compatible with 
-# the DLMtool package we have to do three additional things:
-#
-# 1  assign it the correct class (allowing DLMtool to 'see' it)
-#
-# 2  assign it the correct environment (allowing DLMtool to use it)
-#
-# 3  export it to the cluster for parallel computing
-#
+# the DLMtool package we have to assign it the correct class 
+# (allowing DLMtool to 'see' it)
+
+
 # Our MP provides TAC advice so it is of class 'Output':
 
 class(THC)<-"Output"
 
-# It is going to be used by DLMtool functions:
-
-environment(THC)<-asNamespace('DLMtool')
-
-# The cluster must be able to use it also:
-
-sfExport("THC")
 
 # In this R session, THC is now a part of DLMtool 
 
@@ -225,10 +214,9 @@ TCPUE<-function(x,Data,reps){
   if(ratio < (1 - mc)) ratio <- 1 - mc # if currentI < targetI
   if(ratio > (1 + mc)) ratio <- 1 + mc # if currentI > targetI
  
-  Data@MPrec[x] * ratio * trlnorm(reps, 1, Data@CV_Ind[x])
-
+  Data@MPrec[x] * ratio * exp(rnorm(reps, -Data@CV_Ind[x]^2/2, Data@CV_Ind[x]))
+  
 }
-
 
 # The TCPUE function simply decreases the past TAC (stored in
 # in Data@MPrec) if the index is lower than the target and
@@ -237,8 +225,8 @@ TCPUE<-function(x,Data,reps){
 # All that is left is to make it compatible with DLMtool:
 
 class(TCPUE)<-"Output"
-environment(TCPUE)<-asNamespace('DLMtool')
-sfExport("TCPUE")
+
+
 
 # Q3.1 Run an MSE for TCPUE and THC (among other MPs) - how does
 #      their performance compare?

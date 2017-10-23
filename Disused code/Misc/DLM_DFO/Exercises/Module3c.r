@@ -170,7 +170,7 @@ CobiaData@Name
 # After importing a Data object we may wish to visualize the data. A generic 
 # and rather basic function 'summary' is available to visualize `Data` objects.
 #
-# While not particularly asthetically pleasing, this plot provides a quick-
+# While not particularly aesthetically  pleasing, this plot provides a quick-
 # glance confirmation that the data have been read in correctly.
 
 summary(Cobia)

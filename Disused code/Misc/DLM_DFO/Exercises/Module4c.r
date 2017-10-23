@@ -40,8 +40,7 @@ avail('Input')
 
 curE
 
-# As illustrated by curE, an Input control MP returns a set of 7 recommendations
-# regarding:
+# An Input control MP returns an object with 7 recommendations regarding:
 
 # 1  Effort (TAE relative to last historical year)
 # 2  Spatial closure
@@ -86,7 +85,7 @@ MRreal
 MRnoreal
 
 # The MP 'matlenlim' only specifies the parameters of length 
-# vulnerability using an estimate of length at 50% maturity (L50):
+# retention using an estimate of length at 50% maturity (L50):
 
 matlenlim
 
@@ -137,8 +136,7 @@ TCPUE_e<-function(x,Data,reps){
 # compatible we have to assign it a different class:
 
 class(TCPUE_e)<-"Input"
-environment(TCPUE_e)<-asNamespace('DLMtool')
-sfExport("TCPUE_e")
+
 
 # An MSE can now be run for the TCPUE and TCPUE_e MPs
 
@@ -212,10 +210,8 @@ MRreal75<-function(x,Data,reps){
   rec@Spatial <- c(0.75, 1) # 75% reduction in area 1
   rec  
 }
-
 class(MRreal75)<-"Input"
-environment(MRreal75)<-asNamespace('DLMtool')
-sfExport("MRreal75")
+
 
 # 50% reduction in area 1 effort:
 
@@ -225,10 +221,8 @@ MRreal50<-function(x,Data,reps){
   rec@Spatial <- c(0.5, 1) # 75% reduction in area 1
   rec  
 }
-
 class(MRreal50)<-"Input"
-environment(MRreal50)<-asNamespace('DLMtool')
-sfExport("MRreal50")
+
 
 # We can now see how well these MPs work in MSE analysis:
 

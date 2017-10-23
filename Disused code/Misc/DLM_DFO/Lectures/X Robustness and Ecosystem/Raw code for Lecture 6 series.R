@@ -44,7 +44,7 @@ legend('topleft',legend=c("Hyperstable (Beta = 1/3)","Proportional (Beta = 1)","
 
 
 # fishing efficiency
-OM<-new('OM',Albacore,Generic_fleet,Precise_Unbiased,Perfect_Imp)
+OM<-new('OM',Albacore,Generic_Fleet,Precise_Unbiased,Perfect_Imp)
 OM@nsim=24
 MPs<-c("DD","DDe","curE","curE75","LBSPR_ItTAC","LBSPR_ItEff",
        "Itarget1","ItargetE1","IT10","ITe10","IT5","ITe5",
@@ -126,7 +126,7 @@ save(YFT_MSE_NC,file="C:/Data/YFT_MSE_NC")
 NOAA_plot(YFT_MSE_NC,panel=F)
 NOAA_plot(YFT_MSE_CC,panel=F)
 
-CR<-new('OM',Rockfish,Generic_fleet, Generic_obs, Perfect_Imp)
+CR<-new('OM',Rockfish,Generic_Fleet, Generic_Obs, Perfect_Imp)
 CR@Mgrad = c(0, 0)
 MSECR <- runMSE(CR, MPs)
 save(MSECR,file="C:/Data/MSECR")

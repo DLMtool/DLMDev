@@ -187,7 +187,7 @@ boxplot(TACs)
 Atlantic_mackerel@MPeff <- 1
 
 # The purpose of this slot is to set the current level of fishing effort. Which
-# by assigning a 1, we set to be in units of todays effort. 
+# by assigning a 1, we set to be in units of today's effort. 
 #
 # To run the Input control MPs we can use the 'Input' function:
 

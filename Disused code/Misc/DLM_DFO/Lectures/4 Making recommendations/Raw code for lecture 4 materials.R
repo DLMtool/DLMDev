@@ -1,9 +1,9 @@
-# Lecture 5 series code
+# Lecture 4 series code
 
 library(DLMtool)
 setup()
 
-# 5a ======
+# 4a ======
 
 myfleet=Generic_fleet
 myfleet@EffYears = c(1,    20,  50)
@@ -32,7 +32,7 @@ Chist<-Sim$Chist
 testOM<-StochasticSRA(testOM,CAA,Chist,nsim=20,nits=2000)
 
 
-# 5b =====
+# 4b =====
 
 nyears<-10
 nsim<-2
@@ -72,7 +72,7 @@ myMSE<-runMSE(testOM,MPs<-c("DCAC","AvC","FMSYref","MCD","HAC"))
 NOAA_plot(myMSE)
 
 
-# 5c =======================
+# 4c =======================
 
 
 MLTarg = function(x, Data,...){
@@ -101,6 +101,47 @@ myMSE2<-runMSE(myOM,myMPs)
 
 NOAA_plot(myMSE2)
 
+# Example Input control - size limits 
+
+plotEx <- function(Rec) {
+  Linf <- 150 
+  Lens <- 1:Linf 
+  if (length(Rec@Rmaxlen) == 0) Rec@Rmaxlen <- 1 
+  if (length(Rec@LR5) == 0) stop('Rec@LR5 missing value')
+  if (length(Rec@LFR) == 0) stop('Rec@LFR missing value')
+  
+  srs <- (Linf - Rec@LFR) / ((-log(Rec@Rmaxlen,2))^0.5) 
+  sls <- (Rec@LFR - Rec@LR5) /((-log(0.05,2))^0.5)
+  sel <- getsel(1, lens=Lens, lfs=Rec@LFR, sls=sls, srs=srs)
+  if (length(Rec@HS)>0) sel[Lens>Rec@HS] <- 0 
+  
+  plot(Lens, sel, type="l", xlab="Length",
+       ylab="Retention", ylim=c(0,1), las=1, bty="l", xaxs="i", yaxs="i", lwd=2, xpd=NA, 
+       cex.lab=1.25)
+}
+
+Rec <- new("InputRec")
+Rec@LR5 <- 90
+Rec@LFR <- 100
+
+plotEx(Rec)
+
+
+Rec <- new("InputRec")
+Rec@LR5 <- 90
+Rec@LFR <- 100
+Rec@HS <- 120
+
+plotEx(Rec)
+
+
+
+Rec <- new("InputRec")
+Rec@LR5 <- 90
+Rec@LFR <- 100
+Rec@Rmaxlen <- 0.5
+
+plotEx(Rec)
 
 
 

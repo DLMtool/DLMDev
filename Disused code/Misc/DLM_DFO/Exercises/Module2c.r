@@ -66,11 +66,11 @@ class?Stock
 # Similarly to Stock objects, Fleet, Obs and Imp objects can be read from
 # csv files. E.g:
 
-CDFWobs <- new('Obs',"D:/DLM_DFO/Exercises/Data/CSV/CDFW_obs.csv")
+CDFWobs <- new('Obs',"Data/CSV/CDFW_obs.csv")
 
-Longline <- new('Fleet',"D:/DLM_DFO/Exercises/Data/CSV/Longline.csv")
+Longline <- new('Fleet',"Data/CSV/Longline.csv")
 
-Overages <- new('Imp',"D:/DLM_DFO/Exercises/Data/CSV/Overages.csv")
+Overages <- new('Imp',"Data/CSV/Overages.csv")
 
 
 

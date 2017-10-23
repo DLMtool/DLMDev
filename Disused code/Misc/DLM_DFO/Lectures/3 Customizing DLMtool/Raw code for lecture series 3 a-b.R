@@ -6,7 +6,7 @@ setup()
 
 myMPs = c("AvC","curE","DCAC","DD","MCD","SPMSY")
 
-myOM = new('OM',Albacore,Generic_fleet,Generic_obs,Perfect_Imp)
+myOM = new('OM',Albacore,Generic_Fleet,Generic_Obs,Perfect_Imp)
 
 plot(myOM)
 

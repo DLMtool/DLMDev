@@ -83,7 +83,7 @@ SWO@nsim
 
 # Two of the slots in an MSE object are tables containing the sampled
 # observation error variables (biases, error in data) and the simulated 
-# conditions of the operating models. You can get take a loot at the 
+# conditions of the operating models. You can get take a look at the 
 # first few rows of these tables using the R function head():
 
 head(SWO@Obs)

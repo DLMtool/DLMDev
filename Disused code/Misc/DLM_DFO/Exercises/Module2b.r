@@ -220,7 +220,7 @@ NOAA_plot(myMSE)
 #       your management setting?
  
 
-# TIP: You can use `plotFun()` to print out all theDLMtool functions that  
+# TIP: You can use `plotFun()` to print out all the DLMtool functions that  
 # plot MSE objects.
 
 plotFun()

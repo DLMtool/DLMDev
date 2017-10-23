@@ -11,6 +11,7 @@
 # FMSYref:    reference MP where TAC is FMSY x current biomass known perfectly
 # curE:       TAE set to current effort levels
 # matlenlim:  size limit where the selectivity matches maturity at length
+# MRreal:     spatial closure with re-allocation of fishing effort
 #
 # Close to 100 MPs are included in the current version of DLMtool. These include
 # output (TAC) control MPs and input control MPs (TAE, spatial and size limit)

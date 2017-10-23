@@ -103,7 +103,7 @@ hakeOM<-XL2OM('C:/example/Example_Chile_hake.xlsx')
 
 avail('Stock')  # what Stocks can I use?
 setwd("C:/myOM")     # set the working directory
-OMinit("myrockfish", templates=list(Stock="Rockfish"))
+OMinit("myrockfish", Rockfish)
 
 # Because we now have two OMs in the same folder "C:/myOM",
 # we have to specify the OM name when using OMdoc():
@@ -111,7 +111,8 @@ OMinit("myrockfish", templates=list(Stock="Rockfish"))
 setwd("C:/myOM")
 OMdoc("myrockfish")
 
-OMinit("myflounder", templatesArrowtooth_Flounder_BC_SS)   # create the .xlsx and .rmd files
+
+OMinit("myflounder", Arrowtooth_Flounder_BC_SS)   # create the .xlsx and .rmd files
 
 
 
