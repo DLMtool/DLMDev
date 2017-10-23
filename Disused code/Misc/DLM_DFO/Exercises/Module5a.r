@@ -111,6 +111,7 @@ OMinit("myrockfish", Rockfish)
 setwd("C:/myOM")
 OMdoc("myrockfish")
 
+# Another example. Here we borrow an existing OM:
 
 OMinit("myflounder", Arrowtooth_Flounder_BC_SS)   # create the .xlsx and .rmd files
 
