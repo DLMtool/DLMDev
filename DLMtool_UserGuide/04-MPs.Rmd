@@ -94,17 +94,17 @@ AvC <- function(x, Data, reps) {
 
 Note that all Management Procedures have to be stochastic in this framework, which is why we sample from a log-normal distribution with a CV of roughly 10 per cent. 
 
-Before the Management Procedure can be 'seen' by the rest of the DLMtool package we have to do three more things. 
 
-The  Management Procedure must be assigned a class based on what outputs it provides. Since this is an output control (TAC) based MP we assign it class `Output`. The Management Procedure must also be assigned to the DLMtool namespace:
+The  Management Procedure must be assigned a class based on what outputs it provides. Since this is an output control (TAC) based MP we assign it class `Output`:
+
 ```{r}
 class(AvC) <-"Output"
-environment(AvC) <-asNamespace('DLMtool')
 ```
-and - if we are using parallel computing - exported to the cluster:
-```{r, eval=FALSE}
-sfExport("AvC")
-```
+
+<!-- and - if we are using parallel computing - exported to the cluster: -->
+<!-- ```{r, eval=FALSE} -->
+<!-- sfExport("AvC") -->
+<!-- ``` -->
 
 
 ### Length-at-Retention Set Equal to Length-at-Maturity
@@ -128,13 +128,14 @@ matlenlim <- function (x, Data, ...) {
   return(rec)
 }
 class(matlenlim) <- "Input"
-environment(matlenlim) <- asNamespace("DLMtool")
+
 
 ```
-and export to cluster:
-```{r, eval=FALSE}
-sfExport("matlenlim")
-```
+
+<!-- and export to cluster: -->
+<!-- ```{r, eval=FALSE} -->
+<!-- sfExport("matlenlim") -->
+<!-- ``` -->
 
 ### Harvest Slot Limit 
 We can also choose to create a Management Procedure with a harvest slot limit.  This example sets a minimum legal length at 1.1 times the size of maturity, and a maximum size limit (completely arbitrarily!) at 75% of the distance between the minimum legal length and the estimate of asymptotic length recorded in the fishery data object:
@@ -150,13 +151,12 @@ slotlim <- function (x, Data, ...) {
   rec
 }
 class(slotlim) <- "Input"
-environment(slotlim) <- asNamespace("DLMtool")
 ```
 
-and export to cluster:
-```{r, eval=FALSE}
-sfExport("slotlim")
-```
+<!-- and export to cluster: -->
+<!-- ```{r, eval=FALSE} -->
+<!-- sfExport("slotlim") -->
+<!-- ``` -->
 
 Note that the arguments for the input methods must include either `reps` or `...`, even if these are not used. 
 
@@ -173,9 +173,8 @@ area1_50 <- function(x,Data, ...){
   return(rec)
 }
 class(area1_50)<-"Input"
-environment(area1_50) <- asNamespace('DLMtool')
 ```
 
-```{r, eval=FALSE}
-sfExport("area1_50")
-```
+<!-- ```{r, eval=FALSE} -->
+<!-- sfExport("area1_50") -->
+<!-- ``` -->

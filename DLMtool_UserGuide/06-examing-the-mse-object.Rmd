@@ -335,12 +335,12 @@ Many of the plotting functions have the optional arguments `MPs` and `sims` whic
 You can also manually subset the `MSE` object using the `Sub` function.
 
 ### Subsetting by Performance
-For example, we may wish to exclude any Management Procedures that have less than 30% probability that the biomass is below $0.5B_{MSY}$, and focus our analysis on the remaining Management Procedures.
+For example, we may wish to include only Management Procedures that have greater than 70% probability that the biomass is above $0.5B_{MSY}$:
 
 We can do this using a combination of the `summary` function and the `Sub` function:
 ```{r}
 stats <- summary(BSharkMSE) # save summary object to `stats`
-accept <- which(stats$P50 < 30) # index of methods that pass the criteria
+accept <- which(stats$P50 > 0.70) # index of methods that pass the criteria
 MPs <- stats[accept,"MP"] # the acceptable MPs
 
 subMSE <- Sub(BSharkMSE, MPs=MPs)

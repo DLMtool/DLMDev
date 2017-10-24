@@ -1,5 +1,5 @@
 ---
-title: 'Data-Limited Methods Toolkit (DLMtool)'
+title: 'Data-Limited Methods Toolkit (DLMtool `r packageVersion("DLMtool")`) '
 subtitle: 'User Guide'
 
 date: "`r Sys.Date()`"
