@@ -1,7 +1,6 @@
 
 
 # Generate website for DLMtool documentation
-
 setwd("C:/Users/Adrian/Documents/GitHub/DLMDev")
 source("pkgdown_functions.r")
 
@@ -32,12 +31,13 @@ defineCat <- function(func) {
 	  
 	    # Operating Model
 	    ## OM Input 
-	    funs <- c("writeCSV", "OM_xl")
+	    funs <- c("OMinit", "XL2OM", "OMdoc")
 	    # if (func %in% funs) return("OM_Input")
 	    
 	    ## OM Setup 
 	    funs <- c(funs, "ChooseEffort", "ChooseSelect", "SetRecruitCycle", "makePerf",
-	              "ForceCor", "iSCAM2DLM", "Replace", "SubOM", "SS2DLM", "StochasticSRA")
+	              "ForceCor", "iSCAM2DLM", "Replace", "SubOM", "SS2DLM", "StochasticSRA",
+	              "iSCAM2DLM")
 	    if (func %in% funs) return("Operating_Model_Functions")
 	    
 	    ## run MSE 
@@ -45,9 +45,16 @@ defineCat <- function(func) {
 	    if (func %in% funs) return("Run_MSE_Functions")
 	    
 	    # MSE Object #	    
+	    
+	    
+	    ## PMs ##
+	    funs <- avail("PM")
+	    if (func %in% funs) return("PMs")
+	    
 	    ## MSE Plotting Functions 
 	    funs <- plotFun(msg=FALSE)
-	    funs <- c(funs, "barplot.MSE", "boxplot.MSE", "Converge", "checkMSE")
+	    funs <- c(funs, "barplot.MSE", "boxplot.MSE", "Converge", "checkMSE", "DFO_hist",
+	              "DFO_proj", "PWhisker")
 	    if (func %in% funs) return("MSE_Object_Plotting_Functions")
 	    
 	    ## MSE Object Functions 
@@ -55,6 +62,11 @@ defineCat <- function(func) {
 	    if (func %in% funs) return("MSE_Object_Functions")
 	    
 	    # Data Object 
+	    
+	    ## Import Data 
+	    funs <- c("SS2Data", "iSCAM2Data")
+	    if (func %in% funs) return("import_data")
+	    
 	    ## Available Methods
 	    funs <- c("Can", "Cant", "Needed", "Fease", "Required")
 	    if (func %in% funs) return("Available_Methods_and_Required_Data")
@@ -75,7 +87,7 @@ defineCat <- function(func) {
 	    
 	    ## Useful Misc
 	    funs <- c("replic8", "plotFun", "NAor0", "KalmanFilter", "DLMDataDir", 
-	    "avail", "Fease_xl", "setup")
+	    "avail", "Fease_xl", "setup", "userguide")
 	    if (func %in% funs) return("Other_Functions")	
 	    
 	    ## Other 
@@ -83,7 +95,7 @@ defineCat <- function(func) {
 	      "getAFC",  "qopt", "alphaconv", "betaconv", "cv", "getEffhist", "getFMSY",
 		  "getFMSY2", "getFref", "getFref2", "getmov2", "getq2", "getroot", "mconv", 
 		  "movfit_Rcpp", "optQ_cpp", "trlnorm", "TACfilter", "FMSYopt", "sdconv")
-	    if (func %in% funs) return("Internal_Functions")
+		  if (func %in% funs) return("Internal_Functions")
 	    
 	    if (class == "Stock") return("Stock_Objects")
 	    if (class == "Fleet") return("Fleet_Objects")
