@@ -81,6 +81,33 @@ copyDataObject("MSE", fromData, pkgpath)
 
 
 # --- Build OM Objects ----
+OM_dirs <- list.files(file.path(fromData, "OM"))
+
+for (om in OM_dirs) {
+  fl <- list.files(file.path(fromData, "OM", om))
+  OM <- XL2OM(file.path(fromData, "OM", om, fl))
+  Name <- OM@Name
+    
+  assign(Name, OM)
+  path <- file.path(dataDir, paste0(Name, ".RData"))
+  message("Saving ", paste(Name, collapse = ", "), 
+          " as ", paste(basename(path), collapse = ", "), " to ", dataDir)	 
+  save(list=Name, file = path, compress = "bzip2")
+  
+  # Write roxygen 
+  chk <- file.exists(file.path(pkgpath, 'R/', RoxygenFile))
+  if(!chk) file.create(file.path(pkgpath, 'R/', RoxygenFile)) # make empty file 
+  cat("#'  ", Name, " ", "OM",
+      "\n#'", 
+      "\n#'  An object of class OM", 
+      "\n#'\n",
+      '"', Name, '"\n\n\n', sep="", append=TRUE, 
+      file=file.path(pkgpath, 'R/', RoxygenFile))  
+  
+  rm(OM)   
+  
+}
+
 
 
 
